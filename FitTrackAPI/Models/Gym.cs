@@ -4,6 +4,7 @@ public class Gym
     public string Address { get; set; }
     public string Name { get; set; }
     public int OwnerId { get; set; }
+    public decimal Balance { get; set; }
 
     public Owner Owner { get; set; }
 
