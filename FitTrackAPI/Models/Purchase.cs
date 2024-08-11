@@ -4,6 +4,7 @@ public class Purchase
     public int ItemId { get; set; }      
     public int UserId { get; set; }     
     public DateTime Date { get; set; }  
+    public int Quantity { get; set; }
 
     public ItemType ItemType { get; set; } 
 
