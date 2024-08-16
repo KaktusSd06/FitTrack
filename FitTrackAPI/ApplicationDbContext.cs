@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FitTrackAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitTrackAPI
 {
@@ -25,5 +26,7 @@ namespace FitTrackAPI
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Good> Goods { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<TrainingProgram> TrainingPrograms { get; set; }
+        public DbSet<TrainingInProgram> TrainingsInProgram { get; set; }
     }
 }

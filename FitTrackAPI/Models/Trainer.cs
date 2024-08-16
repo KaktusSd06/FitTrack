@@ -1,3 +1,5 @@
+using FitTrackAPI.Models;
+
 public class Trainer : Person
 {
     public int? GymId { get; set; }
@@ -5,4 +7,5 @@ public class Trainer : Person
 
     public ICollection<IndividualTraining> IndividualTrainings { get; set; }
     public ICollection<GroupTraining> GroupTrainings { get; set; }
+    public ICollection<TrainingProgram> TrainingPrograms { get; set; }
 }
