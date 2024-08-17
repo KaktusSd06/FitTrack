@@ -9,11 +9,11 @@ namespace FitTrackAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TrainingProgramController : ControllerBase
+    public class TrainingProgramsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public TrainingProgramController(ApplicationDbContext context)
+        public TrainingProgramsController(ApplicationDbContext context)
         {
             _context = context;
         }

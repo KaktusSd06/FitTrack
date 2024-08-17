@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FitTrackAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8fb091d8e32d1edd4a10b7b2a6d2a73f572c04ad")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+02527cfec7c574f53e11bf46ceb301176fa7973f")]
 [assembly: System.Reflection.AssemblyProductAttribute("FitTrackAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FitTrackAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

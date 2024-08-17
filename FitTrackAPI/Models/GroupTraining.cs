@@ -1,9 +1,9 @@
-public class GroupTraining
+using FitTrackAPI.Models;
+
+public class GroupTraining : Training
 {
-	public int Id { get; set; }
 	public int GymId { get; set; }
 	public int TrainerId { get; set; }
-	public string Description { get; set; }
 	public DateTime? Date { get; set; }
 
 	public Trainer Trainer { get; set; }

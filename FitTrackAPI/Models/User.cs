@@ -10,7 +10,7 @@ public class User : Person
     public Gym Gym { get; set; }
     public Trainer Trainer { get; set; }
 
-    public ICollection<GroupTraining> GroupTrainings { get; set; }
+    public ICollection<GroupTrainingUser> GroupTrainingUsers { get; set; }
     public ICollection<IndividualTraining> IndividualTrainings { get; set; }
 
     public ICollection<Purchase> Purchases { get; set; }

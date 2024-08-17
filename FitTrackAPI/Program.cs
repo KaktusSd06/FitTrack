@@ -1,4 +1,14 @@
+﻿using FitTrackAPI;
+using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+var configuration = builder.Configuration;
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
@@ -14,7 +24,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

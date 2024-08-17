@@ -3,9 +3,10 @@
     "secrets1": {
       "type": "secrets"
     },
-    "mssql1": {
+    "mssql2": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:Server=Ruslan:SQLEXPRESS;Database=FitTrack;Trusted_Connection=True;"
+      "connectionId": "ConnectionStrings:DefaultConnection",
+      "dynamicId": null
     }
   }
 }

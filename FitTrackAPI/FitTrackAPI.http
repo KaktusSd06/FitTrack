@@ -1,6 +1,6 @@
 @FitTrackAPI_HostAddress = http://localhost:5047
 
-GET {{FitTrackAPI_HostAddress}}/weatherforecast/
+GET {{FitTrackAPI_HostAddress}}/FitTrackAPI/
 Accept: application/json
 
 ###

@@ -11,6 +11,6 @@ public class Gym
     public ICollection<Trainer> Trainers { get; set; }
     public ICollection<Admin> Admins { get; set; }
     public ICollection<User> Users { get; set; }
+    public ICollection<Membership> Memberships { get; set; }
     public ICollection<GroupTraining> GroupTrainings { get; set; }
-    public ICollection<IndividualTraining> IndividualTrainings { get; set; }
 }

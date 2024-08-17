@@ -4,11 +4,11 @@ public class ExerciseInTraining
     public int TrainingId { get; set; }  
     public int ExerciseId { get; set; }  
     public Exercise Exercise { get; set; }
-    public TrainigType TrainigType { get; set; }    
+    public TrainingType TrainingType { get; set; }    
 }
 
 
-public enum TrainigType
+public enum TrainingType
 {
     Individual,
     ForProgram
