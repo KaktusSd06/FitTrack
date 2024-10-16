@@ -1,3 +1,4 @@
+import 'package:fittrack_mobile_app/screens/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:fittrack_mobile_app/widgets/button_with_text.dart';
 import 'package:fittrack_mobile_app/widgets/button_with_text_icon.dart';
@@ -16,6 +17,13 @@ class LoginPage extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Signup()), // Перехід до другого екрану
+    );
+  }
+
+  void navigateToHomePage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()), // Перехід до другого екрану
     );
   }
 
@@ -120,7 +128,7 @@ class LoginPage extends StatelessWidget {
                 ButtonWithText(
                   text: "Увійти",
                   onPressed: () {
-                    print("Увійти натиснуто");
+                    navigateToHomePage(context);
                   },
                 ),
 

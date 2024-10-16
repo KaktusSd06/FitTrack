@@ -8,6 +8,12 @@ class AppTextStyles {
     fontSize: 22,
     fontWeight: FontWeight.w600,
   );
+  static const TextStyle h1_f = const TextStyle(
+    fontFamily: 'NotoSans',
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
+    color: AppColors.fulvous,
+  );
 
   static const TextStyle h2 = const TextStyle(
     fontFamily: 'NotoSans',
