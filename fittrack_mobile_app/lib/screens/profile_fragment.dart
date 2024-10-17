@@ -1,3 +1,8 @@
+import 'package:fittrack_mobile_app/screens/editProfile.dart';
+import 'package:fittrack_mobile_app/screens/logInPage.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -232,7 +237,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Блоки для редагування профілю та інших дій
                   GestureDetector(
                     onTap: () {
-                      // Додайте логіку редагування профілю
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EditProfile()), // Перехід до другого екрану
+                      );
                     },
                     child: Container(
                       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
@@ -270,8 +278,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 8), // Відступ між блоками
 
                   GestureDetector(
-                    onTap: () {
-                      // Додайте логіку для іншої дії
+                    onTap: () async {
+                      final Uri emailUri = Uri(
+                        scheme: 'mailto',
+                        path: 'stepanukdima524@gmail.com', // Вкажіть email
+                        queryParameters: {
+                          'Зворотній зв\'язок': '',
+                        },
+                      );
+                      if (await canLaunchUrl(emailUri)) {
+                        await launchUrl(emailUri);
+                      } else {
+                        // Можна обробити ситуацію, якщо не вдалося відкрити поштовий клієнт
+                        print('Не вдалося запустити поштовий клієнт');
+                      }
                     },
                     child: Container(
                       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
@@ -310,8 +330,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   GestureDetector(
                     onTap: () {
-                      // Додайте логіку для іншої дії
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            title: Text(
+                              "Вийти з застосунку",
+                              style: AppTextStyles.h3.copyWith(
+                                  fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            content: const Text(
+                              "Ви впевнені, що бажаєте вийти?",
+                              style: AppTextStyles.h2,
+                            ),
+                            actionsPadding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text(
+                                  "Залишитись",
+                                  style: AppTextStyles.h2,
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Закриває діалог
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => LoginPage()), // Перехід до екрану входу
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.fulvous, // Колір кнопки "Вийти"
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Вийти",
+                                  style: AppTextStyles.h2.copyWith(
+                                    color: Theme.of(context).brightness == Brightness.light
+                                        ? AppColors.white
+                                        : AppColors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
+
                     child: Container(
                       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
                       // decoration: BoxDecoration(
