@@ -12,6 +12,7 @@ class User {
   late int? trainerId;
   late int? gymId;
   late int? membershipId;
+  late double? weight;
 
   User({
     required this.id,
@@ -34,5 +35,6 @@ class User {
     this.trainerId,
     this.gymId,
     this.membershipId,
+    this.weight,
   });
 }

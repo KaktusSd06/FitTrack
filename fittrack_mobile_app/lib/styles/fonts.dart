@@ -17,7 +17,7 @@ class AppTextStyles {
 
   static const TextStyle h2 = const TextStyle(
     fontFamily: 'NotoSans',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: FontWeight.w400,
   );
 

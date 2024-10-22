@@ -15,6 +15,7 @@ class UserService {
       phoneNumber: '123-456-7890',
       height: 180,
       dateOfBirth: DateTime(1990, 1, 1),
+      weight: 73.5,
     );
 
     return user;
