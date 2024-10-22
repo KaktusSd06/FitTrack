@@ -1,0 +1,29 @@
+.button {
+  width: 100%;
+  position: relative;
+  border-radius: 4px;
+  background-color: #e48100;
+  height: 50px;
+  overflow: hidden;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+  font-family: var(--font-noto-sans), sans-serif;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #d07200;
+}
+
+.button:active {
+  background-color: #c06200;
+}
+
+/* .button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(228, 129, 0, 0.3); 
+  } */
