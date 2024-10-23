@@ -17,9 +17,9 @@ services:
     image: postgres:16
     container_name: fittrack.db
     environment:
-      - POSTGRES_DB=FitTrack
+      - POSTGRES_DB=fittrack_q5ml #FitTrack
       - POSTGRES_USER=admin_db
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_PASSWORD=cDG4Z4vwbJ4BCqmd3OayYtN0bjFTXuro   #password
     volumes:
       - ./.containers/product-db:/var/lib/postgesql/data
     ports:
