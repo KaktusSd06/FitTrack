@@ -4,7 +4,7 @@
     env: docker
     plan: free
     region: frankfurt  # You can set a region, e.g., 'oregon' or 'frankfurt'
-    dockerfilePath: ./Dockerfile  # Path to your Dockerfile for the API
+    dockerfilePath: FitTrack.API/Dockerfile  # Path to your Dockerfile for the API
     buildCommand: dotnet publish -c Release -o out  # Builds the .NET project
     startCommand: dotnet out/YourAppName.dll  # Start command to run the API
     autoDeploy: true
