@@ -23,7 +23,7 @@ builder.WebHost.ConfigureKestrel(options =>
 
 
 builder.Services.AddDbContext<FitTrackDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 
