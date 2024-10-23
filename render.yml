@@ -16,12 +16,13 @@
       - key: CONNECTIONSTRINGS__DEFAULTCONNECTION  # For appsettings.json
         fromDatabase: aspnet-postgres
     healthCheckPath: /
-    #region: frankfurt
+    
 
   - type: postgres
     name: aspnet-postgres
     plan: free
     version: 16
+    region: frankfurt
     # Optionally, set environment variables for PostgreSQL credentials
     # You can also let Render automatically set the DATABASE_URL
     envVars:
