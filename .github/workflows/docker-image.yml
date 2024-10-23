@@ -23,7 +23,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: gravelino  
-          password: AY@vQaLtz7qbFg8 
+          password: hehvoq-kUwpig-4zifbi 
 
       - name: Build Docker image
         run: |
