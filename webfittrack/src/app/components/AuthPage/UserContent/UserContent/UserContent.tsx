@@ -1,34 +1,27 @@
-import type { NextPage } from "next";
-import styles from "./UserContent.module.css";
-import Field from "../Field/Field";
-import Button from "../Button/Button";
+"use client";
 
-const UserContent: NextPage = () => {
+import type { NextPage, ReactNode } from "next";
+import styles from "./UserContent.module.css";
+import RegFields from "../RegFields/RegFields";
+
+type UserContentProps = {
+  children: ReactNode; // Додаємо тип для children
+};
+
+const UserContent: NextPage<UserContentProps> = ({ children }) => {
   return (
     <div className={styles.UserContainer}>
       <div className={styles.UserContent}>
-        <div className={styles.UserMain}>
-          <div className={styles.LogoContainer}>
-            <img className={styles.Logo}></img>
-            <span className={styles.LogoText}>FitTrack</span>
-          </div>
-          <div className={styles.FormFields}>
-            <div className={styles.Fields}>
-              <Field></Field>
-            </div>
-            <div className={styles.Buttons}>
-              <Button label="Увійти" />
-              <Button label="Увійти з Google" />
-            </div>
-          </div>
-          <div className={styles.TextAndLink}>
-            <span className={styles.text}>Забули пароль?</span>
-            <a className={styles.link}>Відновити</a>
-          </div>
+        <div className={styles.LogoContainer}>
+          <img className={styles.Logo} src="/Logo.svg"></img>
+          <span className={styles.LogoText}>FitTrack</span>
         </div>
-        <div className={styles.TextAndLink}>
-          <span className={styles.text}>Не маєте аккаунту?</span>
-          <a className={styles.link}>Зареєструвати</a>
+        <div
+          className={
+            children == RegFields ? styles.Container : styles.RegContainer
+          }
+        >
+          {children}
         </div>
       </div>
     </div>
