@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FitTrack.API.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+11d973dd2b33d1650ef06e9e890122747db30508")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3d818935f19c363d400dd02d69d16ddb00cd1885")]
 [assembly: System.Reflection.AssemblyProductAttribute("FitTrack.API.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FitTrack.API.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

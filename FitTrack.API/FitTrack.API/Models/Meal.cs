@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace FitTrack.API.Models;
 public class Meal
 {
-    public required int Id { get; set; }        
+    public int Id { get; set; }
+    [MaxLength(50)]
     public required string Name { get; set; }
     public required decimal Calories { get; set; } 
 

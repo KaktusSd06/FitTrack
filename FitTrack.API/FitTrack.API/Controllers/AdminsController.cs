@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FitTrack.API.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FitTrack.API.Controllers
 {
+    [Authorize(Roles = "Admin,Owner")]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminsController : ControllerBase
@@ -24,7 +27,7 @@ namespace FitTrack.API.Controllers
 
         // GET: api/Admins/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Admin>> GetAdmin(int id)
+        public async Task<ActionResult<Admin>> GetAdmin(string id)
         {
             var admin = await _context.Admins.FindAsync(id);
 
@@ -38,7 +41,7 @@ namespace FitTrack.API.Controllers
 
         // PUT: api/Admins/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAdmin(int id, Admin admin)
+        public async Task<IActionResult> PutAdmin(string id, Admin admin)
         {
             if (id != admin.Id)
             {
@@ -70,7 +73,7 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Admin>> PostAdmin(Admin admin)
         {
-            _context.Admins.Add(admin);
+            await _context.Admins.AddAsync(admin);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAdmin", new { id = admin.Id }, admin);
@@ -78,7 +81,7 @@ namespace FitTrack.API.Controllers
 
         // DELETE: api/Admins/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAdmin(int id)
+        public async Task<IActionResult> DeleteAdmin(string id)
         {
             var admin = await _context.Admins.FindAsync(id);
             if (admin == null)
@@ -92,7 +95,7 @@ namespace FitTrack.API.Controllers
             return NoContent();
         }
 
-        private bool AdminExists(int id)
+        private bool AdminExists(string id)
         {
             return _context.Admins.Any(e => e.Id == id);
         }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FitTrack.API.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace FitTrack.API
 {
-    public class FitTrackDbContext : DbContext
+    public class FitTrackDbContext : IdentityDbContext<Person>
     {
         public FitTrackDbContext(DbContextOptions<FitTrackDbContext> options) : base(options)
         {
@@ -41,33 +43,64 @@ namespace FitTrack.API
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Owner>().ToTable("Owners");
-            modelBuilder.Entity<Admin>().ToTable("Admins");
-            modelBuilder.Entity<Trainer>().ToTable("Trainers");
-            modelBuilder.Entity<User>().ToTable("Users");
+            //modelBuilder.Entity<Owner>().ToTable("Owners");
+            //modelBuilder.Entity<Admin>().ToTable("Admins");
+            //modelBuilder.Entity<Trainer>().ToTable("Trainers");
+            //modelBuilder.Entity<User>().ToTable("Users");
 
-            modelBuilder.Entity<IndividualTraining>().ToTable("IndividualTrainings");
-            modelBuilder.Entity<GroupTraining>().ToTable("GroupTrainings");
-            modelBuilder.Entity<GroupTrainingUser>().ToTable("GroupTrainingUsers");
-            modelBuilder.Entity<TrainingInProgram>().ToTable("TrainingsInProgram");
+            //modelBuilder.Entity<IndividualTraining>().ToTable("IndividualTrainings");
+            //modelBuilder.Entity<GroupTraining>().ToTable("GroupTrainings");
+            //modelBuilder.Entity<GroupTrainingUser>().ToTable("GroupTrainingUsers");
+            //modelBuilder.Entity<TrainingInProgram>().ToTable("TrainingsInProgram");
 
-            modelBuilder.Entity<TrainingProgram>().ToTable("TrainingPrograms");
+            //modelBuilder.Entity<TrainingProgram>().ToTable("TrainingPrograms");
 
-            modelBuilder.Entity<Exercise>().ToTable("Exercises");
-            modelBuilder.Entity<ExerciseInTraining>().ToTable("ExercisesInTraining");
-            modelBuilder.Entity<Set>().ToTable("Sets");
+            //modelBuilder.Entity<Exercise>().ToTable("Exercises");
+            //modelBuilder.Entity<ExerciseInTraining>().ToTable("ExercisesInTraining");
+            //modelBuilder.Entity<Set>().ToTable("Sets");
 
-            modelBuilder.Entity<Service>().ToTable("Services");
-            modelBuilder.Entity<Good>().ToTable("Goods");
-            modelBuilder.Entity<Purchase>().ToTable("Purchases");
+            //modelBuilder.Entity<Service>().ToTable("Services");
+            //modelBuilder.Entity<Good>().ToTable("Goods");
+            //modelBuilder.Entity<Purchase>().ToTable("Purchases");
 
-            modelBuilder.Entity<Meal>().ToTable("Meals");
-            modelBuilder.Entity<MealsPerDay>().ToTable("MealsPerDay");
+            //modelBuilder.Entity<Meal>().ToTable("Meals");
+            //modelBuilder.Entity<MealsPerDay>().ToTable("MealsPerDay");
 
-            modelBuilder.Entity<Membership>().ToTable("Memberships");
+            //modelBuilder.Entity<Membership>().ToTable("Memberships");
 
-            modelBuilder.Entity<Gym>().ToTable("Gyms");
+            //modelBuilder.Entity<Gym>().ToTable("Gyms");
 
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.PhoneNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<Admin>()
+                .HasIndex(a => a.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Admin>()
+                .HasIndex(a => a.PhoneNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<Trainer>()
+                .HasIndex(t => t.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Trainer>()
+                .HasIndex(t => t.PhoneNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<Owner>()
+                .HasIndex(o => o.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Owner>()
+                .HasIndex(o => o.PhoneNumber)
+                .IsUnique();
 
             //modelBuilder.Entity<User>()
             //    .HasOne(u => u.Gym)

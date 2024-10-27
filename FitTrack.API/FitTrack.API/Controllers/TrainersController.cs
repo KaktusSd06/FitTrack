@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FitTrack.API.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FitTrack.API.Controllers
 {
@@ -24,7 +25,7 @@ namespace FitTrack.API.Controllers
 
         // GET: api/Trainers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Trainer>> GetTrainer(int id)
+        public async Task<ActionResult<Trainer>> GetTrainer(string id)
         {
             var trainer = await _context.Trainers.FindAsync(id);
 
@@ -38,7 +39,7 @@ namespace FitTrack.API.Controllers
 
         // PUT: api/Trainers/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTrainer(int id, Trainer trainer)
+        public async Task<IActionResult> PutTrainer(string id, Trainer trainer)
         {
             if (id != trainer.Id)
             {
@@ -70,7 +71,7 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Trainer>> PostTrainer(Trainer trainer)
         {
-            _context.Trainers.Add(trainer);
+            await _context.Trainers.AddAsync(trainer);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTrainer", new { id = trainer.Id }, trainer);
@@ -78,7 +79,7 @@ namespace FitTrack.API.Controllers
 
         // DELETE: api/Trainers/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTrainer(int id)
+        public async Task<IActionResult> DeleteTrainer(string id)
         {
             var trainer = await _context.Trainers.FindAsync(id);
             if (trainer == null)
@@ -92,7 +93,7 @@ namespace FitTrack.API.Controllers
             return NoContent();
         }
 
-        private bool TrainerExists(int id)
+        private bool TrainerExists(string id)
         {
             return _context.Trainers.Any(e => e.Id == id);
         }

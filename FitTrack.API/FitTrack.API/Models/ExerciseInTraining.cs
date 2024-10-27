@@ -1,7 +1,7 @@
 namespace FitTrack.API.Models;
 public class ExerciseInTraining
 {
-    public required int Id { get; set; }          
+    public int Id { get; set; }          
     public required int TrainingId { get; set; }  
     public required int ExerciseId { get; set; }  
     public required Exercise Exercise { get; set; }

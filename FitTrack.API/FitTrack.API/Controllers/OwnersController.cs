@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FitTrack.API.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FitTrack.API.Controllers
 {
@@ -25,7 +26,7 @@ namespace FitTrack.API.Controllers
 
         // GET: api/Owners/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Owner>> GetOwner(int id)
+        public async Task<ActionResult<Owner>> GetOwner(string id)
         {
             var owner = await _context.Owners.FindAsync(id);
 
@@ -39,7 +40,7 @@ namespace FitTrack.API.Controllers
 
         // PUT: api/Owners/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOwner(int id, Owner owner)
+        public async Task<IActionResult> PutOwner(string id, Owner owner)
         {
             if (id != owner.Id)
             {
@@ -71,7 +72,7 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Owner>> PostOwner(Owner owner)
         {
-            _context.Owners.Add(owner);
+            await _context.Owners.AddAsync(owner);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetOwner", new { id = owner.Id }, owner);
@@ -79,7 +80,7 @@ namespace FitTrack.API.Controllers
 
         // DELETE: api/Owners/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOwner(int id)
+        public async Task<IActionResult> DeleteOwner(string id)
         {
             var owner = await _context.Owners.FindAsync(id);
             if (owner == null)
@@ -93,7 +94,7 @@ namespace FitTrack.API.Controllers
             return NoContent();
         }
 
-        private bool OwnerExists(int id)
+        private bool OwnerExists(string id)
         {
             return _context.Owners.Any(e => e.Id == id);
         }

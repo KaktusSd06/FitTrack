@@ -1,9 +1,9 @@
 namespace FitTrack.API.Models;
 public class Purchase
 {
-    public required int Id { get; set; } 
+    public int Id { get; set; } 
     public required int ItemId { get; set; }      
-    public required int UserId { get; set; }     
+    public required string UserId { get; set; }     
     public required DateTime Date { get; set; }  
     public required int Quantity { get; set; }
 

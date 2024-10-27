@@ -4,7 +4,7 @@ public class User : Person
 {
     public int? Height { get; set; }
     public DateTime? DateOfBirth { get; set; }
-    public int? TrainerId { get; set; }
+    public string? TrainerId { get; set; }
     public int? GymId { get; set; }
 
     public Membership? Membership { get; set; }

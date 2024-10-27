@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 public class Membership
 {
-    public required int Id { get; set; }
+    public int Id { get; set; }
     [ForeignKey("User")]
-    public required int UserId { get; set; }                
+    public required string UserId { get; set; }                
     public required int GymId { get; set; }                 
     public required int SessionsRemind { get; set; }       
     public required DateTime ExpirationDate { get; set; }   
