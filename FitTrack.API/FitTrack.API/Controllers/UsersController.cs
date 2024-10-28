@@ -160,7 +160,7 @@ namespace FitTrack.API.Controllers
                 Email = register.Email,
                 LastName = register.LastName,
                 FirstName = register.FirstName,
-                DateOfBirth = register.BirthDate.ToDateTime(new TimeOnly()),
+                DateOfBirth = DateTime.SpecifyKind(register.BirthDate.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),//register.BirthDate.ToDateTime(new TimeOnly()),
                 MiddleName = register.MiddleName,
                 PhoneNumber = register.PhoneNumber,
                 UserName = register.Email
