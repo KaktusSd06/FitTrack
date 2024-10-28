@@ -163,6 +163,7 @@ namespace FitTrack.API.Controllers
                 DateOfBirth = register.BirthDate.ToDateTime(new TimeOnly()),
                 MiddleName = register.MiddleName,
                 PhoneNumber = register.PhoneNumber,
+                UserName = register.Email
             };
             
             var result = await _userManager.CreateAsync(user, register.Password);
