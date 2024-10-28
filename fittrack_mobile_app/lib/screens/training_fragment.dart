@@ -121,7 +121,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

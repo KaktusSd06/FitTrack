@@ -7,8 +7,8 @@ ThemeData lightMode = ThemeData(
   colorScheme: const ColorScheme.light(
     primary: AppColors.fulvous,
     onPrimary: AppColors.white,
-    secondary: AppColors.isabelline,
-    // onSecondary: AppColors.white,
+    secondary: AppColors.white,
+    onSecondary: AppColors.white,
     surface: AppColors.white,
     onSurface: AppColors.jet,
     primaryContainer: AppColors.black,

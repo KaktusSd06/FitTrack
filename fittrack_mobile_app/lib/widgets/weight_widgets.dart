@@ -38,7 +38,9 @@ class WeightWidgets extends StatelessWidget {
                     Text(
                       " 73.5",
                       style: AppTextStyles.h1.copyWith(
-                        color: AppColors.fulvous,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? AppColors.black
+                            : AppColors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

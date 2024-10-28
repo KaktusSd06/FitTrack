@@ -1,12 +1,16 @@
+import 'package:fittrack_mobile_app/providers/AuthProvider.dart';
+import 'package:fittrack_mobile_app/screens/logInPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fittrack_mobile_app/theme/theme_provider.dart';
 import 'package:fittrack_mobile_app/screens/homepage.dart';
-
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()), // Додаємо AuthProvider
+      ],
       child: const MyApp(),
     ),
   );
@@ -17,12 +21,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
+
+    return Consumer2<ThemeProvider, AuthProvider>( // Використовуємо Consumer2 для двох провайдерів
+      builder: (context, themeProvider, authProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: const HomePage(),
           theme: themeProvider.themeData,
+          home:  const HomePage(), // Якщо авторизований, показуємо HomePage, інакше LoginScreen
         );
       },
     );

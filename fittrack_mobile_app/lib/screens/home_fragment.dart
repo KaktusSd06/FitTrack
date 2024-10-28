@@ -1,3 +1,4 @@
+import 'package:fittrack_mobile_app/screens/group_training.dart';
 import 'package:fittrack_mobile_app/styles/colors.dart';
 import 'package:fittrack_mobile_app/styles/fonts.dart';
 import 'package:fittrack_mobile_app/widgets/kcal_widget.dart';
@@ -15,7 +16,7 @@ class HomeScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min, // Додаємо, щоб уникнути розтягування
           children: [
@@ -47,19 +48,26 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 )),
 
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: AppColors.fulvous,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => GroupTraining()),
+                    );
+                  },                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.fulvous,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
 
-                  child:
-                  Text("Більше", style: AppTextStyles.h3.copyWith(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? AppColors.white
-                        : AppColors.jet,
-                  )),
+                    child:
+                    Text("Більше", style: AppTextStyles.h3.copyWith(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AppColors.white
+                          : AppColors.jet,
+                    )),
+                  ),
                 )
               ],
             ),

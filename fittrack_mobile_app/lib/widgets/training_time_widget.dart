@@ -19,15 +19,7 @@ class TrainingTimeWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            padding: const EdgeInsets.only(right: 24),
-            child: Icon(
-              CupertinoIcons.time,
-              color: AppColors.fulvous,
-              size: 40.0,
-            ),
-          ),
-
+          IconToggle(), // Виклик компоненту, який обробляє стан іконки
 
           SizedBox(height: 24),
 
@@ -38,7 +30,9 @@ class TrainingTimeWidget extends StatelessWidget {
                 Text(
                   "05:13:04",
                   style: AppTextStyles.h1.copyWith(
-                    color: AppColors.fulvous,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? AppColors.black
+                        : AppColors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -59,6 +53,37 @@ class TrainingTimeWidget extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// Компонент, що відповідає за зміну іконки
+class IconToggle extends StatefulWidget {
+  @override
+  _IconToggleState createState() => _IconToggleState();
+}
+
+class _IconToggleState extends State<IconToggle> {
+  bool _isPlaying = false;
+
+  void _toggleIcon() {
+    setState(() {
+      _isPlaying = !_isPlaying;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _toggleIcon,
+      child: Container(
+        padding: const EdgeInsets.only(right: 24),
+        child: Icon(
+          _isPlaying ? CupertinoIcons.pause_circle : CupertinoIcons.play_circle, // Зміна іконки
+          color: AppColors.fulvous,
+          size: 40.0,
+        ),
       ),
     );
   }

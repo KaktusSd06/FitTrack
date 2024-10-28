@@ -78,15 +78,6 @@ class ProductWidgets extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // Icon(
-                  //   CupertinoIcons.cart,
-                  //   color: Theme.of(context).brightness == Brightness.light
-                  //       ? AppColors.white
-                  //       : AppColors.white,
-                  //   size: 16.0,
-                  // ),
-                  //
-                  // SizedBox(width: 4),
 
                   Text("Придбати",
                     style: AppTextStyles.h4.copyWith(

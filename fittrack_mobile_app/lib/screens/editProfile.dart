@@ -33,7 +33,7 @@ class _EditProfileState extends State<EditProfile> {
         _firstNameController.text = user.firstName!;
         _middleNameController.text = user.middleName!;
         _emailController.text = user.email;
-        _phoneController.text = user.phoneNumber;
+        _phoneController.text = user.phoneNumber!;
         _heightController.text = user.height.toString();
       });
     }
@@ -43,24 +43,29 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Редагувати профіль",
-          style: AppTextStyles.h1_f,
+          style: AppTextStyles.h1.copyWith(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? AppColors.gray
+                  : AppColors.white
+          ),
         ),
         centerTitle: false,
         leading: Padding(
           padding: const EdgeInsets.only(left: 16.0),
           child: IconButton(
-            icon: const Icon(
+            icon: Icon(
               CupertinoIcons.back,
-              color: AppColors.fulvous,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? AppColors.gray
+                    : AppColors.white,
             ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
       ),
       body: SingleChildScrollView(
