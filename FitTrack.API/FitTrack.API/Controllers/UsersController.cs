@@ -174,7 +174,7 @@ namespace FitTrack.API.Controllers
             }
             
             await _userManager.AddToRoleAsync(user, "User");
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("GetUserById", new { id = user.Id }, user);
         }
 
         // DELETE: api/Users/5
