@@ -9,74 +9,170 @@ namespace FitTrack.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly FitTrackDbContext _context;
         private readonly UserManager<Person> _userManager;
 
-        public UsersController(FitTrackDbContext context, UserManager<Person> userManager)
+        public UsersController(UserManager<Person> userManager)
         {
-            _context = context;
             _userManager = userManager;
         }
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
             var users = await _userManager.GetUsersInRoleAsync("User");
 
-            return users.ToList();
+            return Ok(users);
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(string id)
+        [HttpGet("get-by-id/{id}")]
+        public async Task<IActionResult> GetUserById(string id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
+            
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        [HttpGet("get-by-email/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(user);
+        }
+
+        // PUT: api/Users/5
+        [HttpPut("update-basic-info{id}")]
+        public async Task<IActionResult> UpdateUserBasicInfo(string id, [FromBody] Update update)
+        {
+            var user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return user;
+            if (!await _userManager.IsInRoleAsync(user, "User"))
+            {
+                return BadRequest("User not in role User");
+            }
+            
+            user.FirstName = update.FirstName;
+            user.LastName = update.LastName;
+            user.MiddleName = update.MiddleName;
+            (user as User).Height = update.Height;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+                
+            return NoContent();
         }
 
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(string id, User user)
+        [HttpPut("update-email{id}")]
+        public async Task<IActionResult> UpdateUserEmail(string id, string email)
         {
-            if (id != user.Id)
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
             {
-                return BadRequest();
+                return NotFound();
+            }
+            
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, email);
+            
+            var result = await _userManager.ChangeEmailAsync(user, email, token);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+            
+            return NoContent();
+        }
+        
+        [HttpPut("update-password{id}")]
+        public async Task<IActionResult> UpdateUserPassword(string id, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            
+            var removePasswordResult = await _userManager.RemovePasswordAsync(user);
+            if (!removePasswordResult.Succeeded)
+            {
+                return BadRequest(removePasswordResult.Errors);
             }
 
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
+            var addPasswordResult = await _userManager.AddPasswordAsync(user, newPassword);
+            if (!addPasswordResult.Succeeded)
             {
-                await _context.SaveChangesAsync();
+                return BadRequest(addPasswordResult.Errors);
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            
+            return NoContent();
+        }
+        
+        [HttpPut("update-phone{id}")]
+        public async Task<IActionResult> UpdateUserPhoneNumber(string id, string phoneNumber)
+        {
+            var user = await _userManager.FindByIdAsync(id);
 
+            if (user == null)
+            {
+                return NotFound();
+            }
+            
+            var token = await _userManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumber);
+            
+            var result = await _userManager.ChangePhoneNumberAsync(user, phoneNumber, token);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+            
             return NoContent();
         }
         // POST: api/Users
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<IActionResult> PostUser([FromBody] Register register)
         {
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            var user = new User
+            {
+                Email = register.Email,
+                LastName = register.LastName,
+                FirstName = register.FirstName,
+                DateOfBirth = register.BirthDate.ToDateTime(new TimeOnly()),
+                MiddleName = register.MiddleName,
+                PhoneNumber = register.PhoneNumber,
+            };
+            
+            var result = await _userManager.CreateAsync(user, register.Password);
 
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+            
+            await _userManager.AddToRoleAsync(user, "User");
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
 
@@ -84,21 +180,20 @@ namespace FitTrack.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            var result = await _userManager.DeleteAsync(user);
 
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+            
             return NoContent();
-        }
-
-        private bool UserExists(string id)
-        {
-            return _context.Users.Any(e => e.Id == id);
         }
     }
 }
