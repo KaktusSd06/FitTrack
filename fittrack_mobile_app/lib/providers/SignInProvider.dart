@@ -43,52 +43,52 @@ class Signinprovider with ChangeNotifier {
   void removeUserFromProvider() {
   }
 
-  void updateUser({
-    String? email,
-    String? password,
-    String? firstName,
-    String? lastName,
-    String? middleName,
-    String? phoneNumber,
-    int? height,
-    DateTime? dateOfBirth,
-    int? trainerId,
-    int? gymId,
-    Membership? membership,
-    Gym? gym,
-    Trainer? trainer,
-    List<GroupTrainingUser>? groupTrainingUsers,
-    List<IndividualTraining>? individualTrainings,
-    List<Purchase>? purchases,
-    List<MealsPerDay>? mealsPerDay,
-    List<WeightsInfo>? weights,
-    List<StepsInfo>? steps,
-  }) {
-    if (user != null) {
-      user = User(
-        id: user.id,
-        email: email ?? user!.email,
-        password: password ?? user!.password,
-        firstName: firstName ?? user!.firstName,
-        lastName: lastName ?? user!.lastName,
-        middleName: middleName ?? user!.middleName,
-        createdAt: user!.createdAt,
-        phoneNumber: phoneNumber ?? user!.phoneNumber!,
-        height: height ?? user!.height,
-        dateOfBirth: dateOfBirth ?? user!.dateOfBirth,
-        trainerId: trainerId ?? user!.trainerId,
-        gymId: gymId ?? user!.gymId,
-        membership: membership ?? user!.membership,
-        gym: gym ?? user!.gym,
-        trainer: trainer ?? user!.trainer,
-        groupTrainingUsers: groupTrainingUsers ?? user!.groupTrainingUsers,
-        individualTrainings: individualTrainings ?? user!.individualTrainings,
-        purchases: purchases ?? user!.purchases,
-        mealsPerDay: mealsPerDay ?? user!.mealsPerDay,
-        weights: weights ?? user!.weights,
-        steps: steps ?? user!.steps,
-      );
-      notifyListeners(); // Оповіщення про зміну
-    }
-  }
+  // void updateUser({
+  //   String? email,
+  //   String? password,
+  //   String? firstName,
+  //   String? lastName,
+  //   String? middleName,
+  //   String? phoneNumber,
+  //   int? height,
+  //   DateTime? dateOfBirth,
+  //   String? trainerId,
+  //   int? gymId,
+  //   Membership? membership,
+  //   Gym? gym,
+  //   Trainer? trainer,
+  //   List<GroupTrainingUser>? groupTrainingUsers,
+  //   List<IndividualTraining>? individualTrainings,
+  //   List<Purchase>? purchases,
+  //   List<MealsPerDay>? mealsPerDay,
+  //   List<WeightsInfo>? weights,
+  //   List<StepsInfo>? steps,
+  // }) {
+  //   if (user != null) {
+  //     user = User(
+  //       id: user.id,
+  //       email: email ?? user!.email,
+  //       password: password ?? user!.password,
+  //       firstName: firstName ?? user!.firstName,
+  //       lastName: lastName ?? user!.lastName,
+  //       middleName: middleName ?? user!.middleName,
+  //       createdAt: user!.createdAt,
+  //       phoneNumber: phoneNumber ?? user!.phoneNumber!,
+  //       height: height ?? user!.height,
+  //       dateOfBirth: dateOfBirth ?? user!.dateOfBirth,
+  //       gymId: gymId ?? user!.gymId,
+  //       trainerId: trainerId ?? user!.trainerId,
+  //       membership: membership ?? user!.membership,
+  //       gym: gym ?? user!.gym,
+  //       trainer: trainer ?? user!.trainer,
+  //       groupTrainingUsers: groupTrainingUsers ?? user!.groupTrainingUsers,
+  //       individualTrainings: individualTrainings ?? user!.individualTrainings,
+  //       purchases: purchases ?? user!.purchases,
+  //       mealsPerDay: mealsPerDay ?? user!.mealsPerDay,
+  //       weights: weights ?? user!.weights,
+  //       steps: steps ?? user!.steps,
+  //     );
+  //     notifyListeners(); // Оповіщення про зміну
+  //   }
+  // }
 }

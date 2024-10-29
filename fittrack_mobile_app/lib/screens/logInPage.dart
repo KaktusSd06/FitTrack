@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fittrack_mobile_app/widgets/button_with_text.dart';
 import 'package:fittrack_mobile_app/widgets/button_with_text_icon.dart';
 import 'package:provider/provider.dart';
+import '../models/user.dart';
 import '../providers/AuthProvider.dart';
 import '../services/user_service.dart';
 import '../styles/colors.dart';
@@ -79,6 +80,31 @@ class _LoginPageState extends State<LoginPage> {
     return true;
   }
 
+  Future<void> handleLogin(BuildContext context) async {
+    if (_validateInputs(context)) {
+      setState(() {
+        isLoading = true;
+      });
+
+      final loginResult = await UserService.loginUser(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (loginResult['status'] == 200) {
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        authProvider.loginWithUserData(User.fromJson(loginResult['user']));
+        navigateToHomePage(context);
+      } else {
+        showErrorDialog(context, loginResult['message']);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -117,33 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                             ? Center(child: CircularProgressIndicator())
                             : ButtonWithText(
                           text: "Увійти",
-                          onPressed: () async {
-                            if (_validateInputs(context)) {
-                              setState(() {
-                                isLoading = true;
-                              });
-
-                              int loginResult = await UserService.loginUser(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              );
-
-                              setState(() {
-                                isLoading = false;
-                              });
-
-                              if (loginResult == 200) {
-                                authProvider.login();
-                                navigateToHomePage(context);
-                              } else if (loginResult == 404) {
-                                showErrorDialog(context, "Користувач не знайдений");
-                              } else if (loginResult == 400) {
-                                showErrorDialog(context, "Введіть пошту в коректному форматі");
-                              } else {
-                                showErrorDialog(context, "Помилка під час входу");
-                              }
-                            }
-                          },
+                          onPressed: () => handleLogin(context),
                         ),
                         const SizedBox(height: 8),
                         ButtonWithTextIcon(

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import 'package:http/http.dart' as http;
+import '../providers/AuthProvider.dart';
 import 'ApiService.dart';
 
 class UserService {
@@ -18,8 +20,7 @@ class UserService {
     }
   }
 
-  static Future<int> loginUser({required String email, required String password}) async{
-
+  static Future<Map<String, dynamic>> loginUser({required String email, required String password}) async {
     final payload = {
       'email': email,
       'password': password,
@@ -31,16 +32,46 @@ class UserService {
         'Content-Type': 'application/json',
       },
       body: json.encode(payload),
-    );
+    ).timeout(const Duration(seconds: 60));
+
     if (response.statusCode == 200) {
-      return 200;
-    }
-    else {
-      print('Failed to login user. Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      return response.statusCode;
+      final emailEncoded = Uri.encodeComponent(email);
+      final userResponse = await http.get(
+        Uri.parse('https://fittrackapidev.onrender.com/api/Users/get-by-email/$emailEncoded'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ).timeout(const Duration(seconds: 60));
+
+      print('Status code for get-by-email request: ${userResponse.statusCode}');
+      print('Response body for get-by-email request: ${userResponse.body}');
+
+      if (userResponse.statusCode == 200) {
+        if (userResponse.body.isNotEmpty) {
+          final responseData = json.decode(userResponse.body);
+          print('Отриманий JSON: $responseData');
+
+          if (responseData.containsKey('id') && responseData.containsKey('email') && responseData.containsKey('firstName') && responseData.containsKey('lastName')) {
+            return {'status': 200, 'user': responseData};
+          } else {
+            throw Exception('Missing required user fields in JSON');
+          }
+        } else {
+          return {'status': 500, 'message': 'Порожня відповідь від сервера'};
+        }
+      } else {
+        return {'status': userResponse.statusCode, 'message': 'Помилка під час входу'};
+      }
+    } else if (response.statusCode == 404) {
+      return {'status': 404, 'message': 'Користувач не знайдений'};
+    } else if (response.statusCode == 400) {
+      return {'status': 400, 'message': 'Введіть пошту в коректному форматі'};
+    } else {
+      return {'status': response.statusCode, 'message': 'Помилка під час входу'};
     }
   }
+
+
 
   static Future<int> registerUser({
     required String email,
@@ -72,7 +103,7 @@ class UserService {
         'Content-Type': 'application/json',
       },
       body: json.encode(payload),
-    );
+    ).timeout(const Duration(seconds: 60));
 
     if (response.statusCode == 200) {
       return 200;

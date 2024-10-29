@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'person.dart';
 import 'membership.dart';
 import 'gym.dart';
@@ -12,7 +13,7 @@ import 'steps_info.dart';
 class User extends Person {
   final int? height;
   final DateTime? dateOfBirth;
-  final int? trainerId;
+  final String? trainerId; // Changed to String
   final int? gymId;
 
   final Membership? membership;
@@ -21,17 +22,15 @@ class User extends Person {
 
   final List<GroupTrainingUser>? groupTrainingUsers;
   final List<IndividualTraining>? individualTrainings;
-
   final List<Purchase>? purchases;
   final List<MealsPerDay>? mealsPerDay;
-
   final List<WeightsInfo>? weights;
   final List<StepsInfo>? steps;
 
   User({
     required String id,
     required String email,
-    required String password,
+    required String password, // Password can be optional
     required String firstName,
     required String lastName,
     String? middleName,
@@ -39,7 +38,7 @@ class User extends Person {
     String? phoneNumber,
     this.height,
     this.dateOfBirth,
-    this.trainerId,
+    this.trainerId, // Changed to String
     this.gymId,
     this.membership,
     this.gym,
@@ -53,7 +52,7 @@ class User extends Person {
   }) : super(
     id: id,
     email: email,
-    password: password,
+    password: password, // You may want to handle the password differently
     firstName: firstName,
     lastName: lastName,
     middleName: middleName,
@@ -62,18 +61,22 @@ class User extends Person {
   );
 
   factory User.fromJson(Map<String, dynamic> json) {
+    if (json['id'] == null || json['email'] == null || json['firstName'] == null || json['lastName'] == null) {
+      throw Exception('Missing required user fields in JSON.');
+    }
+
     return User(
       id: json['id'],
       email: json['email'],
-      password: json['password'],
+      password: json.containsKey('password') ? json['password'] : '', // Handle password optionally
       firstName: json['firstName'],
       lastName: json['lastName'],
-      middleName: json['middleName'],
+      middleName: json['middleName'] ?? '',
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      phoneNumber: json['phoneNumber'],
+      phoneNumber: json['phoneNumber'] ?? '',
       height: json['height'],
       dateOfBirth: json['dateOfBirth'] != null ? DateTime.parse(json['dateOfBirth']) : null,
-      trainerId: json['trainerId'],
+      trainerId: json['trainerId'], // String trainerId
       gymId: json['gymId'],
       membership: json['membership'] != null ? Membership.fromJson(json['membership']) : null,
       gym: json['gym'] != null ? Gym.fromJson(json['gym']) : null,
@@ -124,7 +127,7 @@ class User extends Person {
       'phoneNumber': phoneNumber,
       'height': height,
       'dateOfBirth': dateOfBirth?.toIso8601String(),
-      'trainerId': trainerId,
+      'trainerId': trainerId, // String trainerId
       'gymId': gymId,
       'membership': membership?.toJson(),
       'gym': gym?.toJson(),

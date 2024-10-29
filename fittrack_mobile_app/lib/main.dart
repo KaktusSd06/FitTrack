@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fittrack_mobile_app/theme/theme_provider.dart';
 import 'package:fittrack_mobile_app/screens/homepage.dart';
+
 void main() {
   runApp(
     MultiProvider(
@@ -21,13 +22,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer2<ThemeProvider, AuthProvider>( // Використовуємо Consumer2 для двох провайдерів
       builder: (context, themeProvider, authProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: themeProvider.themeData,
-          home:  const HomePage(), // Якщо авторизований, показуємо HomePage, інакше LoginScreen
+          home: Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              return authProvider.isAuthenticated ? const HomePage() : LoginPage();
+            },
+          ),
         );
       },
     );
