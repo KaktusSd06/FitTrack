@@ -53,7 +53,7 @@ namespace FitTrack.API.Controllers
         }
 
         // PUT: api/Users/5
-        [HttpPut("update-basic-info{id}")]
+        [HttpPut("update-basic-info/{id}")]
         public async Task<IActionResult> UpdateUserBasicInfo(string id, [FromBody] Update update)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -83,7 +83,7 @@ namespace FitTrack.API.Controllers
             return NoContent();
         }
 
-        [HttpPut("update-email{id}")]
+        [HttpPut("update-email/{id}")]
         public async Task<IActionResult> UpdateUserEmail(string id,[FromBody]  string email)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -107,7 +107,7 @@ namespace FitTrack.API.Controllers
             return NoContent();
         }
         
-        [HttpPut("update-password{id}")]
+        [HttpPut("update-password/{id}")]
         public async Task<IActionResult> UpdateUserPassword(string id,[FromBody]  string newPassword)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -132,7 +132,7 @@ namespace FitTrack.API.Controllers
             return NoContent();
         }
         
-        [HttpPut("update-phone{id}")]
+        [HttpPut("update-phone/{id}")]
         public async Task<IActionResult> UpdateUserPhoneNumber(string id,[FromBody] string phoneNumber)
         {
             var user = await _userManager.FindByIdAsync(id);
