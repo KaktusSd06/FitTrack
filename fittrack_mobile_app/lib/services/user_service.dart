@@ -126,6 +126,100 @@ class UserService {
     }
   }
 
+  static Future<bool> updateBasicIngo(String id, String firstName, String lastName, String middleName, int height) async {
+    final payload = {
+      'firstName': firstName,
+      'lastName': lastName,
+      'middleName': middleName.isNotEmpty ? middleName : null,
+      'height': height,
+    };
+
+    final response = await http.put(
+      Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-basic-info$id'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(payload),
+    ).timeout(const Duration(seconds: 60));
+
+    if (response.statusCode == 204) {
+      return true;
+    }
+    else {
+      print('Failed to register user. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return false;
+    }
+  }
+
+  static Future<bool> updateEmail(String id, String email) async {
+    final payload = {
+      email,
+    };
+
+    final response = await http.put(
+      Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-email/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(email),
+    ).timeout(const Duration(seconds: 60));
+
+    if (response.statusCode == 204) {
+      return true;
+    }
+    else {
+      print('Failed to register user. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return false;
+    }
+  }
+
+  static Future<bool> updatePhone(String id, String phoneNumber) async {
+    final payload = {
+      phoneNumber,
+    };
+
+    final response = await http.put(
+      Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-phone/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(phoneNumber),
+    ).timeout(const Duration(seconds: 60));
+
+    if (response.statusCode == 204) {
+      return true;
+    }
+    else {
+      print('Failed to register user. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return false;
+    }
+  }
+
+  static Future<bool> updatePassword(String id, String password) async {
+    final payload = {
+      password,
+    };
+
+    final response = await http.put(
+      Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-password/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(password),
+    ).timeout(const Duration(seconds: 60));
+
+    if (response.statusCode == 204) {
+      return true;
+    }
+    else {
+      print('Failed to register user. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return false;
+    }
+  }
 
   static Future<int> registerUser({
     required String email,
@@ -138,7 +232,6 @@ class UserService {
     required String phoneNumber,
   }) async {
     final formattedDate = DateFormat('yyyy-MM-dd').format(dateOfBirth.toUtc());
-
 
     final payload = {
       'email': email,
