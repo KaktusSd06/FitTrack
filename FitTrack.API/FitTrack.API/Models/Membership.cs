@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 public class Membership
 {
     public int Id { get; set; }
+    public required string MembershipName { get; set; }
     [ForeignKey("User")]
     public required string UserId { get; set; }                
     public required int GymId { get; set; }                 
