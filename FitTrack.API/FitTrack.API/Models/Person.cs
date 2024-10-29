@@ -12,6 +12,4 @@ public class Person : IdentityUser
     [MaxLength(30)]
     public string? MiddleName { get; set; }
     public DateTime? CreatedAt { get; set; }
-    [MaxLength(10)]
-    public new string? PhoneNumber { get; set; }
 }
