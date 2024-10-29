@@ -20,9 +20,65 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Future<User?> _fetchUser() async {
-    return UserService().getUser();
+
+  void _deleteAccount() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    try {
+      final result = await UserService.deleteUser(authProvider.user!.id!);
+      authProvider.logout();
+      if(result) {
+        _showSnackBar("Акаунт успішно видалено.");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      }
+      else{
+        _showSnackBar("Сталася помилка при видаленні акаунту");
+      }
+    } catch (e) {
+      _showSnackBar("Сталася помилка при видаленні акаунту: $e");
+    }
   }
+
+  Future<User?> _fetchUser() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    // Перевірка на null для authProvider.user
+    if (authProvider.user != null) {
+      String email = authProvider.user!.email!;
+
+      try {
+        final userData = await UserService.getUserByEmail(email); // Викликаємо метод отримання користувача за електронною поштою
+        if (userData != null) {
+          return User.fromJson(userData); // Перетворюємо JSON на об'єкт User
+        } else {
+          _showSnackBar("Користувача не знайдено за цією електронною поштою.");
+          return null; // Якщо користувача не знайдено, повертаємо null
+        }
+      } catch (e) {
+        _showSnackBar("Сталася помилка при отриманні даних користувача: $e");
+        return null; // У випадку помилки повертаємо null
+      }
+    } else {
+      // Обробка ситуації, коли користувач не аутентифікований
+      _showSnackBar("Користувач не аутентифікований.");
+      return null;
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +134,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               text: "Зв'язатись з нами",
               onTap: () => _sendEmail(),
             ),
-
             const SizedBox(height: 8),
             _buildActionBlock(
               icon: CupertinoIcons.power,
@@ -144,7 +199,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
             ),
-            //_buildLogoutBlock(),
+
+            const SizedBox(height: 8),
+            _buildActionBlock(
+              icon: CupertinoIcons.trash,
+              text: "Видалити профіль",
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      title: Text(
+                        "Видалити профіль",
+                        style: AppTextStyles.h3.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      content: const Text(
+                        "Ви впевнені, що бажаєте видалити профіль?",
+                        style: AppTextStyles.h2,
+                      ),
+                      actionsPadding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Залишити",
+                            style: AppTextStyles.h2,
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                            _deleteAccount(); // Proceed to delete the account
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.fulvous, // Колір кнопки "Вийти"
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: Text(
+                            "Видалити",
+                            style: AppTextStyles.h2.copyWith(
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? AppColors.white
+                                  : AppColors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -205,11 +320,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ? AppColors.gray
                       : AppColors.isabelline))
                 else ...[
-                  Text("Ваш абонемент: ${user.membership}", style: AppTextStyles.h3.copyWith(color: Theme.of(context).brightness == Brightness.light
+                  Text("Ваш абонемент: ${user.membership?.id.toString() ?? 'Невідомо'}", style: AppTextStyles.h3.copyWith(color: Theme.of(context).brightness == Brightness.light
                       ? AppColors.gray
                       : AppColors.isabelline)),
                   const SizedBox(height: 4),
-                  Text("Активний до: ${user.membership}", style: AppTextStyles.h3.copyWith(color: Theme.of(context).brightness == Brightness.light
+                  Text("Активний до: ${user.membership?.expirationDate ?? 'Невідомо'}", style: AppTextStyles.h3.copyWith(color: Theme.of(context).brightness == Brightness.light
                       ? AppColors.gray
                       : AppColors.isabelline)),
                 ],
@@ -255,5 +370,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('Не вдалося запустити поштовий клієнт');
     }
   }
-
 }

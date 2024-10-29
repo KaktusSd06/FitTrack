@@ -72,6 +72,60 @@ class UserService {
   }
 
 
+  static Future<Map<String, dynamic>?> getUserByEmail(String email) async {
+    final emailEncoded = Uri.encodeComponent(email);
+    final userResponse = await http.get(
+      Uri.parse(
+          'https://fittrackapidev.onrender.com/api/Users/get-by-email/$emailEncoded'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    ).timeout(const Duration(seconds: 60));
+
+    print('Status code for get-by-email request: ${userResponse.statusCode}');
+    print('Response body for get-by-email request: ${userResponse.body}');
+
+    if (userResponse.statusCode == 200) {
+      if (userResponse.body.isNotEmpty) {
+        final responseData = json.decode(userResponse.body);
+        print('Отриманий JSON: $responseData');
+
+        if (responseData.containsKey('id') &&
+            responseData.containsKey('email') &&
+            responseData.containsKey('firstName') &&
+            responseData.containsKey('lastName')) {
+          return responseData; // Повертаємо карту з даними користувача
+        } else {
+          throw Exception('Missing required user fields in JSON');
+        }
+      } else {
+        return null; // Повертаємо null, якщо відповідь порожня
+      }
+    } else {
+      throw Exception('Failed to load user data: ${userResponse.statusCode}');
+    }
+  }
+
+  static Future<bool> deleteUser(String id) async {
+    final userResponse = await http.delete(
+      Uri.parse(
+          'https://fittrackapidev.onrender.com/api/Users/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    ).timeout(const Duration(seconds: 60));
+
+    print('Status code for get-by-email request: ${userResponse.statusCode}');
+    print('Response body for get-by-email request: ${userResponse.body}');
+
+    if (userResponse.statusCode == 204) {
+      return true;
+    }
+    else {
+      throw Exception('Failed to load user data: ${userResponse.statusCode}');
+    }
+  }
+
 
   static Future<int> registerUser({
     required String email,
@@ -114,6 +168,7 @@ class UserService {
       return response.statusCode; // Registration failed
     }
   }
+
 
   User getUser() {
     String jsonString = '''{
