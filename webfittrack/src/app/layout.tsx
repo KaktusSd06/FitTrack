@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import localFont from "next/font/local";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const notoSans = Noto_Sans({
@@ -35,7 +36,7 @@ export default function RootLayout({
       <body
         className={`${notoSans.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
