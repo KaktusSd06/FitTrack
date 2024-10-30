@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using FitTrack.API.Models;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -13,60 +14,67 @@ namespace FitTrack.API.Controllers;
 public class AccountController : Controller
 {
     private readonly UserManager<Person> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly SignInManager<Person> _signInManager;
     private readonly IConfiguration _configuration;
 
-    public AccountController(UserManager<Person> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    public AccountController(UserManager<Person> userManager, SignInManager<Person> signInManager, IConfiguration configuration)
     {
         _userManager = userManager;
-        _roleManager = roleManager;
+        _signInManager = signInManager;
         _configuration = configuration;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> RegisterUser([FromBody] Register model)
+    [HttpGet("login-google")]
+    public async Task<IActionResult> LoginWithGoogle()
     {
-        var user = new Person
-        {
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            MiddleName = model.MiddleName,
-            PhoneNumber = model.PhoneNumber,
-            Email = model.Email,
-            UserName = model.Email,
-            CreatedAt = DateTime.UtcNow,
-        };
-
-        var createResult = await _userManager.CreateAsync(user, model.Password);
-
-        if (!createResult.Succeeded)
-        {
-            var errors = createResult.Errors.Select(e => e.Description).ToList();
-            return BadRequest(errors);
-        }
+        var redirectUrl = Url.Action("GoogleResponse", "Account", null, Request.Scheme);
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
         
-        return Ok();
+        return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
 
-    [HttpPost("assign-role")]
-    public async Task<IActionResult> AssignRole([FromBody] UserRole userRole)
+    [HttpGet("signin-google")]
+    public async Task<IActionResult> GoogleResponse([FromBody] string newUserRole)
     {
-        var user = await _userManager.FindByEmailAsync(userRole.UserEmail);
+        var info = await _signInManager.GetExternalLoginInfoAsync();
 
-        if (user == null)
+        if (info == null)
         {
-            return NotFound();
+            return Unauthorized();
         }
         
-        var result = await _userManager.AddToRoleAsync(user, userRole.Role);
+        var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
 
-        if (!result.Succeeded)
+        if (result.Succeeded)
         {
-            var errors = result.Errors.Select(e => e.Description).ToList();
-            return BadRequest(errors);
+            var loginUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            var token = GenerateJwtToken(loginUser);
+            
+            return Ok(new { Token = token });
         }
         
-        return Ok();
+        var email = info.Principal.FindFirst(ClaimTypes.Email)?.Value;
+        var newUser = new Person
+        {
+            UserName = email,
+            Email = email,
+            FirstName = string.Empty,
+            LastName = string.Empty,
+            CreatedAt = DateTime.UtcNow,
+        };
+        var creationResult = await _userManager.CreateAsync(newUser);
+
+        await _userManager.AddToRoleAsync(newUser, newUserRole);
+        
+        if (creationResult.Succeeded)
+        {
+            await _userManager.AddLoginAsync(newUser, info);
+            var token = GenerateJwtToken(newUser);
+            
+            return Ok(new { Token = token });
+        }
+        
+        return BadRequest(creationResult.Errors);
     }
     
     [HttpPost("login")]
@@ -83,6 +91,34 @@ public class AccountController : Controller
             return Unauthorized();
         }
         
+        var token = GenerateJwtToken(user);
+        
+        return Ok(new { Token = token });
+        
+        /*var userRoles = await _userManager.GetRolesAsync(user);
+        
+        var authClaims = new List<Claim>
+        {
+            new (JwtRegisteredClaimNames.Sub, user.Email!),
+            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+
+        };
+        
+        authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        var token = new JwtSecurityToken(
+            issuer: _configuration["Jwt:Issuer"],
+            expires: DateTime.Now.AddMinutes(double.Parse(_configuration["Jwt:ExpiryMinutes"]!)),
+            claims: authClaims,
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)),
+                SecurityAlgorithms.HmacSha256)
+        );
+        
+        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });*/
+    }
+
+    public async Task<IActionResult> GenerateJwtToken(Person user)
+    {
         var userRoles = await _userManager.GetRolesAsync(user);
         
         var authClaims = new List<Claim>
