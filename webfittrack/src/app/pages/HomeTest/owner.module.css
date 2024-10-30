@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@700&display=swap');
+
+.b {
+    position: relative;
+    top: 0px;
+    text-align: center;
+    font-size: 56px;
+    color: #e48100;
+}
+.humanframe  {
+    position: relative;
+    top: 15%;
+    left: 40%;
+}
+.flatColorIconsstatistics {
+    width: 95px;
+    position: relative;
+    height: 95px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.b1 {
+    align-self: stretch;
+    position: relative;
+}
+.div {
+    align-self: stretch;
+    position: relative;
+    font-size: 16px;
+    font-weight: 500;
+}
+.ownerstatstext {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+.ownerstatsframe {
+    position: relative;
+    top: -40%;
+    left: calc(95% - 384px); 
+    box-shadow: 7px 6px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    background-color: #f4f0e9;
+    width: 384px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 12px;
+    box-sizing: border-box;
+    gap: 12px;
+}
+.frame {
+    width: 95px;
+    position: relative;
+    height: 83.4px;
+    overflow: hidden;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+.ownercontrolframe {
+    position: relative;
+    top: -40%;
+    left: 5%;
+    box-shadow: 7px 6px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    background-color: #f4f0e9;
+    width: 384px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 12px;
+    box-sizing: border-box;
+    gap: 12px;
+}
+.frame1 {
+    width: 95px;
+    position: relative;
+    height: 109.2px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.ownerpersonalframe {
+    position: relative;
+    top: -45%;
+    left: calc(90% - 384px); 
+    box-shadow: 7px 6px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    background-color: #f4f0e9;
+    width: 384px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 12px;
+    box-sizing: border-box;
+    gap: 12px;
+}
+
+.ownerparentframe {
+    width: 100%;
+    position: relative;
+    background-color: #fff;
+    height: 900px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 28px;
+    color: #000;
+    font-family: 'Noto Sans';
+}
+@media screen and (max-width: 1250px) {
+    .humanframe {
+        visibility: hidden; /* This will remove it from the layout */
+    }
+}
+
+@media screen and (max-width: 940px) {
+
+    
+    .ownerparentframe {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start; 
+        height: fit-content;/* Change to flex-start to stack items from the top */
+    }
+    .ownerstatsframe,
+    .ownercontrolframe,
+    .ownerpersonalframe,
+    .humanframe {
+        margin-top: 20px; /* Add space between the frames */
+        position: static; /* Remove absolute positioning */
+        left: 0; /* Reset left position */
+    }
+    .humanframe {
+        display: none; /* This will remove it from the layout */
+    }
+}
