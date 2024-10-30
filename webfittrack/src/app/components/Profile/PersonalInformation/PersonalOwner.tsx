@@ -20,7 +20,7 @@ const PersonalOwner: React.FC = () => {
           <div className={styles.DataContainer}>
             <div className={styles.InputsContainer}>
               <div className={styles.inputContainer}>
-                <label className={styles.label}>Прізвище:</label>
+                <label className={styles.label}>Прізвище</label>
                 <Input
                   type="text"
                   placeholder="Введіть ваше прізвище"
