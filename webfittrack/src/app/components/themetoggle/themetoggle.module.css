@@ -1,0 +1,39 @@
+.toggle {
+    width: 80px;
+    position: relative;
+    border-radius: 50px;
+    height: 40px;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: background-color 0.4s ease; /* Smooth background transition */
+  }
+  
+  .toggleblack {
+    background-color: #4c4c47;
+  }
+  
+  .togglewhite {
+    background-color: #f4f0e9;
+  }
+  
+  .white, .black {
+    position: absolute;
+    top: 5px;
+    border-radius: 50px;
+    width: 30px;
+    cursor: pointer;
+    height: 30px;
+    padding: 5px;
+    transition: left 0.4s ease, background-color 0.4s ease; /* Smooth position and background transition */
+  }
+  
+  .white {
+    left: 45px; 
+    background-color: #ffffff;
+  }
+  
+  .black {
+    left: 5px; 
+    background-color: #e48100;
+  }
+  

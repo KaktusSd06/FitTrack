@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+.div {
+    width: 426px;
+    position: relative;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    display: inline-block;
+}
+.div1 {
+    width: 415px;
+    position: relative;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    display: inline-block;
+    opacity: 0.8;
+}
+.formtext {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+}
+.div2 {
+    position: relative;
+    letter-spacing: -0.01em;
+}
+.fname {
+    flex: 1;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 12px 14px;
+}
+.names {
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 14px;
+    z-index: 4;
+}
+.email {
+    align-self: stretch;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 12px 14px;
+    z-index: 3;
+}
+.phone {
+    align-self: stretch;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 12px 14px;
+    z-index: 2;
+}
+.message {
+    align-self: stretch;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    height: 111px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 12px 14px;
+    z-index: 1;
+}
+.div6 {
+    position: relative;
+    letter-spacing: -0.01em;
+    font-weight: 500;
+}
+.submit {
+    align-self: stretch;
+    border-radius: 5px;
+    background-color: #e48100;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 10px;
+    z-index: 0;
+    color: #fff;
+}
+.forminputs {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.6);
+}
+.mainform {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 40px;
+    gap: 41px;
+}
+.footerimage {
+    position: relative; 
+   border-radius: 15px;
+    width: 830px;
+    height: 460px;
+    margin:10px;
+    object-fit: cover;
+}
+.footerparentframe {
+    width: 100%;
+    position: relative;
+    margin: 40px;
+    background-color: #fff;
+    height: 600px;
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: flex-start;
+    gap: 100px;
+    text-align: left;
+    font-size: 30px;
+    color: #000;
+    font-family: 'Inter';
+}
+
+
