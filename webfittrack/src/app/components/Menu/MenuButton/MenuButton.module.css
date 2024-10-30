@@ -2,10 +2,10 @@
   	position: absolute;
   	top: 0px;
   	left: 0px;
-  	border-radius: 0px 4px 4px 0px;
+  	border-radius: 16px 16px 16px 16px;
   	background-color: #e48100;
   	width: 8px;
-  	height: 48px;
+  	height: 56px;
 }
 .userIcon {
   	width: 24px;
@@ -29,18 +29,18 @@
 .property1defaultInner {
   	position: absolute;
   	top: 0px;
-  	left: calc(50% - 125px);
-  	border-radius: 12px;
+  	left: calc(50% - 150px);
+  	border-radius: 16px;
   	background-color: #e48100;
   	width: 250px;
-  	height: 48px;
+  	height: 56px;
   	overflow: hidden;
     cursor: pointer; 
     outline: none;
 }
 .property1default {
-  	width: 400px;
-  	height: 48px;
+	width: 300px;
+	height: 56px;
   	overflow: hidden;
 }
 .property1variant2Child {
@@ -49,23 +49,23 @@
   	left: 0px;
   	border-radius: 0px 4px 4px 0px;
   	width: 8px;
-  	height: 48px;
+  	height: 72px;
 }
 .property1variant2Inner {
   	position: absolute;
   	top: 0px;
-  	left: calc(50% - 125px);
+  	left: calc(50% - 150px);
   	border-radius: 4px;
   	width: 250px;
-  	height: 48px;
+  	height: 56px;
   	overflow: hidden;
     cursor: pointer;
     outline: none;
 
 }
 .property1variant2 {
-  	width: 400px;
-  	height: 48px;
+	width: 300px;
+	height: 56px;
   	overflow: hidden;
   	color: #201f1c;
 }
@@ -88,3 +88,23 @@
     filter: invert(0%) sepia(100%) saturate(0%) hue-rotate(360deg);
   }
 
+  @media (max-width: 768px) {
+    .property1defaultInner,
+    .property1variant2Inner {
+		left: calc(50% - 170px);
+        width: 56px;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+    }
+	
+    .userIcon {
+        margin-left:4px;
+		margin-top: 1px;
+    }
+
+    .div {
+        display: none; /* Hide text on smaller screens */
+    }
+}

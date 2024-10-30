@@ -1,3 +1,7 @@
+.pageContainer {
+  background: white;
+}
+
 .fieldContainer {
   position: relative;
   width: 100%;
@@ -5,10 +9,10 @@
 }
 
 .inputField {
-  width: 100%;
+  width: 400px;
   border: 1px solid #c6c1b9;
   border-radius: 4px;
-  padding: 12px 40px 12px 12px; /* Відступ праворуч для іконки */
+  padding: 12px 12px;
   font-size: 18px;
   outline: none;
   transition: border-color 0.2s, padding 0.2s;
@@ -16,6 +20,7 @@
 }
 
 .inputFieldActive {
+  padding: 12px 12px;
   color: black;
   border-color: black;
 }
@@ -29,6 +34,7 @@
   font-size: 18px;
   color: #c6c1b9;
   pointer-events: none;
+
   background-color: white;
   padding: 0 4px;
 }
@@ -39,27 +45,4 @@
   font-size: 14px;
   color: black;
   background-color: white;
-}
-
-.togglePassword {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-  transition: filter 0.2s; /* Плавний перехід кольору */
-}
-
-/* Іконка активна: коли є фокус або введено текст */
-.iconActive {
-  filter: invert(0%) sepia(100%) saturate(1000%) hue-rotate(0deg) brightness(0%)
-    contrast(100%);
-}
-
-/* Іконка неактивна: коли немає фокусу або тексту */
-.iconInactive {
-  filter: invert(60%) sepia(10%) saturate(200%) hue-rotate(0deg) brightness(90%)
-    contrast(85%);
 }
