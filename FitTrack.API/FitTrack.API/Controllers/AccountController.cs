@@ -136,7 +136,8 @@ public class AccountController : Controller
         
         return Ok();
     }
-    public async Task<string> GenerateJwtToken(Person user)
+    [HttpGet("generate-token")]
+    public async Task<IActionResult> GenerateJwtToken(Person user)
     {
         var userRoles = await _userManager.GetRolesAsync(user);
         
@@ -157,6 +158,6 @@ public class AccountController : Controller
                 SecurityAlgorithms.HmacSha256)
         );
         
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return Ok(new{Token = new JwtSecurityTokenHandler().WriteToken(token)});
     }
 }
