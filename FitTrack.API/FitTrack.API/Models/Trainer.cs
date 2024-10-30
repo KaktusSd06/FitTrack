@@ -2,6 +2,7 @@ using FitTrack.API.Models;
 
 public class Trainer : Person
 {
+    public string ProfilePicture { get; set; }
     public int? Gym_Id { get; set; }
     public Gym? Gym { get; set; }
     public ICollection<User>? Users { get; set; }
