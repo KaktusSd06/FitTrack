@@ -117,7 +117,26 @@ public class AccountController : Controller
         return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });*/
     }
 
-    public async Task<IActionResult> GenerateJwtToken(Person user)
+    [HttpPost("assign-role")]
+    public async Task<IActionResult> AssignRole([FromBody] UserRole role)
+    {
+        var user = await _userManager.FindByEmailAsync(role.UserEmail);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+        
+        var result = await _userManager.AddToRoleAsync(user, role.Role);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+        
+        return Ok();
+    }
+    public async Task<string> GenerateJwtToken(Person user)
     {
         var userRoles = await _userManager.GetRolesAsync(user);
         
@@ -138,6 +157,6 @@ public class AccountController : Controller
                 SecurityAlgorithms.HmacSha256)
         );
         
-        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
