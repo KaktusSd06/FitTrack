@@ -34,7 +34,7 @@ public class AccountController : Controller
     }
 
     [HttpGet("signin-google")]
-    public async Task<IActionResult> GoogleResponse([FromBody] string newUserRole)
+    public async Task<IActionResult> GoogleResponse()
     {
         var info = await _signInManager.GetExternalLoginInfoAsync();
 
@@ -63,8 +63,6 @@ public class AccountController : Controller
             CreatedAt = DateTime.UtcNow,
         };
         var creationResult = await _userManager.CreateAsync(newUser);
-
-        await _userManager.AddToRoleAsync(newUser, newUserRole);
         
         if (creationResult.Succeeded)
         {
@@ -136,6 +134,27 @@ public class AccountController : Controller
         
         return Ok();
     }
+    
+    [HttpPost("remove-role")]
+    public async Task<IActionResult> RemoveRole([FromBody] UserRole role)
+    {
+        var user = await _userManager.FindByEmailAsync(role.UserEmail);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+        
+        var result = await _userManager.RemoveFromRoleAsync(user, role.Role);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+        
+        return Ok();
+    }
+    
     [HttpGet("generate-token")]
     public async Task<IActionResult> GenerateJwtToken(Person user)
     {
