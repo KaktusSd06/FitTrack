@@ -11,11 +11,6 @@ namespace FitTrack.API
         {
             
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseNpgsql("Host=localhost;Database=FitTrack;Username=admin_db;Password=password@12345#");
-        //}
-
 
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Owner> Owners { get; set; }
@@ -23,7 +18,6 @@ namespace FitTrack.API
         public DbSet<Trainer> Trainers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<GroupTraining> GroupTrainings { get; set; }
-        public DbSet<GroupTrainingUser> GroupTrainingUsers { get; set; }
         public DbSet<IndividualTraining> IndividualTrainings { get; set; }
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
@@ -38,37 +32,11 @@ namespace FitTrack.API
         public DbSet<TrainingInProgram> TrainingsInProgram { get; set; }
         public DbSet<WeightsInfo> Weights { get; set; }
         public DbSet<StepsInfo> Steps { get; set; }
+        public DbSet<UserMembership> UserMemberships { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            //modelBuilder.Entity<Owner>().ToTable("Owners");
-            //modelBuilder.Entity<Admin>().ToTable("Admins");
-            //modelBuilder.Entity<Trainer>().ToTable("Trainers");
-            //modelBuilder.Entity<User>().ToTable("Users");
-
-            //modelBuilder.Entity<IndividualTraining>().ToTable("IndividualTrainings");
-            //modelBuilder.Entity<GroupTraining>().ToTable("GroupTrainings");
-            //modelBuilder.Entity<GroupTrainingUser>().ToTable("GroupTrainingUsers");
-            //modelBuilder.Entity<TrainingInProgram>().ToTable("TrainingsInProgram");
-
-            //modelBuilder.Entity<TrainingProgram>().ToTable("TrainingPrograms");
-
-            //modelBuilder.Entity<Exercise>().ToTable("Exercises");
-            //modelBuilder.Entity<ExerciseInTraining>().ToTable("ExercisesInTraining");
-            //modelBuilder.Entity<Set>().ToTable("Sets");
-
-            //modelBuilder.Entity<Service>().ToTable("Services");
-            //modelBuilder.Entity<Good>().ToTable("Goods");
-            //modelBuilder.Entity<Purchase>().ToTable("Purchases");
-
-            //modelBuilder.Entity<Meal>().ToTable("Meals");
-            //modelBuilder.Entity<MealsPerDay>().ToTable("MealsPerDay");
-
-            //modelBuilder.Entity<Membership>().ToTable("Memberships");
-
-            //modelBuilder.Entity<Gym>().ToTable("Gyms");
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
@@ -102,6 +70,19 @@ namespace FitTrack.API
                 .HasIndex(o => o.PhoneNumber)
                 .IsUnique();
 
+            modelBuilder.Entity<Purchase>()
+                .HasOne(p => p.Good)
+                .WithMany(g => g.Purchases)
+                .HasForeignKey(p => p.ItemId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Purchase>()
+                .HasOne(p => p.Service)
+                .WithMany(s => s.Purchases)
+                .HasForeignKey(p => p.ItemId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
             //modelBuilder.Entity<User>()
             //    .HasOne(u => u.Gym)
             //    .WithMany(g => g.Users)
