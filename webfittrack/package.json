@@ -10,11 +10,15 @@
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
+    "@nextui-org/button": "^2.0.38",
     "@nextui-org/react": "^2.4.8",
+    "@nextui-org/system": "^2.2.6",
+    "@nextui-org/theme": "^2.2.11",
     "framer-motion": "^11.11.10",
     "next": "^15.0.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.53.1",
     "webfittrack": "file:"
   },
   "devDependencies": {
