@@ -7,5 +7,5 @@ public class GroupTraining : Training
 	public required Trainer Trainer { get; set; }
 	public required Gym Gym { get; set; }
 
-	public ICollection<GroupTrainingUser>? GroupTrainingUsers { get; set; }
+	public ICollection<User>? Users { get; set; }
 }
