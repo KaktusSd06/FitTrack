@@ -15,8 +15,8 @@ public class BasePersonController<TPerson> : ControllerBase where TPerson : Pers
         _userManager = userManager;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromBody] string personRole)
+    [HttpGet("{personRole}")]
+    public async Task<IActionResult> GetAll(string personRole)
     {
         var person = await _userManager.GetUsersInRoleAsync(personRole);
         
