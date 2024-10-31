@@ -20,7 +20,6 @@ public class Register
     public string LastName { get; set; }
 
     public string MiddleName { get; set; } = string.Empty;
-    [Required]
     public DateOnly BirthDate { get; set; }
    
 }
