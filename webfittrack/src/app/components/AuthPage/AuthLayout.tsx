@@ -4,7 +4,7 @@ import styles from "./AuthLayout.module.css";
 import { ReactNode } from "react";
 
 interface AuthLayoutProps {
-  children: ReactNode; // Тип для динамічного вмісту
+  children: ReactNode;
 }
 
 const AuthLayout: NextPage<AuthLayoutProps> = ({ children }) => {
@@ -14,9 +14,7 @@ const AuthLayout: NextPage<AuthLayoutProps> = ({ children }) => {
         <div className={styles.Slider}>
           <SliderContainer />
         </div>
-        <div className={styles.UserContainer}>
-          {children} {/* Динамічний вміст сторінки */}
-        </div>
+        <div className={styles.UserContainer}>{children}</div>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@
   font-size: 22px;
   color: #fff;
   font-family: var(--font-noto-sans), sans-serif;
+  user-select: none;
 }
 
 .sliderbuttons {

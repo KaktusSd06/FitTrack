@@ -1,12 +1,9 @@
 import AuthLayout from "@/app/components/AuthPage/AuthLayout";
-import UserContent from "@/app/components/AuthPage/UserContent/UserContent/UserContent";
-import LoginFields from "@/app/components/AuthPage/UserContent/LoginFields/LoginFields";
+import LoginContent from "@/app/components/AuthPage/Login/Login";
 export default function Login() {
   return (
     <AuthLayout>
-      <UserContent>
-        <LoginFields></LoginFields>
-      </UserContent>
+      <LoginContent />
     </AuthLayout>
   );
 }

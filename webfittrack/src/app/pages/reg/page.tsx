@@ -1,13 +1,10 @@
 import AuthLayout from "@/app/components/AuthPage/AuthLayout";
-import UserContent from "@/app/components/AuthPage/UserContent/UserContent/UserContent";
-import RegFields from "@/app/components/AuthPage/UserContent/RegFields/RegFields";
+import Reg from "@/app/components/AuthPage/Reg/Reg";
 
 export default function Login() {
   return (
     <AuthLayout>
-      <UserContent>
-        <RegFields />
-      </UserContent>
+      <Reg></Reg>
     </AuthLayout>
   );
 }

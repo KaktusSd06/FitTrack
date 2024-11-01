@@ -7,15 +7,15 @@ import styles from "./SliderContainer.module.css";
 const slides = [
   {
     text: "FitTrack допоможе слідкувати за своїм прогресом",
-    imageUrl: "/rounded-rectangle.png",
+    imageUrl: "/AuthPage/AuthSliderPhoto1.jpg",
   },
   {
     text: "Досягайте нових висот з FitTrack",
-    imageUrl: "/AuthPage/AuthSliderPhoto.jpg",
+    imageUrl: "/AuthPage/AuthSliderPhoto2.jpg",
   },
   {
     text: "Ваші тренування під контролем",
-    imageUrl: "/rounded-rectangle.png",
+    imageUrl: "/AuthPage/AuthSliderPhoto3.jpg",
   },
 ];
 

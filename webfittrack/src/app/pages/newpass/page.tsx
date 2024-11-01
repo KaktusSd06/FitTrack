@@ -1,12 +1,9 @@
 import AuthLayout from "@/app/components/AuthPage/AuthLayout";
-import UserContent from "@/app/components/AuthPage/UserContent/UserContent/UserContent";
-import NewPassFields from "@/app/components/AuthPage/UserContent/NewPassword/NewPasswordFields";
-export default function Login() {
+import NewPasswordContent from "@/app/components/AuthPage/ResetPassword/NewPassword";
+export default function NewPassword() {
   return (
     <AuthLayout>
-      <UserContent>
-        <NewPassFields />
-      </UserContent>
+      <NewPasswordContent></NewPasswordContent>
     </AuthLayout>
   );
 }
