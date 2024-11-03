@@ -41,7 +41,7 @@
 .LogoText {
   font-weight: 600;
   font-size: 48px;
-  color: #e48100;
+  color: var(--text-color);
 }
 
 .FormElements {

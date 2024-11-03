@@ -56,12 +56,12 @@ const Login: NextPage = () => {
             <div className={styles.ButtonContainer}>
               <Button
                 variant="flat"
-                className={`bg-[#E48100] text-white rounded-[8px]`}
+                className={`bg-[#E48100] text-[var(--text-color)] rounded-[8px]`}
               >
                 Увійти
               </Button>
               <Button
-                className={`bg-[#E48100] text-white rounded-[8px]`}
+                className={`bg-[#E48100] text-[var(--text-color)] rounded-[8px]`}
                 variant="flat"
                 startContent={
                   <img

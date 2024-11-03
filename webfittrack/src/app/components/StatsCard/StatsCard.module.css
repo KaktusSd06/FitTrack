@@ -1,0 +1,90 @@
+.Card {
+  min-width: 100px;
+  max-width: 100%;
+  height: 92px;
+  background-color: var(--isabelline);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 16px;
+  box-sizing: border-box;
+  font-family: var(--font-noto-sans);
+  gap: 30px;
+}
+
+.StepsCard {
+  container-type: inline-size;
+  min-width: 300px;
+}
+
+.Content {
+  min-width: 95px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.StatsValue {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  align-items: center;
+}
+
+.Title {
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.CurrentValue {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.Goal {
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.Icon {
+  position: relative; /* Дозволяє точно позиціонувати псевдоелемент */
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  flex-shrink: 0; /* Запобігає виходу псевдоелемента за межі */
+}
+
+.IconBefore {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.4;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.Icon img {
+  position: relative;
+  width: 36px;
+  z-index: 2; /* Робить іконку видимою поверх псевдоелемента */
+}
+
+.Progress {
+  width: 100%;
+}
+
+@container (max-width: 343px) {
+  .Icon {
+    display: none;
+  }
+}
