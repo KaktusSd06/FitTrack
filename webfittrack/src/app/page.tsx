@@ -1,17 +1,9 @@
-import MenuButtonGroup from "./components/Menu/MenuButtonGroup/MenuButtonGroup";
+import data from "./components/Table/data.json";
+import { CustomTable } from "./components/Table/Table";
 export default function Home() {
-  const buttonsData = [
-    { text: 'Button 1', imageSrc: '/user.svg' },
-    { text: 'Button 2', imageSrc: '/user.svg' },
-    { text: 'Button 3', imageSrc: '/user.svg' },
-    { text: 'Button 4', imageSrc: '/user.svg' },
-    { text: 'Button 5', imageSrc: '/user.svg' },
-  ];
   return (
     <>
-     
-     <MenuButtonGroup buttonsData={buttonsData} />;
-      
+      <CustomTable {...data} />
     </>
   );
 }
