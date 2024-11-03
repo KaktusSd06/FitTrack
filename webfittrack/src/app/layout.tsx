@@ -1,11 +1,14 @@
+// app/layout.tsx
+
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { Providers } from "./providers";
+import ThemeWrapper from "./ThemeWrapper";
 import "./globals.css";
 
 const notoSans = Noto_Sans({
-  weight: ["400", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-noto-sans",
   subsets: ["latin"],
 });
@@ -37,7 +40,9 @@ export default function RootLayout({
       <body
         className={`${notoSans.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <ThemeWrapper>{children}</ThemeWrapper>
+        </Providers>
       </body>
     </html>
   );
