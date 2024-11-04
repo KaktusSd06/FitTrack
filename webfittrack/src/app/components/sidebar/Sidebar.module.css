@@ -10,7 +10,7 @@
 
 .frameParent {
     width: 100%;
-    max-width: 300px;
+    max-width: 350px;
     height: 100vh;
     overflow: hidden;
     display: flex;

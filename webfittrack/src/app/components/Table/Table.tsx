@@ -34,7 +34,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   vacation: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "status", "actions"];
 
 type User = (typeof users)[0];
 
@@ -68,7 +68,7 @@ export const CustomTable = ({
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(2);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
@@ -201,7 +201,7 @@ export const CustomTable = ({
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
+            placeholder="Пошук за ім'ям"
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
@@ -209,11 +209,11 @@ export const CustomTable = ({
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button variant="flat">Status</Button>
+                <Button variant="flat">Статус</Button>
               </DropdownTrigger>
               <DropdownMenu
                 disallowEmptySelection
-                aria-label="Table Columns"
+                aria-label="Колонки"
                 closeOnSelect={false}
                 selectedKeys={statusFilter}
                 selectionMode="multiple"
@@ -228,7 +228,7 @@ export const CustomTable = ({
             </Dropdown>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button variant="flat">Columns</Button>
+                <Button variant="flat">Колонки</Button>
               </DropdownTrigger>
               <DropdownMenu
                 disallowEmptySelection
@@ -246,16 +246,16 @@ export const CustomTable = ({
               </DropdownMenu>
             </Dropdown>
             <Button color="warning" className="text-white">
-              Add New
+              Додати
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users.length} users
+            Загалом {users.length}
           </span>
           <label className="flex items-center text-default-400 text-small">
-            Rows per page:
+            Кількість записів:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
               onChange={onRowsPerPageChange}
@@ -282,38 +282,20 @@ export const CustomTable = ({
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400"></span>
+      <div className="flex justify-center items-center py-2 px-2">
         <Pagination
           isCompact
           showControls
           showShadow
           classNames={{
-            base: "text-white",
+            wrapper: "color-[#f4f0e9]",
+            base: "color-[#f4f0e9]",
+            cursor: "bg-[#E48100] text-white",
           }}
-          color="warning"
           page={page}
           total={pages}
           onChange={setPage}
         />
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onPreviousPage}
-          >
-            Previous
-          </Button>
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onNextPage}
-          >
-            Next
-          </Button>
-        </div>
       </div>
     );
   }, [page, pages, onPreviousPage, onNextPage]);
