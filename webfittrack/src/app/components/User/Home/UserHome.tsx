@@ -5,6 +5,8 @@ import StatsCard from "../../StatsCard/StatsCard";
 import { Button, Input, Tab, Tabs } from "@nextui-org/react";
 import Calendar from "../Calendar/Calendar";
 import dayjs from "dayjs";
+import { CustomTable } from "../../Table/Table";
+import data from "@/app/components/Table/data.json";
 
 const UserHome = () => {
   const handleClick = () => {
@@ -76,7 +78,7 @@ const UserHome = () => {
         ></Tab>
       </Tabs>
       <div className={styles.NavTableContainer}>
-        <div className={styles.Search}>
+        {/* <div className={styles.Search}>
           <Input
             label="Пошук"
             // isClearable
@@ -85,7 +87,7 @@ const UserHome = () => {
               <img src="/search.svg" className={`w-[24px] h-[24px]`} />
             }
           />
-        </div>
+        </div> */}
         <div className={styles.Calendar}>
           <Calendar onDateSelect={handleDateSelect} daysToShow={7} />
         </div>
@@ -97,6 +99,7 @@ const UserHome = () => {
           Створити
         </Button>
       </div>
+      <CustomTable {...data} />
     </div>
   );
 };

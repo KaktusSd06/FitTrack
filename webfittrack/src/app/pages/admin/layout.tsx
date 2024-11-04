@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import Sidebar from "@/app/components/sidebar/Sidebar";
 import styles from "./layout.module.css";
 interface LayoutProps {
-  children: ReactNode; // Define the children prop type
+  children: ReactNode;
 }
 const Layout: React.FC<LayoutProps> = ({ children }) => {
 
@@ -12,9 +12,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div>
         <Sidebar />
       </div>
-      <div className = {styles.main}>
-      
-        <Navbar imageSrc="/images/image-3.png" firstName="Adminqweqweqwew" lastName="Admin"/>
+      <div className={styles.main}>
+
+        <Navbar imageSrc="/images/image-3.png" firstName="Adminqweqweqwew" lastName="Admin" />
         {children}
       </div>
     </div>

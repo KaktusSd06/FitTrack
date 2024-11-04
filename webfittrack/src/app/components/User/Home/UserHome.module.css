@@ -6,7 +6,7 @@
 
 .Container {
   width: 100%;
-  padding: 100px;
+  padding-top: 30px;
   height: fit-content;
   display: flex;
   flex-direction: column;
