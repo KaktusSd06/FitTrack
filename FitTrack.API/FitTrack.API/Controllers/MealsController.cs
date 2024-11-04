@@ -27,13 +27,50 @@ namespace FitTrack.API.Controllers
         public async Task<ActionResult<Meal>> GetMeal(int id)
         {
             var meal = await _context.Meals.FindAsync(id);
-
             if (meal == null)
             {
                 return NotFound();
             }
 
             return meal;
+        }
+
+        [HttpGet("get-meal-by-userId-by-day/{userId}/{date}")]
+        public async Task<IActionResult> GetMealsByUserIdByDay(string userId, DateTime date)
+        {
+            var meals = await _context.Meals
+                .Where(m => m.UserId == userId && m.DateOfConsumption.Day == date.Day)
+                .ToListAsync();
+            if (meals == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(meals);
+        }
+        
+        [HttpGet("get-meal-by-userId-by-period/{userId}/{fromDate}/{toDate}")]
+        public async Task<IActionResult> GetMealsByUserIdByPeriod(string userId, DateTime fromDate, DateTime toDate)
+        {
+            var meals = await _context.Meals
+                .Where(m => m.UserId == userId
+                            && m.DateOfConsumption.Day >= fromDate.Day
+                            && m.DateOfConsumption.Day <= toDate.Day)
+                .GroupBy(m => m.DateOfConsumption.Date)
+                .Select(g => new
+                {
+                    Date = g.Key.ToString("dd/MM/yyyy"),
+                    TotalCalories = g.Sum(m => m.Calories)
+                })
+                .ToListAsync();
+            if (meals == null || meals.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            var result = meals.Select(m => $"{m.Date}: {m.TotalCalories}");
+            
+            return Ok(result);
         }
 
         // PUT: api/Meals/5

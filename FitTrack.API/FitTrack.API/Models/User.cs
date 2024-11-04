@@ -15,7 +15,7 @@ public class User : Person
     public ICollection<IndividualTraining>? IndividualTrainings { get; set; }
 
     public ICollection<Purchase>? Purchases { get; set; }
-    public ICollection<MealsPerDay>? MealsPerDay { get; set; }
+    public ICollection<Meal>? Meals { get; set; }
     public ICollection<UserMembership>? UserMemberships { get; set; }
 
     public ICollection<WeightsInfo>? Weights { get; set; }

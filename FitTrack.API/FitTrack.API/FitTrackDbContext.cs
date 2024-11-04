@@ -23,7 +23,6 @@ namespace FitTrack.API
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Set> Sets { get; set; }
         public DbSet<Meal> Meals { get; set; }
-        public DbSet<MealsPerDay> MealsPerDay { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Good> Goods { get; set; }
         public DbSet<Service> Services { get; set; }

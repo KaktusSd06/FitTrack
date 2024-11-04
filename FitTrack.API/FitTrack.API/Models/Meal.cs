@@ -7,6 +7,8 @@ public class Meal
     [MaxLength(50)]
     public required string Name { get; set; }
     public required decimal Calories { get; set; } 
+    public required DateTime DateOfConsumption { get; set; } 
 
-    public ICollection<MealsPerDay>? MealsPerDay { get; set; }
+    public required string UserId { get; set; } 
+    public required User User { get; set; }
 }

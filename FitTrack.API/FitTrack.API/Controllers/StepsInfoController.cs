@@ -35,12 +35,36 @@ public class StepsInfoController : ControllerBase
 
         return stepsInfo;
     }
+    
+    [HttpGet("get-steps-by-userId-by-period/{userId}/{fromDate}/{toDate}")]
+    public async Task<IActionResult> GetStepsInfoByUserIdByPeriod(string userId, DateTime fromDate, DateTime toDate)
+    {
+        var meals = await _context.Steps
+            .Where(m => m.UserId == userId
+                        && m.Date.Day >= fromDate.Day
+                        && m.Date.Day <= toDate.Day)
+            .GroupBy(m => m.Date.Date)
+            .Select(g => new
+            {
+                Date = g.Key.ToString("dd/MM/yyyy"),
+                TotalSteps = g.Sum(m => m.Steps)
+            })
+            .ToListAsync();
+        if (meals == null || meals.Count == 0)
+        {
+            return NotFound();
+        }
+            
+        var result = meals.Select(m => $"{m.Date}: {m.TotalSteps}");
+            
+        return Ok(result);
+    }
 
     // POST: api/StepsInfo
     [HttpPost]
     public async Task<ActionResult<StepsInfo>> PostStepsInfo(StepsInfo stepsInfo)
     {
-        _context.Steps.Add(stepsInfo);
+        await _context.Steps.AddAsync(stepsInfo);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetStepsInfo), new { id = stepsInfo.Id }, stepsInfo);
