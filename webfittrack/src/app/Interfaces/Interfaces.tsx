@@ -36,7 +36,7 @@ export interface Admin {
 export interface GroupTraining {
     id: number; // required
     description?: string; // nullable
-    date: Date; // could also use Date type for better date handling
+    string: string; // could also use string type for better string handling
     gymId: number; // required
     gym?: Gym; // nullable, reference to Gym
     trainerId?: string; // nullable
@@ -66,7 +66,7 @@ export interface Membership {
 export interface UserMembership {
     id: number;
     sessionsReminded?: number; // nullable
-    expirationDate: Date; // або використовуйте DateOnly, якщо це ваш власний тип
+    expirationDate: string; // або використовуйте DateOnly, якщо це ваш власний тип
     userId?: string; // nullable
     user?: User; // об'єкт User (nullable)
     membershipId: number;
@@ -75,14 +75,13 @@ export interface UserMembership {
 export interface User {
     id?: string;
     userName?: string;
-    normalizedUserName?: string;
     email?: string;
     phoneNumber?: string;
     firstName: string;
     lastName: string;
     middleName?: string;
     height?: number;
-    dateOfBirth?: Date;
+    dateOfBirth?: string;
     trainerId?: string;
     trainer?: Trainer;
     gymId?: number;
@@ -100,7 +99,7 @@ export interface TrainingProgram {
 export interface TrainingInProgram {
     id: number;
     description?: string;
-    date: Date;
+    string: string;
     trainingProgramId: number;
     trainingProgram?: TrainingProgram;
 }
@@ -122,7 +121,7 @@ export interface Trainer {
     lastName: string;
     middleName?: string;
     height?: number;
-    dateOfBirth?: Date;
+    dateOfBirth?: string;
     trainerId?: string;
     profilePicture: string;
     gymId?: number;
@@ -133,7 +132,7 @@ export interface Purchase {
     id: number;
     itemId: number;
     itemType: number;
-    date: Date;
+    string: string;
     quantity: number;
     userId: string;
     user: User;
