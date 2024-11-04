@@ -4,6 +4,7 @@ using System.Text;
 using FitTrack.API.Models;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -24,7 +25,7 @@ public class AccountController : Controller
         _configuration = configuration;
     }
 
-    [HttpGet("login-google")]
+    /*[HttpGet("login-google")]
     public async Task<IActionResult> LoginWithGoogle()
     {
         var redirectUrl = Url.Action("GoogleResponse", "Account", null, Request.Scheme);
@@ -73,6 +74,67 @@ public class AccountController : Controller
         }
         
         return BadRequest(creationResult.Errors);
+    }*/
+
+    [HttpPost("login-google")]
+    public async Task<IActionResult> GoogleLogin([FromBody] string googleToken)
+    {
+        var payload = await ValidateGoogleToken(googleToken);
+        if (payload is null)
+        {
+            return Unauthorized();
+        }
+        
+        var user = await FindOrCreateUser(payload);
+        
+        var jwtToken = GenerateJwtToken(user);
+        return Ok(new { token = jwtToken });
+    }
+
+    [HttpPost("validate-google-token")]
+    public async Task<GoogleJsonWebSignature.Payload> ValidateGoogleToken(string googleToken)
+    {
+        var settings = new GoogleJsonWebSignature.ValidationSettings()
+        {
+            Audience = new List<string>() {_configuration["Google:ClientId"]!},
+        };
+
+        try
+        {
+            var payload = await GoogleJsonWebSignature.ValidateAsync(googleToken, settings);
+            return payload;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+    [HttpPost("find-or-create-user")]
+    public async Task<Person> FindOrCreateUser(GoogleJsonWebSignature.Payload payload)
+    {
+        var email = payload.Email;
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user != null)
+        {
+            return user;
+        }
+        
+        var newUser = new Person
+        {
+            UserName = email,
+            Email = email,
+            FirstName = string.Empty,
+            LastName = string.Empty,
+            CreatedAt = DateTime.UtcNow,
+        };
+        
+        var creationResult = await _userManager.CreateAsync(newUser);
+        if (!creationResult.Succeeded)
+        {
+            return null;
+        }
+        
+        return await _userManager.FindByIdAsync(newUser.Id);
     }
     
     [HttpPost("login")]

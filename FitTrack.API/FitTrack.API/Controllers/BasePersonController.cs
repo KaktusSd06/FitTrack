@@ -148,6 +148,7 @@ public class BasePersonController<TPerson> : ControllerBase where TPerson : Pers
             Email = model.Email,
             PhoneNumber = model.PhoneNumber,
             UserName = model.Email,
+            CreatedAt = DateTime.UtcNow,
         };
 
         if (person is User user)

@@ -33,6 +33,7 @@ namespace FitTrack.API
         public DbSet<WeightsInfo> Weights { get; set; }
         public DbSet<StepsInfo> Steps { get; set; }
         public DbSet<UserMembership> UserMemberships { get; set; }
+        public DbSet<TrainingTime> TrainingTimes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

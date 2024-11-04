@@ -46,6 +46,7 @@ builder.Services.AddIdentity<Person, IdentityRole>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
 })
     .AddEntityFrameworkStores<FitTrackDbContext>()
     .AddDefaultTokenProviders();
