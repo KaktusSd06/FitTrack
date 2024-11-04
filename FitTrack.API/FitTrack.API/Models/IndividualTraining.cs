@@ -2,11 +2,11 @@ namespace FitTrack.API.Models;
 
 public class IndividualTraining:Training
 {
-    public required string UserId { get; set; } 
-    public required User User { get; set; }
+    public string UserId { get; set; } 
+    public User? User { get; set; }
     
     public string? TrainerId { get; set; }    
-    public required Trainer? Trainer { get; set; }
+    public Trainer? Trainer { get; set; }
 
-    public ICollection<Exercise> Exercises { get; set; }
+    public ICollection<Exercise>? Exercises { get; set; }
 }

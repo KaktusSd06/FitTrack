@@ -35,27 +35,34 @@ namespace FitTrack.API.Controllers
             return meal;
         }
 
-        [HttpGet("get-meal-by-userId-by-day/{userId}/{date}")]
+        [HttpGet("get-meals-by-userId-by-day/{userId}/{date}")]
         public async Task<IActionResult> GetMealsByUserIdByDay(string userId, DateTime date)
         {
+            date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
+            
             var meals = await _context.Meals
-                .Where(m => m.UserId == userId && m.DateOfConsumption.Day == date.Day)
+                .Where(m => m.UserId == userId && m.DateOfConsumption.Date == date.Date)
                 .ToListAsync();
             if (meals == null)
             {
                 return NotFound();
             }
             
+            //var result = meals.Select(m => new { name = m.Name });
+            
             return Ok(meals);
         }
         
-        [HttpGet("get-meal-by-userId-by-period/{userId}/{fromDate}/{toDate}")]
+        [HttpGet("get-calories-by-userId-by-period/{userId}/{fromDate}/{toDate}")]
         public async Task<IActionResult> GetMealsByUserIdByPeriod(string userId, DateTime fromDate, DateTime toDate)
         {
+            fromDate = DateTime.SpecifyKind(fromDate, DateTimeKind.Utc);
+            toDate = DateTime.SpecifyKind(toDate, DateTimeKind.Utc);
+            
             var meals = await _context.Meals
                 .Where(m => m.UserId == userId
-                            && m.DateOfConsumption.Day >= fromDate.Day
-                            && m.DateOfConsumption.Day <= toDate.Day)
+                            && m.DateOfConsumption.Date >= fromDate.Date
+                            && m.DateOfConsumption.Date <= toDate.Date)
                 .GroupBy(m => m.DateOfConsumption.Date)
                 .Select(g => new
                 {
@@ -68,7 +75,7 @@ namespace FitTrack.API.Controllers
                 return NotFound();
             }
             
-            var result = meals.Select(m => $"{m.Date}: {m.TotalCalories}");
+            var result = meals.Select(m => new { date = m.Date, calories = m.TotalCalories });
             
             return Ok(result);
         }

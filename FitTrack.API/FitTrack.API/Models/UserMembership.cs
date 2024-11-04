@@ -7,10 +7,10 @@ public class UserMembership
     public DateOnly ExpirationDate { get; set; } 
     
     public string UserId { get; set; }
-    public User User { get; set; }
+    public User? User { get; set; }
     
     public int MembershipId { get; set; }
-    public Membership Membership { get; set; }
+    public Membership? Membership { get; set; }
 
     public UserMembership()
     {

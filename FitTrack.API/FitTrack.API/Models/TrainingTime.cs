@@ -7,5 +7,5 @@ public class TrainingTime
     public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
     
     public string UserId { get; set; }
-    public User User { get; set; }
+    public User? User { get; set; }
 }

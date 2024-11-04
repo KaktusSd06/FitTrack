@@ -5,12 +5,15 @@ public class Gym
 {
     public  int Id { get; set; }
     [MaxLength(150)]
-    public required string Address { get; set; }
+    [Required]
+    public string Address { get; set; }
     [MaxLength(50)]
-    public required string Name { get; set; }
-    public required string OwnerId { get; set; }
+    [Required]
+    public string Name { get; set; }
     public decimal? Balance { get; set; }
-    public required Owner Owner { get; set; }
+    
+    public string OwnerId { get; set; }
+    public Owner? Owner { get; set; }
 
     public ICollection<Trainer>? Trainers { get; set; }
     public ICollection<Admin>? Admins { get; set; }

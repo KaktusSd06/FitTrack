@@ -3,8 +3,8 @@
 public class StepsInfo
 {
     public int Id { get; set; }
-    public required string UserId { get; set; }
-    public required int Steps { get; set; }
-    public required DateTime Date { get; set; }
-    public required User User { get; set; }
+    public int Steps { get; set; }
+    public DateTime Date { get; set; }
+    public string UserId { get; set; }
+    public User? User { get; set; }
 }

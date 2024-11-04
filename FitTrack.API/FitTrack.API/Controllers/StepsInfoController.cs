@@ -39,10 +39,13 @@ public class StepsInfoController : ControllerBase
     [HttpGet("get-steps-by-userId-by-period/{userId}/{fromDate}/{toDate}")]
     public async Task<IActionResult> GetStepsInfoByUserIdByPeriod(string userId, DateTime fromDate, DateTime toDate)
     {
+        fromDate = DateTime.SpecifyKind(fromDate, DateTimeKind.Utc);
+        toDate = DateTime.SpecifyKind(toDate, DateTimeKind.Utc);
+        
         var meals = await _context.Steps
             .Where(m => m.UserId == userId
-                        && m.Date.Day >= fromDate.Day
-                        && m.Date.Day <= toDate.Day)
+                        && m.Date.Date >= fromDate.Date
+                        && m.Date.Date <= toDate.Date)
             .GroupBy(m => m.Date.Date)
             .Select(g => new
             {

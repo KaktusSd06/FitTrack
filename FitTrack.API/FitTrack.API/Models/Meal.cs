@@ -5,10 +5,10 @@ public class Meal
 {
     public int Id { get; set; }
     [MaxLength(50)]
-    public required string Name { get; set; }
-    public required decimal Calories { get; set; } 
-    public required DateTime DateOfConsumption { get; set; } 
+    public string Name { get; set; }
+    public decimal Calories { get; set; } 
+    public DateTime DateOfConsumption { get; set; } = DateTime.UtcNow;
 
-    public required string UserId { get; set; } 
-    public required User User { get; set; }
+    public string UserId { get; set; } 
+    public User? User { get; set; }
 }
