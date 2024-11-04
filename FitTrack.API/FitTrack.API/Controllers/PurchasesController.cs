@@ -70,7 +70,7 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Purchase>> PostPurchase(Purchase purchase)
         {
-            _context.Purchases.Add(purchase);
+            await _context.Purchases.AddAsync(purchase);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPurchase", new { id = purchase.Id }, purchase);

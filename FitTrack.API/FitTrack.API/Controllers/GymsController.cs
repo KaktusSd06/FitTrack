@@ -70,7 +70,7 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Gym>> PostGym(Gym gym)
         {
-            _context.Gyms.Add(gym);
+            await _context.Gyms.AddAsync(gym);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetGym", new { id = gym.Id }, gym);

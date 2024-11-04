@@ -3,6 +3,7 @@ using System;
 using FitTrack.API;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FitTrack.API.Migrations
 {
     [DbContext(typeof(FitTrackDbContext))]
-    partial class FitTrackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241104182459_RemoveMealsPerDay")]
+    partial class RemoveMealsPerDay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace FitTrack.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("ExerciseIndividualTraining", b =>
-                {
-                    b.Property<int>("ExercisesId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("IndividualTrainingsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ExercisesId", "IndividualTrainingsId");
-
-                    b.HasIndex("IndividualTrainingsId");
-
-                    b.ToTable("ExerciseIndividualTraining");
-                });
 
             modelBuilder.Entity("FitTrack.API.Models.Exercise", b =>
                 {
@@ -49,12 +37,17 @@ namespace FitTrack.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("IndividualTrainingId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IndividualTrainingId");
 
                     b.ToTable("Exercises");
                 });
@@ -760,19 +753,15 @@ namespace FitTrack.API.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("ExerciseIndividualTraining", b =>
+            modelBuilder.Entity("FitTrack.API.Models.Exercise", b =>
                 {
-                    b.HasOne("FitTrack.API.Models.Exercise", null)
-                        .WithMany()
-                        .HasForeignKey("ExercisesId")
+                    b.HasOne("FitTrack.API.Models.IndividualTraining", "IndividualTraining")
+                        .WithMany("Exercises")
+                        .HasForeignKey("IndividualTrainingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FitTrack.API.Models.IndividualTraining", null)
-                        .WithMany()
-                        .HasForeignKey("IndividualTrainingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("IndividualTraining");
                 });
 
             modelBuilder.Entity("FitTrack.API.Models.GroupTraining", b =>
@@ -1054,6 +1043,11 @@ namespace FitTrack.API.Migrations
                     b.Navigation("Trainers");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("FitTrack.API.Models.IndividualTraining", b =>
+                {
+                    b.Navigation("Exercises");
                 });
 
             modelBuilder.Entity("FitTrack.API.Models.Membership", b =>

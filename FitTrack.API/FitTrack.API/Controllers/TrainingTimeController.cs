@@ -40,7 +40,7 @@ public class TrainingTimeController : Controller
     [HttpPost]
     public async Task<IActionResult> PostUserTrainingTime(TrainingTime trainingTime)
     {
-        _context.TrainingTimes.Add(trainingTime);
+        await _context.TrainingTimes.AddAsync(trainingTime);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetTrainingTimeById", new { id = trainingTime.Id }, trainingTime);

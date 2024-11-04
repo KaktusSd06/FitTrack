@@ -107,7 +107,7 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Meal>> PostMeal(Meal meal)
         {
-            _context.Meals.Add(meal);
+            await _context.Meals.AddAsync(meal);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMeal", new { id = meal.Id }, meal);

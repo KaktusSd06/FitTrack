@@ -70,7 +70,7 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Exercise>> PostExercise(Exercise exercise)
         {
-            _context.Exercises.Add(exercise);
+            await _context.Exercises.AddAsync(exercise);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetExercise", new { id = exercise.Id }, exercise);

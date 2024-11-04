@@ -70,7 +70,7 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Good>> PostGood(Good good)
         {
-            _context.Goods.Add(good);
+            await _context.Goods.AddAsync(good);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetGood", new { id = good.Id }, good);

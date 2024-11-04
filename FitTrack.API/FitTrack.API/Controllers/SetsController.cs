@@ -70,7 +70,7 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Set>> PostSet(Set set)
         {
-            _context.Sets.Add(set);
+            await _context.Sets.AddAsync(set);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetSet", new { id = set.Id }, set);
