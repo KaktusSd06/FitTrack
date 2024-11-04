@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "63HkQhtKI8U=",
+  "dgSpecHash": "S3TffhKTQyI=",
   "success": true,
-  "projectFilePath": "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\Fittrack.API\\FitTrack.API.csproj",
+  "projectFilePath": "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\FitTrack.API\\FitTrack.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vitek\\.nuget\\packages\\entityframework\\6.5.1\\entityframework.6.5.1.nupkg.sha512",
     "C:\\Users\\vitek\\.nuget\\packages\\google.apis\\1.68.0\\google.apis.1.68.0.nupkg.sha512",

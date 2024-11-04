@@ -10,5 +10,5 @@ public class Trainer : Person
     public ICollection<User>? Users { get; set; }
     public ICollection<IndividualTraining>? IndividualTrainings { get; set; }
     public ICollection<GroupTraining>? GroupTrainings { get; set; }
-    public ICollection<TrainingProgram>? TrainingPrograms { get; set; }
+    //public ICollection<TrainingProgram>? TrainingPrograms { get; set; }
 }

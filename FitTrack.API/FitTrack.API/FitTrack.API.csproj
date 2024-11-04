@@ -34,4 +34,11 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Models\TrainingInProgram.cs" />
+    <Compile Remove="Models\TrainingProgram.cs" />
+    <Compile Remove="Controllers\TrainingProgramsController.cs" />
+    <Compile Remove="Controllers\TrainingsInTrainingController.cs" />
+  </ItemGroup>
+
 </Project>

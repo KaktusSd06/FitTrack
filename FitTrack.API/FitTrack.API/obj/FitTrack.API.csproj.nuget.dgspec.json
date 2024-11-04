@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\Fittrack.API\\FitTrack.API.csproj": {}
+    "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\FitTrack.API\\FitTrack.API.csproj": {}
   },
   "projects": {
-    "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\Fittrack.API\\FitTrack.API.csproj": {
+    "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\FitTrack.API\\FitTrack.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\Fittrack.API\\FitTrack.API.csproj",
+        "projectUniqueName": "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\FitTrack.API\\FitTrack.API.csproj",
         "projectName": "FitTrack.API",
-        "projectPath": "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\Fittrack.API\\FitTrack.API.csproj",
+        "projectPath": "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\FitTrack.API\\FitTrack.API.csproj",
         "packagesPath": "C:\\Users\\vitek\\.nuget\\packages\\",
-        "outputPath": "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\Fittrack.API\\obj\\",
+        "outputPath": "D:\\4 course\\CourseWork\\FitTrack\\FitTrack.API\\FitTrack.API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\vitek\\AppData\\Roaming\\NuGet\\NuGet.Config",

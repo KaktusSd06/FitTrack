@@ -21,15 +21,14 @@ namespace FitTrack.API
         public DbSet<IndividualTraining> IndividualTrainings { get; set; }
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
-        public DbSet<ExerciseInTraining> ExercisesInTraining { get; set; }
         public DbSet<Set> Sets { get; set; }
         public DbSet<Meal> Meals { get; set; }
         public DbSet<MealsPerDay> MealsPerDay { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Good> Goods { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<TrainingProgram> TrainingPrograms { get; set; }
-        public DbSet<TrainingInProgram> TrainingsInProgram { get; set; }
+        //public DbSet<TrainingProgram> TrainingPrograms { get; set; }
+        //public DbSet<TrainingInProgram> TrainingsInProgram { get; set; }
         public DbSet<WeightsInfo> Weights { get; set; }
         public DbSet<StepsInfo> Steps { get; set; }
         public DbSet<UserMembership> UserMemberships { get; set; }
