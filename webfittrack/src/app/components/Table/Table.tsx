@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -13,30 +13,19 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Chip,
-  User,
   Pagination,
   Selection,
-  ChipProps,
   SortDescriptor,
   Tooltip,
 } from "@nextui-org/react";
-import data from "./data.json";
+import { User } from "@/app/Interfaces/Interfaces"
 import { DeleteIcon } from "./DeleteIcon";
 import { EditIcon } from "./EditIcon";
 import { Key } from "@react-types/shared";
 
-const { users } = data;
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
-};
+const INITIAL_VISIBLE_COLUMNS = ["name", "actions"];
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
-
-type User = (typeof users)[0];
 
 interface Column {
   name: string;
@@ -44,22 +33,33 @@ interface Column {
   sortable?: boolean;
 }
 
-interface StatusOption {
-  name: string;
-  uid: string;
-}
-
 interface CustomTableProps {
   columns: Column[];
-  users: User[];
-  statusOptions: StatusOption[];
 }
 
 export const CustomTable = ({
   columns,
-  users,
-  statusOptions,
 }: CustomTableProps): JSX.Element => {
+  const [users, setDataJson] = useState<User[]>([]); // State variable to store the fetched data
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/proxy/Users/User');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data: User[] = await response.json(); // Type the response data as User[]
+
+        setDataJson(data); // Store the fetched data in the state variable
+        console.log('Data from API:', data); // Output the result in the console
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -67,8 +67,7 @@ export const CustomTable = ({
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(2);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
@@ -90,20 +89,13 @@ export const CustomTable = ({
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions.length
-    ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
+        user.firstName.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
+
     return filteredUsers;
-  }, [users, hasSearchFilter, statusFilter, statusOptions.length, filterValue]);
+  }, [users, hasSearchFilter, filterValue]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -127,22 +119,26 @@ export const CustomTable = ({
     const cellValue = user[columnKey as keyof User];
 
     switch (columnKey) {
-      case "name":
-        return <div className="flex items-center gap-2"> {cellValue}</div>;
-      case "email":
-        return <div className="flex items-center gap-2"> {cellValue}</div>;
-      case "status":
+
+      case "trainer":
+        // Check if cellValue is a Trainer object
         return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[user.status]}
-            size="sm"
-            variant="flat"
-          >
-            {cellValue}
-          </Chip>
+          <div className="flex items-center gap-2">
+            {cellValue && typeof cellValue === "object" && "firstName" in cellValue
+              ? cellValue.firstName
+              : "N/A"}  {/* Fallback if trainer object is not valid */}
+          </div>
         );
-      case "actions":
+
+      case "gym":
+        // Check if cellValue is a Gym object
+        return (
+          <div className="flex items-center gap-2">
+            {cellValue && typeof cellValue === "object" && "name" in cellValue
+              ? cellValue.name
+              : "N/A"}  {/* Fallback if gym object is not valid */}
+          </div>
+        ); case "actions":
         return (
           <div className="relative flex items-center gap-2">
             <Tooltip content="Edit user">
@@ -158,7 +154,15 @@ export const CustomTable = ({
           </div>
         );
       default:
-        return cellValue;
+        return (
+          <div>
+            {cellValue && typeof cellValue === "object" && "name" in cellValue
+              ? cellValue.name
+              : cellValue && typeof cellValue === "string" || cellValue === "number"
+                ? cellValue
+                : "N/A"}
+          </div>
+        );
     }
   }, []);
   const onNextPage = React.useCallback(() => {
@@ -201,7 +205,7 @@ export const CustomTable = ({
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
+            placeholder="Пошук за ім'ям"
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
@@ -209,26 +213,7 @@ export const CustomTable = ({
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button variant="flat">Status</Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {status.name}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button variant="flat">Columns</Button>
+                <Button variant="flat">Колонки</Button>
               </DropdownTrigger>
               <DropdownMenu
                 disallowEmptySelection
@@ -246,16 +231,16 @@ export const CustomTable = ({
               </DropdownMenu>
             </Dropdown>
             <Button color="warning" className="text-white">
-              Add New
+              Додати
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users.length} users
+            Загалом {users.length}
           </span>
           <label className="flex items-center text-default-400 text-small">
-            Rows per page:
+            Кількість записів:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
               onChange={onRowsPerPageChange}
@@ -271,8 +256,6 @@ export const CustomTable = ({
   }, [
     filterValue,
     onSearchChange,
-    statusFilter,
-    statusOptions,
     visibleColumns,
     columns,
     users.length,
@@ -282,38 +265,20 @@ export const CustomTable = ({
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400"></span>
+      <div className="flex justify-center items-center py-2 px-2">
         <Pagination
           isCompact
           showControls
           showShadow
           classNames={{
-            base: "text-white",
+            wrapper: "color-[#f4f0e9]",
+            base: "color-[#f4f0e9]",
+            cursor: "bg-[#E48100] text-white",
           }}
-          color="warning"
           page={page}
           total={pages}
           onChange={setPage}
         />
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onPreviousPage}
-          >
-            Previous
-          </Button>
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onNextPage}
-          >
-            Next
-          </Button>
-        </div>
       </div>
     );
   }, [page, pages, onPreviousPage, onNextPage]);

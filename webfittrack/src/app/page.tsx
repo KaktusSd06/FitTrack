@@ -1,9 +1,11 @@
-import data from "./components/Table/data.json";
+'use client';
+import data from "@/app/Columns/user.json"
 import { CustomTable } from "./components/Table/Table";
 export default function Home() {
   return (
-    <>
-      <CustomTable {...data} />
-    </>
+    <div>
+      {/* Pass columns as a property, not by spreading */}
+      <CustomTable columns={data.columns} />
+    </div>
   );
 }
