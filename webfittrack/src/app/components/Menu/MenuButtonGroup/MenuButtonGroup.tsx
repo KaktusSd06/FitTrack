@@ -12,25 +12,28 @@ const notoSans = Noto_Sans({
 interface ButtonData {
   text: string;
   imageSrc: string;
+  redirectPath: string,
 }
 
 
 interface MenuButtonGroupProps {
-  buttonsData: ButtonData[]; 
+  buttonsData: ButtonData[];
 }
 
 const MenuButtonGroup: NextPage<MenuButtonGroupProps> = ({ buttonsData }) => {
-    const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const handleToggle = (index: number) => {
     // If the clicked button is already active, do nothing
     if (activeIndex !== index) {
-      setActiveIndex(index); // Set the new active button
+      setActiveIndex(index);
+
+
     }
-};
+  };
 
   return (
-    <div className={notoSans.className+ "layoutContainer"} style={{ width: '400px', height: '360px', display: 'flex', flexDirection: 'column' }}>
+    <div className={notoSans.className + "layoutContainer"} style={{ width: '400px', height: '360px', display: 'flex', flexDirection: 'column' }}>
       {buttonsData.map((button, index) => (
         <MenuButton
           key={index}

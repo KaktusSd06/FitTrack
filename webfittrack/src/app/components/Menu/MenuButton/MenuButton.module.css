@@ -108,3 +108,25 @@
 	  display: none; /* Hide text on smaller screens */
   }
 }
+@media (max-width: 480px) {
+	.property1defaultInner,
+	.property1variant2Inner {
+		left: 12px;
+		width: 56px;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+	}
+	.property1defaultChild{
+		display: none;
+	  }
+	.userIcon {
+		margin-left:4px;
+		margin-top: 1px;
+	}
+  
+	.div {
+		display: none; /* Hide text on smaller screens */
+	}
+  }
