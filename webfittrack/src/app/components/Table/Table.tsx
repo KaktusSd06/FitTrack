@@ -230,7 +230,7 @@ export const CustomTable = ({
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="warning" className="text-white">
+            <Button className=" bg-[#E48100] text-white">
               Додати
             </Button>
           </div>
@@ -271,8 +271,6 @@ export const CustomTable = ({
           showControls
           showShadow
           classNames={{
-            wrapper: "color-[#f4f0e9]",
-            base: "color-[#f4f0e9]",
             cursor: "bg-[#E48100] text-white",
           }}
           page={page}

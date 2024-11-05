@@ -1,4 +1,33 @@
 // Interfaces.tsx
+export const AdminButtonData = [
+    {
+        text: "Користувачі",
+        imageSrc: "/images/user.svg",
+        redirectPath: "/pages/admin/users"
+    },
+    {
+        text: "Товари",
+        imageSrc: "/images/local-grocery-store.svg",
+        redirectPath: "/pages/admin/products"
+    },
+    {
+        text: "Панель",
+        imageSrc: "/images/icon-color.png",
+        redirectPath: "/pages/admin/dashboard"
+    },
+    {
+        text: "Тренування",
+        imageSrc: "/images/mdi-dumbbell.svg",
+        redirectPath: "/pages/admin/trainings"
+    },
+    {
+        text: "Транзакції",
+        imageSrc: "/images/attach-money.svg",
+        redirectPath: "/pages/admin/transactions"
+    },
+];
+
+
 export interface Good {
     id: number;
     name?: string;

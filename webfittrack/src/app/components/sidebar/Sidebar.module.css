@@ -73,10 +73,14 @@
     .frameChild {
         width: 30px;
         height: 30px;
+        margin-left: 0px;
     }
+    .frameGroup{
+        margin-left: 0px;
+        
+    padding: 0 0 0vh;
 
-    /* Hide the sidebar completely if needed */
-    .frameParent {
-        display: none;
     }
+    /* Hide the sidebar completely if needed */
+    
 }
