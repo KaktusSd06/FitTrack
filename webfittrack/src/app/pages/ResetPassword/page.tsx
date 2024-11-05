@@ -1,9 +1,11 @@
+"use client"
+
 import AuthLayout from "@/app/components/AuthPage/AuthLayout";
-import NewPasswordContent from "@/app/components/AuthPage/ResetPassword/NewPassword";
+import ResetPassword from "@/app/components/AuthPage/ResetPassword/ResetPassword";
 export default function NewPassword() {
   return (
     <AuthLayout>
-      <NewPasswordContent></NewPasswordContent>
+      <ResetPassword></ResetPassword>
     </AuthLayout>
   );
 }

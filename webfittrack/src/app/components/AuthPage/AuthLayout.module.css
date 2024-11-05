@@ -40,6 +40,10 @@
     display: none; /* Ховаємо Slider, якщо ширина менша за 900px */
   }
 
+  .container {
+    padding-bottom: 10px;
+  }
+
   .UserContainer {
     width: 100%; /* UserContainer займає всю ширину при малих екранах */
   }
