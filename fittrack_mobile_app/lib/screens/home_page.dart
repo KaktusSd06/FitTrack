@@ -7,26 +7,29 @@ import '../styles/colors.dart';
 import '../styles/fonts.dart';
 import '../theme/theme_provider.dart';
 import 'home_fragment.dart';
-import 'logInPage.dart';
-import 'training_fragment.dart';
+import 'Authorization/login.dart';
+import 'training/training_fragment.dart';
 import 'shop_fragment.dart';
-import 'profile_fragment.dart';
+import 'profile/profile_fragment.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
 
   @override
   State<HomePage> createState() => _HomePage();
 }
 
+
+
 class _HomePage extends State<HomePage> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _pages = <Widget>[
+  static List<Widget> _pages = <Widget>[
     HomeScreen(),
-    TrainingScreen(),
-    ShopScreen(),
-    ProfileScreen(),
+    const TrainingScreen(),
+    const ShopScreen(),
+    const ProfileScreen(),
   ];
 
   void _onTabChange(int index) {

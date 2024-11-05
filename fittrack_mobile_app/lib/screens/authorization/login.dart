@@ -1,14 +1,15 @@
+import 'package:fittrack_mobile_app/screens/Authorization/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:fittrack_mobile_app/widgets/button_with_text.dart';
 import 'package:fittrack_mobile_app/widgets/button_with_text_icon.dart';
 import 'package:provider/provider.dart';
-import '../models/user.dart';
-import '../providers/AuthProvider.dart';
-import '../services/user_service.dart';
-import '../styles/colors.dart';
-import '../styles/fonts.dart';
-import '../screens/signUp.dart';
-import '../screens/homepage.dart';
+import '../../models/user.dart';
+import '../../providers/AuthProvider.dart';
+import '../../services/user_service.dart';
+import '../../styles/colors.dart';
+import '../../styles/fonts.dart';
+import 'signin.dart';
+import '../home_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -156,21 +157,24 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 20),
                         TextButton(
                           onPressed: () {
-                            // Логіка відновлення пароля
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+                            );
                           },
-                          child: RichText(
-                            text: const TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'Забули пароль? ',
-                                  style: AppTextStyles.h3_gray,
-                                ),
-                                TextSpan(
-                                  text: 'Увійти',
-                                  style: AppTextStyles.h3_fulvous,
-                                ),
-                              ],
-                            ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Забули пароль?  ',
+                                style: AppTextStyles.h3_gray,
+                              ),
+                              Text(
+                                'Відновити',
+                                style: AppTextStyles.h3_fulvous,
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -258,8 +262,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
             border: InputBorder.none,
           ),
-          style: const TextStyle(
-            color: AppColors.jet,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.light
+                ? AppColors.jet
+                : AppColors.white,
             fontSize: 18,
           ),
         ),

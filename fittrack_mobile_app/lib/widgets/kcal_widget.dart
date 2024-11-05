@@ -2,20 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fittrack_mobile_app/styles/colors.dart';
 import 'package:fittrack_mobile_app/styles/fonts.dart';
-
-import '../screens/kcal_page.dart';
+import 'package:provider/provider.dart';
+import '../providers/AuthProvider.dart';
+import '../services/meals_service.dart'; // Import the MealsService to fetch data
+import '../screens/Meals/kcal_page.dart';
 
 class KcalWidget extends StatelessWidget {
   final bool isClickable;
+  final int? calories; // Make it nullable to show 'Loading...' if null
 
-  KcalWidget({this.isClickable = true}); // за замовчуванням клікабельний
+  KcalWidget({this.isClickable = true, this.calories});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: isClickable
           ? () => Navigator.push(context, MaterialPageRoute(builder: (context) => KcalPage()))
-          : null, // якщо не клікабельний, на tap нічого не відбувається
+          : null,
       child: Container(
         padding: const EdgeInsets.all(16),
         width: double.infinity,
@@ -46,7 +49,7 @@ class KcalWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "1283",
+                        calories == null ? '...' : '$calories',
                         style: AppTextStyles.h1.copyWith(
                           color: Theme.of(context).brightness == Brightness.light
                               ? AppColors.black
@@ -70,3 +73,5 @@ class KcalWidget extends StatelessWidget {
     );
   }
 }
+
+

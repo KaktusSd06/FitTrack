@@ -1,11 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fittrack_mobile_app/firebase_options.dart';
 import 'package:fittrack_mobile_app/providers/AuthProvider.dart';
-import 'package:fittrack_mobile_app/screens/logInPage.dart';
+import 'package:fittrack_mobile_app/screens/authorization/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fittrack_mobile_app/theme/theme_provider.dart';
-import 'package:fittrack_mobile_app/screens/homepage.dart';
+import 'package:fittrack_mobile_app/screens/home_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiProvider(
       providers: [
@@ -22,7 +26,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ThemeProvider, AuthProvider>( // Використовуємо Consumer2 для двох провайдерів
+    return Consumer2<ThemeProvider, AuthProvider>(
       builder: (context, themeProvider, authProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,

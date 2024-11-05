@@ -71,7 +71,6 @@ class UserService {
     }
   }
 
-
   static Future<Map<String, dynamic>?> getUserByEmail(String email) async {
     final emailEncoded = Uri.encodeComponent(email);
     final userResponse = await http.get(
@@ -135,7 +134,7 @@ class UserService {
     };
 
     final response = await http.put(
-      Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-basic-info$id'),
+      Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-basic-info/$id'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -180,7 +179,7 @@ class UserService {
       phoneNumber,
     };
 
-    final response = await http.put(
+    final response = await http.post(
       Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-phone/$id'),
       headers: {
         'Content-Type': 'application/json',
@@ -193,6 +192,25 @@ class UserService {
     }
     else {
       print('Failed to register user. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return false;
+    }
+  }
+
+  static Future<bool> signInWithGoogle(String token) async{
+    final response = await http.post(
+      Uri.parse('https://fittrackapidev.onrender.com/api/Account/login-google'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(token),
+    ).timeout(const Duration(seconds: 60));
+
+    if (response.statusCode == 204) {
+      return true;
+    }
+    else {
+      print('Failed to register with google user. Status code: ${response.statusCode}');
       print('Response body: ${response.body}');
       return false;
     }
@@ -252,7 +270,7 @@ class UserService {
       body: json.encode(payload),
     ).timeout(const Duration(seconds: 60));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return 200;
     }
     else {

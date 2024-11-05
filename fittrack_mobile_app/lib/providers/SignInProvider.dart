@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../models/group_training_user.dart';
 import '../models/gym.dart';
 import '../models/individual_training.dart';
-import '../models/meals_per_day.dart';
 import '../models/membership.dart';
 import '../models/purchase.dart';
 import '../models/steps_info.dart';

@@ -1,16 +1,16 @@
-import 'package:fittrack_mobile_app/screens/editProfile.dart';
-import 'package:fittrack_mobile_app/screens/logInPage.dart';
+import 'package:fittrack_mobile_app/screens/profile/edit_profile.dart';
+import 'package:fittrack_mobile_app/screens/Authorization/login.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/user.dart';
-import '../providers/AuthProvider.dart';
-import '../services/user_service.dart';
-import '../styles/colors.dart';
-import '../styles/fonts.dart';
-import '../theme/theme_provider.dart';
+import '../../models/user.dart';
+import '../../providers/AuthProvider.dart';
+import '../../services/user_service.dart';
+import '../../styles/colors.dart';
+import '../../styles/fonts.dart';
+import '../../theme/theme_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -88,16 +88,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return const Center(child: Text('Error fetching user data'));
+          return _buildErrorContent(); // Show error content with Log Out button
         } else if (snapshot.hasData && snapshot.data != null) {
           User user = snapshot.data!;
           return _buildProfileContent(user);
         } else {
-          return const Center(child: Text('No user data available'));
+          return const Center(child: Text('Помилка завантаження даних'));
         }
       },
     );
   }
+
+  Widget _buildErrorContent() {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Не вдалося завантажити дані користувача.',
+            style: TextStyle(fontSize: 18),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              authProvider.logout();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
+            child: const Text('Вийти з акаунта'),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   Widget _buildProfileContent(User user) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);

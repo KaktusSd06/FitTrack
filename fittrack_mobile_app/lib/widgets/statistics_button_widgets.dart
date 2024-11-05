@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fittrack_mobile_app/styles/colors.dart';
 import 'package:fittrack_mobile_app/styles/fonts.dart';
 
-import '../screens/kcal_page.dart';
+import '../screens/Meals/kcal_page.dart';
 
 class StatisticsButtonWidgets extends StatelessWidget {
   @override

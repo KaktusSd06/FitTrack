@@ -22,7 +22,7 @@ ThemeData darkMode = ThemeData(
     onPrimary: AppColors.white,
     secondary: AppColors.fulvous,
     onSecondary: AppColors.black,
-    surface: AppColors.black,  // Використовуємо surface замість background
+    surface: AppColors.black,
     onSurface: AppColors.isabelline,
     primaryContainer: AppColors.white,
   ),

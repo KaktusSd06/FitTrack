@@ -1,44 +1,55 @@
-import 'training.dart';
 import 'user.dart';
 import 'trainer.dart';
+import 'set.dart';
 
-class IndividualTraining extends Training {
-  final int userId;
-  final int? trainerId;
-  final User user;
+class IndividualTraining {
+  final int id;
+  final String? description;
+  final DateTime date;
+  final String? userId;
+  final User? user;
+  final String? trainerId;
   final Trainer? trainer;
+  final List<Set>? sets;
 
   IndividualTraining({
-    required int id,
-    required String description,
-    required DateTime date,
-    required this.userId,
+    required this.id,
+    this.description,
+    required this.date,
+    this.userId,
+    this.user,
     this.trainerId,
-    required this.user,
     this.trainer,
-  }) : super(id: id, description: description, date: date);
+    this.sets,
+  });
 
+  // Factory constructor to create an IndividualTraining instance from a JSON object
   factory IndividualTraining.fromJson(Map<String, dynamic> json) {
     return IndividualTraining(
-      id: json['id'],
-      description: json['description'],
-      date: DateTime.parse(json['date']), // Include date parsing
-      userId: json['userId'],
-      trainerId: json['trainerId'],
-      user: User.fromJson(json['user']),
+      id: json['id'] as int,
+      description: json['description'] as String?,
+      date: DateTime.parse(json['date'] as String),
+      userId: json['userId'] as String?,
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
+      trainerId: json['trainerId'] as String?,
       trainer: json['trainer'] != null ? Trainer.fromJson(json['trainer']) : null,
+      sets: (json['sets'] as List<dynamic>?)
+          ?.map((set) => Set.fromJson(set as Map<String, dynamic>))
+          .toList(),
     );
   }
 
+  // Method to convert an IndividualTraining instance into a JSON object
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'description': description,
-      'date': date.toIso8601String(), // Include date serialization
+      'date': date.toIso8601String(),
       'userId': userId,
+      'user': user?.toJson(),
       'trainerId': trainerId,
-      'user': user.toJson(),
       'trainer': trainer?.toJson(),
+      'sets': sets?.map((set) => set.toJson()).toList(),
     };
   }
 }

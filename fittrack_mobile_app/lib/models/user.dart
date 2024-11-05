@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'meal.dart';
 import 'person.dart';
 import 'membership.dart';
 import 'gym.dart';
@@ -6,14 +7,13 @@ import 'trainer.dart';
 import 'group_training_user.dart';
 import 'individual_training.dart';
 import 'purchase.dart';
-import 'meals_per_day.dart';
 import 'weights_info.dart';
 import 'steps_info.dart';
 
 class User extends Person {
   final int? height;
   final DateTime? dateOfBirth;
-  final String? trainerId; // Changed to String
+  final String? trainerId;
   final int? gymId;
 
   final Membership? membership;
@@ -23,7 +23,7 @@ class User extends Person {
   final List<GroupTrainingUser>? groupTrainingUsers;
   final List<IndividualTraining>? individualTrainings;
   final List<Purchase>? purchases;
-  final List<MealsPerDay>? mealsPerDay;
+  final List<Meal>? mealsPerDay;
   final List<WeightsInfo>? weights;
   final List<StepsInfo>? steps;
 
@@ -98,7 +98,7 @@ class User extends Person {
           : null,
       mealsPerDay: json['mealsPerDay'] != null
           ? (json['mealsPerDay'] as List)
-          .map((e) => MealsPerDay.fromJson(e))
+          .map((e) => Meal.fromJson(e))
           .toList()
           : null,
       weights: json['weights'] != null

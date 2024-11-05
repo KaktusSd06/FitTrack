@@ -1,16 +1,19 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../providers/AuthProvider.dart';
-import '../services/ApiService.dart';
-import '../services/user_service.dart';
-import '../styles/colors.dart';
-import '../styles/fonts.dart';
-import '../widgets/button_with_text.dart';
-import '../widgets/button_with_text_icon.dart';
-import 'homepage.dart';
-import 'logInPage.dart';
+import 'package:sign_in_button/sign_in_button.dart';
+import '../../providers/AuthProvider.dart';
+import '../../services/ApiService.dart';
+import '../../services/user_service.dart';
+import '../../styles/colors.dart';
+import '../../styles/fonts.dart';
+import '../../widgets/button_with_text.dart';
+import '../../widgets/button_with_text_icon.dart';
+import '../home_page.dart';
+import 'login.dart';
 
 class SignupStepOne extends StatefulWidget {
   @override
@@ -18,11 +21,28 @@ class SignupStepOne extends StatefulWidget {
 }
 
 class _SignupStepOneState extends State<SignupStepOne> {
+
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   bool _isLoading = false;
+  bool _isLoadingGoogle = false;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _auth.authStateChanges().listen((event) {
+      setState((){
+        _user = event;
+      });
+    });
+  }
 
   Future<bool> _onWillPop() async {
     return (await showDialog(
@@ -60,9 +80,33 @@ class _SignupStepOneState extends State<SignupStepOne> {
       ),
     );
   }
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Реєстрація успішна"),
+          content: Text("Ви успішно зареєстровані!\nУвійдіть в систему щоб продовжити"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -88,10 +132,22 @@ class _SignupStepOneState extends State<SignupStepOne> {
                       onPressed: () => _handleContinue(context),
                     ),
                     const SizedBox(height: 4),
-                    ButtonWithTextIcon(
+
+                    // SizedBox(
+                    //   height: 50,
+                    //   child: SignInButton(
+                    //       Buttons.google,
+                    //       text: "Продовжити з Google",
+                    //       onPressed: _handelGoogleSignIn
+                    //   ),
+                    // ),
+
+                    _isLoadingGoogle
+                        ? const Center(child: CircularProgressIndicator())
+                        : ButtonWithTextIcon(
                       text: "Продовжити з Google",
                       iconPath: 'lib/assets/images/googleIcon.png',
-                      onPressed: () => print("Продовжити через Google натиснуто"),
+                      onPressed: _handleGoogleSignIn,
                     ),
                   ],
                 ),
@@ -100,6 +156,51 @@ class _SignupStepOneState extends State<SignupStepOne> {
             _buildLoginPrompt(context),
           ],
         ),
+      ),
+    );
+  }
+
+  void _handleGoogleSignIn() async {
+    if (_isLoadingGoogle) return; // Додаємо перевірку, щоб не виконувалось повторно
+
+    try {
+      setState(() => _isLoadingGoogle = true);
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        _showSnackBar("Помилка реєстрації");
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+
+      if(await UserService.signInWithGoogle((googleAuth.accessToken).toString())){
+        _showSuccessDialog();
+      }
+      else{
+        _showSnackBar("Не вдалось зареєструватись за допомогою Google, спробуйте ще раз");
+      }
+
+      // final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      // final credential = GoogleAuthProvider.credential(
+      //   accessToken: googleAuth.accessToken,
+      //   idToken: googleAuth.idToken,
+      // );
+      //
+      // await _auth.signInWithCredential(credential);
+    } catch (error) {
+      _showSnackBar("Не вдалось зареєструватись за допомогою Google, спробуйте ще раз");
+    } finally {
+      setState(() => _isLoadingGoogle = false);
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -350,7 +451,6 @@ class _SignupStepTwoState extends State<SignupStepTwo> {
     );
   }
 
-
   void _handleRegister() async {
     if (_validateStepTwo()) {
       setState(() => _isLoading = true);
@@ -406,7 +506,6 @@ class _SignupStepTwoState extends State<SignupStepTwo> {
       },
     );
   }
-
 
   bool _validateStepTwo() {
     if (lastNameController.text.isEmpty || firstNameController.text.isEmpty ||
