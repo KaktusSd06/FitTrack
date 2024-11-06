@@ -1,15 +1,16 @@
 import React from "react";
 import { Tooltip, Avatar } from "@nextui-org/react";
+import { User } from "@/app/Interfaces/Interfaces";
 import { DeleteIcon } from "./DeleteIcon";
 import { EditIcon } from "./EditIcon";
 import CameraIcon from "./CameraIcon";
 
 interface UserTableCellProps {
-    user: object;
+    user: User;
     columnKey: React.Key;
 }
 const UserTableCell: React.FC<UserTableCellProps> = ({ user, columnKey }) => {
-    const cellValue = user[columnKey as keyof object];
+    const cellValue = user[columnKey as keyof User];
 
     switch (columnKey) {
         case "trainer":

@@ -8,6 +8,7 @@ import {
     Selection
 } from "@nextui-org/react";
 import { Column } from "./TableAdminUsers";
+import ModalCreateTrainer from "../Modal/ModalCreateTrainer/ModalCreateTrainer";
 
 interface TableTopContentProps {
     filterValue: string;
@@ -18,6 +19,7 @@ interface TableTopContentProps {
     setVisibleColumns: React.Dispatch<React.SetStateAction<Selection>>;
     onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     usersCount: number;
+    role: string
 }
 
 const TableTopContent = ({
@@ -29,7 +31,9 @@ const TableTopContent = ({
     setVisibleColumns,
     onRowsPerPageChange,
     usersCount,
+    role,
 }: TableTopContentProps) => {
+
     return (
         <div className="flex flex-col gap-4">
             <div className="flex justify-between gap-3 items-end">
@@ -61,7 +65,10 @@ const TableTopContent = ({
                             ))}
                         </DropdownMenu>
                     </Dropdown>
-                    <Button className=" bg-[#E48100] text-white">Додати</Button>
+                    {(role === "Trainer" || role === "Admin") && <ModalCreateTrainer />}
+
+
+
                 </div>
             </div>
             <div className="flex justify-between items-center">

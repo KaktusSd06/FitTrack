@@ -1,11 +1,9 @@
-import { CustomTable } from "@/app/components/Table/Table";
+import { Spinner } from "@nextui-org/react";
 import React from "react";
-import { columns } from "@/app/Columns/user.json"
-
-export default function AdminUsers() {
-<<<<<<< HEAD
-=======
-    const [data, setData] = useState<User[]>([]); // Задайте відповідний тип даних для `data`
+import { useEffect, useState } from "react";
+import { fetchGymById } from "@/app/Api/gym/Gym";
+export default function GridGood() {
+    const [data, setData] = useState<Gym>([]); // Задайте відповідний тип даних для `data`
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -13,10 +11,14 @@ export default function AdminUsers() {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const users = await getUserByRole("User"); // Отримуємо дані користувачів
-                setData(users);
-                console.log(data[0].role);
-                console.log(users);
+
+
+                const id: number = 0;
+
+
+                const gym = await fetchGymById(id); // Отримуємо дані користувачів
+                setData(gym);
+                console.log(gym);
             } catch (error) {
                 console.error("Error fetching users:", error);
             } finally {
@@ -28,12 +30,10 @@ export default function AdminUsers() {
     }, []);
 
     if (loading) return <Spinner label="Завантаження..." color="warning" />; // Показуємо "завантаження" під час виконання запиту
->>>>>>> 5b36690 (addded ability for creating trainers)
 
     return (
         <>
-            <CustomTable columns={columns} />
+
         </>
     );
 }
-

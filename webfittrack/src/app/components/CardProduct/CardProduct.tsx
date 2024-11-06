@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import React from "react";
 import styles from "./CardProduct.module.css";
-
 interface CardProductProps {
   title: string;
   description: string;

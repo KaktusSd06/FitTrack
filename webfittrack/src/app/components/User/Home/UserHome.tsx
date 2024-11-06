@@ -2,7 +2,7 @@
 
 import styles from "./UserHome.module.css";
 import StatsCard from "../../StatsCard/StatsCard";
-import { Button, Input, Tab, Tabs } from "@nextui-org/react";
+import { Button, Tab, Tabs } from "@nextui-org/react";
 import Calendar from "../Calendar/Calendar";
 import dayjs from "dayjs";
 import { CustomTable } from "../../Table/Table";
@@ -138,7 +138,6 @@ const UserHome = () => {
           Створити
         </Button>
       </div>
-      <CustomTable {...data} />
     </div>
   );
 };

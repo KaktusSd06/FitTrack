@@ -11,11 +11,11 @@ import {
   Selection,
   SortDescriptor,
 } from "@nextui-org/react";
-import { Admin, Trainer, User } from "@/app/Interfaces/Interfaces";
+import { Gym } from "@/app/Interfaces/Interfaces";
 import TableTopContent from "./TableTopContent";
 import UserTableCell from "./UserTableCell ";
 
-const INITIAL_VISIBLE_COLUMNS = ["firstName", "lastName", "email", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "location", "email", "actions"];
 
 export interface Column {
   name: string;
@@ -23,31 +23,30 @@ export interface Column {
   sortable?: boolean;
 }
 
-interface CustomTableProps<T> {
+interface CustomTableProps {
   columns: Column[];
-  data: T[];
+  data: Gym[];
 }
 
-export const TableAdminUsers = <T extends User | Trainer | Admin>({
+export const TableOwnerGyms = ({
   columns,
   data,
-}: CustomTableProps<T>): JSX.Element => {
-  const [users, setDataJson] = useState<T[]>([]);
-  const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "age",
+}: CustomTableProps): JSX.Element => {
+  const [gyms, setGyms] = useState<Gym[]>([]);
+  const [filterValue, setFilterValue] = useState("");
+  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+  const [visibleColumns, setVisibleColumns] = useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+    column: "name",
     direction: "ascending",
   });
-  const [page, setPage] = React.useState(1);
-  const role = data[0]?.role;
-  console.log(role);
+  const [page, setPage] = useState(1);
+
   const hasSearchFilter = Boolean(filterValue);
 
   useEffect(() => {
-    setDataJson(data); // Set the `data` prop to the state directly
+    setGyms(data);
   }, [data]);
 
   const headerColumns = React.useMemo(() => {
@@ -58,14 +57,13 @@ export const TableAdminUsers = <T extends User | Trainer | Admin>({
   }, [columns, visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredGyms = [...gyms];
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.firstName.toLowerCase().includes(filterValue.toLowerCase())
+      filteredGyms = filteredGyms.filter((gym) => { if (gym.name !== undefined) gym.name.toLowerCase().includes(filterValue.toLowerCase()) }
       );
     }
-    return filteredUsers;
-  }, [users, hasSearchFilter, filterValue]);
+    return filteredGyms;
+  }, [gyms, hasSearchFilter, filterValue]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -77,8 +75,8 @@ export const TableAdminUsers = <T extends User | Trainer | Admin>({
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a, b) => {
-      const first = a[sortDescriptor.column as keyof T] as number;
-      const second = b[sortDescriptor.column as keyof T] as number;
+      const first = a[sortDescriptor.column as keyof Gym] as string | number;
+      const second = b[sortDescriptor.column as keyof Gym] as string | number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
@@ -93,8 +91,7 @@ export const TableAdminUsers = <T extends User | Trainer | Admin>({
       setVisibleColumns={setVisibleColumns}
       columns={columns}
       onRowsPerPageChange={(e) => setRowsPerPage(Number(e.target.value))}
-      usersCount={users.length}
-      role={role}
+      usersCount={gyms.length}
     />
   );
 

@@ -95,9 +95,12 @@ export interface Gym {
     admins?: Admin[];
     users?: User[];
     memberships?: Membership[];
+    goods?: Good[];
+    services?: Service[];
     groupTrainings?: GroupTraining[];
 }
 export interface Admin {
+<<<<<<< HEAD
     id?: string; // nullable
     userName?: string; // nullable
     email?: string; // nullable
@@ -108,16 +111,24 @@ export interface Admin {
     middleName?: string; // nullable, maxLength: 30
     gymId?: number; // nullable
     gym?: Gym; // nullable, reference to Gym
+=======
+    id?: string;
+    userName?: string;
+    email?: string;
+    phoneNumber?: string;
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+    gymId?: number;
+>>>>>>> 5b36690 (addded ability for creating trainers)
 }
 export interface GroupTraining {
     id: number; // required
     description?: string; // nullable
     string: string; // could also use string type for better string handling
     gymId: number; // required
-    gym?: Gym; // nullable, reference to Gym
     trainerId?: string; // nullable
-    trainer?: Trainer; // nullable, reference to Trainer
-    users?: User[]; // nullable, array of User objects
+    users?: User[];
 }
 export interface Owner {
     id?: string; // nullable
@@ -127,7 +138,7 @@ export interface Owner {
     firstName: string; // обов'язкове поле з мінімальною довжиною 1
     lastName: string; // обов'язкове поле з мінімальною довжиною 1
     middleName?: string; // nullable
-    gyms?: Gym[]; // Масив об'єктів Gym (nullable)
+    gyms?: Gym[];
 }
 export interface Membership {
     id: number;
@@ -136,17 +147,14 @@ export interface Membership {
     sessions?: number; // nullable
     durationInMonths: number;
     cost: number;
-    gym: Gym; // об'єкт Gym
-    userMemberships?: UserMembership[]; // Масив об'єктів UserMembership (nullable)
+    userMemberships?: UserMembership[];
 }
 export interface UserMembership {
     id: number;
     sessionsReminded?: number; // nullable
     expirationDate: string; // або використовуйте DateOnly, якщо це ваш власний тип
     userId?: string; // nullable
-    user?: User; // об'єкт User (nullable)
     membershipId: number;
-    membership: Membership; // об'єкт Membership
 }
 export interface User {
     id?: string;
@@ -159,9 +167,7 @@ export interface User {
     height?: number;
     dateOfBirth?: string;
     trainerId?: string;
-    trainer?: Trainer;
     gymId?: number;
-    gym?: Gym;
 }
 export interface TrainingProgram {
     id: number;
@@ -177,7 +183,6 @@ export interface TrainingInProgram {
     description?: string;
     string: string;
     trainingProgramId: number;
-    trainingProgram?: TrainingProgram;
 }
 export interface Service {
     id: number;
@@ -201,16 +206,15 @@ export interface Trainer {
     trainerId?: string;
     profilePicture: string;
     gymId?: number;
-    gym?: Gym;
 }
 
 export interface Purchase {
-    id: number;
-    itemId: number;
+    id?: number;
+    itemId?: number;
     itemType: number;
-    string: string;
-    quantity: number;
+    date: string;
+    quantity?: number;
     userId: string;
-    user: User;
-    service: Service;
+    good?: Good,
+    service?: Service;
 }
