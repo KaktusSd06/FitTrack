@@ -7,11 +7,50 @@ import Calendar from "../Calendar/Calendar";
 import dayjs from "dayjs";
 import { CustomTable } from "../../Table/Table";
 import data from "@/app/components/Table/data.json";
+import { useEffect } from "react";
+import { fetchWithAuth } from "@/app/fetchWithAuth";
+import { useRouter } from "next/router";
 
 const UserHome = () => {
   const handleClick = () => {
     console.log("Card clicked");
   };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const getUser = async (): Promise<boolean | undefined> => {
+    const email = JSON.parse(localStorage.getItem("currentUser") || "{}").email;
+    try {
+      const response = await fetchWithAuth(`/api/proxy/Admins/get-by-email/${email}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      // Перевіряємо, чи є response перед подальшою обробкою
+      if (!response) {
+        console.error("No response received");
+        return false; // Якщо response undefined, припиняємо виконання
+      }
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data.id);
+        window.location.href = "/pages/Login";
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      return false;
+    }
+  };
+
 
   const handleDateSelect = (date: dayjs.Dayjs) => {
     console.log("Вибрана дата:", date.format("DD-MM-YYYY"));

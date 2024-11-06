@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import React, { useState } from "react";
-import { Link, Input, Button } from "@nextui-org/react";
+import { useRouter } from 'next/navigation';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Link, Input, Button, useDisclosure } from "@nextui-org/react";
 import { User } from "@/app/Interfaces/Interfaces";
 import styles from "../Login/Login.module.css";
 
@@ -17,9 +18,24 @@ const ResetPassword: NextPage = () => {
     const [user, setUser] = useState<User>();
     const [confirmedPasswordError, setConfirmedPasswordError] = useState('');
     const [resetPasswordError, setResetPasswordError] = useState('');
-
+    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+    const router = useRouter();
     const toggleVisibilityPass = () => setIsPasswordVisible(!isPasswordVisible);
     const toggleVisibilityConfPass = () => setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+
+
+    const handleYesLoginClick = () => {
+        const queryParams = new URLSearchParams({
+            email: email,
+            password: password,
+        });
+        window.location.href = `/pages/Login?${queryParams.toString()}`;
+    };
+
+    const handleNoLoginClick = () => {
+        onClose();
+        router.push(`/pages/Login`);
+    }
 
     const checkExistUser = async (): Promise<boolean | undefined> => {
         try {
@@ -79,6 +95,7 @@ const ResetPassword: NextPage = () => {
         }
         if (await resetPassword()) {
             setResetPasswordError("");
+            onOpen();
         }
         else {
             setResetPasswordError("Сталась помилка при змінені паролю. Спробуйте ще раз")
@@ -256,7 +273,30 @@ const ResetPassword: NextPage = () => {
                     <Link className={styles.Link}>Зареєструватись</Link>
                 </div>
             </div>
+            <Modal hideCloseButton isDismissable={false} isOpen={isOpen} onOpenChange={onOpenChange}>
+                <ModalContent>
+                    {(
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Пароль успішно змінено!</ModalHeader>
+                            <ModalBody>
+                                <p>
+                                    Бажає увійти в систему?
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="light" onPress={handleNoLoginClick}>
+                                    Ні
+                                </Button>
+                                <Button className={`bg-[--fulvous] text-white`} onPress={handleYesLoginClick}>
+                                    Так
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
         </div>
+
     );
 };
 

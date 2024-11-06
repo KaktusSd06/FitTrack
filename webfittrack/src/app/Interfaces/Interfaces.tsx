@@ -27,6 +27,53 @@ export const AdminButtonData = [
     },
 ];
 
+export const UserButtonData = [
+    {
+        text: "Головна",
+        imageSrc: "/images/icon-color.png",
+        redirectPath: "/pages/User/Main"
+    },
+    {
+        text: "Товари та послуги",
+        imageSrc: "/images/local-grocery-store.svg",
+        redirectPath: "/pages/User/Products"
+    },
+    {
+        text: "Транзакції",
+        imageSrc: "/images/attach-money.svg",
+        redirectPath: "/pages/User/Transactions"
+    },
+];
+
+export const OwnerButtonData = [
+    {
+        text: "Зали",
+        imageSrc: "/images/mdi-dumbbell.svg",
+        redirectPath: "/pages/Owner/Gyms"
+    },
+    {
+        text: "Адміни",
+        imageSrc: "/images/people.svg",
+        redirectPath: "/pages/Owner/Admins"
+    },
+    {
+        text: "Звіти",
+        imageSrc: "/images/report.svg",
+        redirectPath: "/pages/Owner/Reports"
+    },
+    {
+        text: "Статистика",
+        imageSrc: "/images/timeline.svg",
+        redirectPath: "/pages/Owner/Statistic"
+    },
+    {
+        text: "Транзакції",
+        imageSrc: "/images/attach-money.svg",
+        redirectPath: "/pages/Owner/Transactions"
+    },
+];
+
+
 
 export interface Good {
     id: number;

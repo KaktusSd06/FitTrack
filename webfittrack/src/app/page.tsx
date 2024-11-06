@@ -1,11 +1,10 @@
 'use client';
-import data from "@/app/Columns/user.json"
-import { CustomTable } from "./components/Table/Table";
+import GymCard from "./components/Owner/GymCard/gymcard";
 export default function Home() {
   return (
     <div>
-      {/* Pass columns as a property, not by spreading */}
-      <CustomTable columns={data.columns} />
+      <GymCard></GymCard>
+      <GymCard></GymCard> <GymCard></GymCard> <GymCard></GymCard>
     </div>
   );
 }

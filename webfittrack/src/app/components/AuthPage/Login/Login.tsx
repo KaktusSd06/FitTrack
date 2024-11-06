@@ -2,19 +2,41 @@
 
 import type { NextPage } from "next";
 import { useRouter } from 'next/navigation';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CircularProgress, Modal, ModalContent, ModalHeader, ModalBody, useDisclosure, ModalFooter, Link, Input, Button } from "@nextui-org/react";
 import styles from "./Login.module.css";
 
 
 const Login: NextPage = () => {
+
+  useEffect(() => {
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+    localStorage.removeItem("currentUser");
+    // Отримання параметрів запиту з URL
+    const params = new URLSearchParams(window.location.search);
+    const emailParam = params.get("email");
+    const passwordParam = params.get("password");
+
+    // Встановлення значень, якщо вони є
+    if (emailParam) setEmail(emailParam);
+    if (passwordParam) setPassword(passwordParam);
+
+    if (emailParam || passwordParam) {
+      router.replace("/pages/Login");
+    }
+
+  }, []);
+
+
   const router = useRouter();
   const [isVisible, setIsVisible] = React.useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userExistsError, setUserExistsError] = useState('');
   const [allFieldReqiredError, setAllFieldReqiredError] = useState('');
-  const [token, setToken] = useState<string | null>(null);  // Зберігаємо токен
+  const [userId, setUserId] = useState(null);
+  const [role, setRole] = useState("");
   const toggleVisibility = () => setIsVisible(!isVisible);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
@@ -22,19 +44,56 @@ const Login: NextPage = () => {
     return (email && password);
   }
 
-  const loginAs = (role: string) => {
-    onClose();
-    if (token) {
+
+  useEffect(() => {
+    if (userId) {
       const currentUser = {
+        userId,
         email,
         role,
-        token,
       };
       localStorage.setItem("currentUser", JSON.stringify(currentUser));
     }
+  }, [userId]);
+
+  const loginAs = async (role: string) => {
+    onClose();
+
+    setRole(role);
+    await getUser();
+    // const currentUser = {
+    //   userId, // тут вже буде правильний userId
+    //   email,
+    //   role,
+    // };
+
+    // localStorage.setItem("currentUser", JSON.stringify(currentUser));
     setLoading(true);
     router.push(`/pages/${role}`);
   }
+
+  const getUser = async (): Promise<boolean | undefined> => {
+    try {
+      const response = await fetch(`/api/proxy/Users/get-by-email/${email}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data.id);
+        setUserId(data.id);
+      }
+
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return false;
+    }
+  };
 
   const login = async () => {
     if (!(await checkReqiredFields())) {
@@ -63,11 +122,13 @@ const Login: NextPage = () => {
       }
 
       const data = await response.json();
-      const receivedToken = data.token; // Отримуємо токен з відповіді
+      const { accessToken, refreshToken } = data;
 
-      if (receivedToken) {
-        setToken(receivedToken);  // Зберігаємо токен у стані
-        onOpen();  // Відкриваємо модальне вікно для вибору ролі
+      // Зберігаємо токени у sessionStorage
+      if (accessToken && refreshToken) {
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("refreshToken", refreshToken);
+        onOpen();
       } else {
         setUserExistsError("Не вдалося отримати токен.");
       }
@@ -92,7 +153,6 @@ const Login: NextPage = () => {
         </div>
       ) : (
         <>
-
           <div className={styles.ContainerWrapper}>
             <div className={styles.MainContainer}>
               <div className={styles.LogoContainer}>

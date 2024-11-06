@@ -1,6 +1,7 @@
 "use client";
 
 import type { NextPage } from "next";
+import { useRouter } from 'next/navigation';
 import React, { useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Checkbox, CheckboxGroup, DateInput, Link, Input, Button } from "@nextui-org/react";
 import { DateValue, getLocalTimeZone, today } from "@internationalized/date";
@@ -8,6 +9,7 @@ import { I18nProvider } from "@react-aria/i18n";
 import styles from "../Login/Login.module.css";
 
 const Reg: NextPage = () => {
+  const router = useRouter();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
@@ -48,11 +50,16 @@ const Reg: NextPage = () => {
 
 
   const handleYesLoginClick = () => {
-
-  }
+    const queryParams = new URLSearchParams({
+      email: email,
+      password: password,
+    });
+    window.location.href = `/pages/Login?${queryParams.toString()}`;
+  };
 
   const handleNoLoginClick = () => {
     onClose();
+    router.push(`/pages/Login`);
   }
 
   const formatDate = (date: DateValue | null): string => {
@@ -67,7 +74,6 @@ const Reg: NextPage = () => {
 
     return `${year}-${month}-${day}`;
   };
-
 
   const registerUser = async (registrationData: Record<string, unknown>): Promise<boolean | undefined> => {
     try {
