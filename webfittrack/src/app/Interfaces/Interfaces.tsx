@@ -51,21 +51,21 @@ export interface Gym {
     groupTrainings?: GroupTraining[];
 }
 export interface Admin {
-    id?: string; // nullable
-    userName?: string; // nullable
-    email?: string; // nullable
+    id?: string;
+    userName?: string;
+    email?: string;
     emailConfirmed: boolean;
-    phoneNumber?: string; // nullable
-    firstName: string; // required, minLength: 1, maxLength: 30
-    lastName: string; // required, minLength: 1, maxLength: 30
-    middleName?: string; // nullable, maxLength: 30
-    gymId?: number; // nullable
-    gym?: Gym; // nullable, reference to Gym
+    phoneNumber?: string;
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+    gymId?: number;
+    gym?: Gym;
 }
 export interface GroupTraining {
-    id: number; // required
-    description?: string; // nullable
-    string: string; // could also use string type for better string handling
+    id: number;
+    description?: string;
+    string: string;
     gymId: number; // required
     gym?: Gym; // nullable, reference to Gym
     trainerId?: string; // nullable

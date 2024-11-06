@@ -37,7 +37,7 @@ interface CustomTableProps {
   columns: Column[];
 }
 
-export const CustomTable = ({
+export const TableAdminCustomers = ({
   columns,
 }: CustomTableProps): JSX.Element => {
   const [users, setDataJson] = useState<User[]>([]); // State variable to store the fetched data

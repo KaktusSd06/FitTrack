@@ -5,7 +5,7 @@ import StatsCard from "../../StatsCard/StatsCard";
 import { Button, Input, Tab, Tabs } from "@nextui-org/react";
 import Calendar from "../Calendar/Calendar";
 import dayjs from "dayjs";
-import { CustomTable } from "../../Table/Table";
+import { CustomTable } from "../../Table/TableAdminCustomers";
 import data from "@/app/components/Table/data.json";
 
 const UserHome = () => {

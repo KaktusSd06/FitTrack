@@ -15,7 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
       <div className={styles.main}>
 
-        <Navbar imageSrc="/images/image-3.png" firstName="Adminqweqweqwew" lastName="Admin" />
+        <Navbar firstName="Adminqweqweqwew" lastName="Admin" />
         {children}
       </div>
     </div>
