@@ -92,6 +92,7 @@ export const TableOwnerGyms = ({
       columns={columns}
       onRowsPerPageChange={(e) => setRowsPerPage(Number(e.target.value))}
       usersCount={gyms.length}
+      role="Gym"
     />
   );
 

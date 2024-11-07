@@ -2,8 +2,9 @@ import { Spinner } from "@nextui-org/react";
 import React from "react";
 import { useEffect, useState } from "react";
 import { fetchGymById } from "@/app/Api/gym/Gym";
+import { Gym } from "@/app/Interfaces/Interfaces";
 export default function GridGood() {
-    const [data, setData] = useState<Gym>([]); // Задайте відповідний тип даних для `data`
+    const [data, setData] = useState<Gym | undefined>();
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -11,11 +12,7 @@ export default function GridGood() {
         const fetchData = async () => {
             setLoading(true);
             try {
-
-
                 const id: number = 0;
-
-
                 const gym = await fetchGymById(id); // Отримуємо дані користувачів
                 setData(gym);
                 console.log(gym);

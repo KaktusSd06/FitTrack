@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { CustomTable } from "@/app/components/Table/Table";
-import React from "react";
-import { columns } from "@/app/Columns/user.json"
-=======
+
 "use client";
 import { TableOwnerGyms } from "@/app/components/Table/TableOwnerGyms";
 import { GymColumns } from "@/app/Api/gym/gym.json"
@@ -10,7 +6,6 @@ import { Spinner } from "@nextui-org/react";
 import { fetchGymsByOwnerId } from "@/app/Api/gym/Gym";
 import { useEffect, useState } from "react";
 import { Gym } from "@/app/Interfaces/Interfaces";
->>>>>>> 5b36690 (addded ability for creating trainers)
 
 export default function AdminDashboard() {
     const [data, setData] = useState<Gym[]>([]); // Задайте відповідний тип даних для `data`
@@ -39,11 +34,8 @@ export default function AdminDashboard() {
 
     return (
         <>
-<<<<<<< HEAD
-            <CustomTable columns={columns} />
-=======
+
             <TableOwnerGyms columns={GymColumns} data={data}></TableOwnerGyms>
->>>>>>> 5b36690 (addded ability for creating trainers)
         </>
     );
 }

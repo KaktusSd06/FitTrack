@@ -5,8 +5,6 @@ import StatsCard from "../../StatsCard/StatsCard";
 import { Button, Tab, Tabs } from "@nextui-org/react";
 import Calendar from "../Calendar/Calendar";
 import dayjs from "dayjs";
-import { CustomTable } from "../../Table/Table";
-import data from "@/app/components/Table/data.json";
 import { useEffect } from "react";
 import { fetchWithAuth } from "@/app/fetchWithAuth";
 import { useRouter } from "next/router";
