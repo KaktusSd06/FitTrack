@@ -1,7 +1,7 @@
 // Good.ts
 import axios from 'axios';
 import { Good } from '@/app/Interfaces/Interfaces';
-const BASE_URL = '/api/Goods';
+const BASE_URL = '/api/proxy/Goods';
 
 
 export const getGoods = async (): Promise<Good[]> => {
