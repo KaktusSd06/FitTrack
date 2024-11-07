@@ -14,6 +14,7 @@ import {
 import { Admin, Trainer, User } from "@/app/Interfaces/Interfaces";
 import TableTopContent from "./TableTopContent";
 import UserTableCell from "./UserTableCell ";
+import { useRole } from "@/app/Api/RoleProvider"
 
 const INITIAL_VISIBLE_COLUMNS = ["firstName", "lastName", "email", "actions"];
 
@@ -42,8 +43,7 @@ export const TableAdminUsers = <T extends User | Trainer | Admin>({
     direction: "ascending",
   });
   const [page, setPage] = React.useState(1);
-  const role = data[0]?.role;
-  console.log(role);
+  const role = useRole();
   const hasSearchFilter = Boolean(filterValue);
 
   useEffect(() => {

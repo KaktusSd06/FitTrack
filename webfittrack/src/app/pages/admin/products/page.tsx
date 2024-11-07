@@ -1,18 +1,12 @@
-<<<<<<< HEAD
-import { CustomTable } from "@/app/components/Table/Table";
-=======
 "use client";
 import { CardProduct } from "@/app/components/CardProduct/CardProduct";
 import { Tab, Tabs } from "@nextui-org/react";
->>>>>>> 5b36690 (addded ability for creating trainers)
 import React from "react";
 
 export default function AdminProducts() {
     return (
         <>
-<<<<<<< HEAD
-            <CustomTable columns={columns} />
-=======
+
             <Tabs
                 classNames={{
                     cursor: "w-full bg-[#e48100]",
@@ -28,7 +22,6 @@ export default function AdminProducts() {
                 <Tab title="Абонименти"><div>11212</div></Tab>
                 <Tab title="Послуги"><div>11212</div></Tab>
             </Tabs>
->>>>>>> 5b36690 (addded ability for creating trainers)
         </>
     );
 }

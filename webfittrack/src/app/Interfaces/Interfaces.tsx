@@ -100,18 +100,7 @@ export interface Gym {
     groupTrainings?: GroupTraining[];
 }
 export interface Admin {
-<<<<<<< HEAD
-    id?: string; // nullable
-    userName?: string; // nullable
-    email?: string; // nullable
-    emailConfirmed: boolean;
-    phoneNumber?: string; // nullable
-    firstName: string; // required, minLength: 1, maxLength: 30
-    lastName: string; // required, minLength: 1, maxLength: 30
-    middleName?: string; // nullable, maxLength: 30
-    gymId?: number; // nullable
-    gym?: Gym; // nullable, reference to Gym
-=======
+
     id?: string;
     userName?: string;
     email?: string;
@@ -120,7 +109,6 @@ export interface Admin {
     lastName: string;
     middleName?: string;
     gymId?: number;
->>>>>>> 5b36690 (addded ability for creating trainers)
 }
 export interface GroupTraining {
     id: number; // required
