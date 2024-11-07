@@ -1,8 +1,8 @@
-import UserHome from "@/app/components/User/Home/UserHome";
+import Admins from "@/app/components/Owner/Admins/Admins";
 
 const Page = () => {
     return (
-        <h1>Адміни</h1>
+        <Admins></Admins>
     );
 };
 
