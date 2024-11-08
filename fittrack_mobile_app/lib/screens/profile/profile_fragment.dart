@@ -21,6 +21,52 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
+  Map<String, dynamic>? membershipInfo;
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeProfile();
+  }
+
+  Future<void> _initializeProfile() async {
+    User? fetchedUser = await _fetchUser();
+    if (fetchedUser != null) {
+      setState(() {
+        user = fetchedUser;
+      });
+      await _fetchMembershipInfo(fetchedUser.id); // Fetch membership info after user is loaded
+    }
+  }
+
+  Future<void> _fetchMembershipInfo(String userId) async {
+    try {
+      final membership = await UserService.getMembershipByUserId(userId);
+      setState(() {
+        membershipInfo = membership;
+      });
+    } catch (e) {
+      _showSnackBar("Сталася помилка при отриманні даних абонемента: $e");
+    }
+  }
+
+  Future<User?> _fetchUser() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (authProvider.user != null) {
+      String email = authProvider.user!.email!;
+      try {
+        final userData = await UserService.getUserByEmail(email);
+        return userData != null ? User.fromJson(userData) : null;
+      } catch (e) {
+        _showSnackBar("Сталася помилка при отриманні даних користувача: $e");
+      }
+    } else {
+      _showSnackBar("Користувач не аутентифікований.");
+    }
+    return null;
+  }
+
   void _deleteAccount() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
@@ -39,32 +85,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } catch (e) {
       _showSnackBar("Сталася помилка при видаленні акаунту: $e");
-    }
-  }
-
-  Future<User?> _fetchUser() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-    // Перевірка на null для authProvider.user
-    if (authProvider.user != null) {
-      String email = authProvider.user!.email!;
-
-      try {
-        final userData = await UserService.getUserByEmail(email); // Викликаємо метод отримання користувача за електронною поштою
-        if (userData != null) {
-          return User.fromJson(userData); // Перетворюємо JSON на об'єкт User
-        } else {
-          _showSnackBar("Користувача не знайдено за цією електронною поштою.");
-          return null; // Якщо користувача не знайдено, повертаємо null
-        }
-      } catch (e) {
-        _showSnackBar("Сталася помилка при отриманні даних користувача: $e");
-        return null; // У випадку помилки повертаємо null
-      }
-    } else {
-      // Обробка ситуації, коли користувач не аутентифікований
-      _showSnackBar("Користувач не аутентифікований.");
-      return null;
     }
   }
 
@@ -343,18 +363,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (user.membership == null)
-                  Text("Абонемент відсутній", style: AppTextStyles.h3.copyWith(color: Theme.of(context).brightness == Brightness.light
-                      ? AppColors.gray
-                      : AppColors.isabelline))
-                else ...[
-                  Text("Ваш абонемент: ${user.membership?.id.toString() ?? 'Невідомо'}", style: AppTextStyles.h3.copyWith(color: Theme.of(context).brightness == Brightness.light
-                      ? AppColors.gray
-                      : AppColors.isabelline)),
-                  const SizedBox(height: 4),
-                  Text("Активний до: ${user.membership?.expirationDate ?? 'Невідомо'}", style: AppTextStyles.h3.copyWith(color: Theme.of(context).brightness == Brightness.light
-                      ? AppColors.gray
-                      : AppColors.isabelline)),
+                Text(
+                  membershipInfo == null
+                      ? "Абонемент відсутній"
+                      : "${membershipInfo?['membershipName']}",
+                  style: AppTextStyles.h3.copyWith(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? AppColors.jet
+                        : AppColors.white,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                if (membershipInfo != null) ...[
+                  if (membershipInfo?['durationInMonths'] != null)
+                    Text(
+                      "Термін дії (місяців): ${membershipInfo?['durationInMonths']}",
+                      style: AppTextStyles.h3.copyWith(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? AppColors.jet
+                            : AppColors.white,
+                      ),
+                    )
+                  else
+                    Text(
+                      "Кількість сесій: ${membershipInfo?['sessions']}",
+                      style: AppTextStyles.h3.copyWith(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? AppColors.jet
+                            : AppColors.white,
+                      ),
+                    ),
                 ],
               ],
             ),

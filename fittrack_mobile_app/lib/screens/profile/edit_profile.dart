@@ -1,12 +1,22 @@
+import 'dart:ffi';
+
+import 'package:fittrack_mobile_app/models/membership.dart';
+import 'package:fittrack_mobile_app/models/trainer.dart';
+import 'package:fittrack_mobile_app/screens/trainers_page.dart';
+import 'package:fittrack_mobile_app/services/gym_service.dart';
+import 'package:fittrack_mobile_app/services/trainer_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/Gym_fot_UI.dart';
+import '../../models/gym.dart';
 import '../../models/user.dart';
 import '../../providers/AuthProvider.dart';
 import '../../services/user_service.dart';
 import '../../styles/colors.dart';
 import '../../styles/fonts.dart';
+import '../gym.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -16,6 +26,7 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> with SingleTickerProviderStateMixin {
   final UserService _userService = UserService();
   late TabController _tabController;
+  late String TrainerInfo = "Тренер не закріплений";
 
   User? user;
   TextEditingController _lastNameController = TextEditingController();
@@ -25,7 +36,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _heightController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-
+  GymForUI? gym;
   bool _isLoading = false;
 
   @override
@@ -33,6 +44,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _loadUserData();
+
   }
 
   Future<void> _loadUserData() async {
@@ -43,6 +55,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (authProvider.user != null) {
       try {
+        // Завантажуємо дані користувача
         final userData = await UserService.getUserByEmail(authProvider.user!.email!);
         if (userData != null) {
           user = User.fromJson(userData);
@@ -54,6 +67,20 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
             _phoneController.text = userData['phoneNumber'] ?? '';
             _heightController.text = userData['height']?.toString() ?? '';
           });
+
+          if (user?.trainerId != null) {
+            TrainerInfo = await TrainerService.getTrainerSurnameAndNameById(user!.trainerId!);
+          }
+
+          loadMembership();
+
+          // Завантажуємо зал для користувача
+          final gymData = await GymService.getGymByUserId(user!.id);
+          if (gymData != null) {
+            setState(() {
+              gym = GymForUI.fromJson(gymData);  // Передбачається, що у вас є клас Gym для десеріалізації
+            });
+          }
         }
       } catch (e) {
         print('Error loading user data: $e');
@@ -64,6 +91,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
       }
     }
   }
+
 
   void _saveBasicInfo() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -177,14 +205,17 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
     );
   }
 
+  late List<Membership> memberships;
+  late Trainer trainer;
+
   Widget _buildAdditionalTab() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInfoRow(Icons.home, "Зал", actionIcon: Icons.edit),
-          SizedBox(height: 8),
+          _buildInfoRow(Icons.home, gym?.name ?? "Оберіть зал", actionIcon: Icons.edit),
+          SizedBox(height: 24),
           _buildMembershipInfo(),
           SizedBox(height: 8),
           _buildTrainerInfo(),
@@ -193,7 +224,10 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
     );
   }
 
+
   Widget _buildInfoRow(IconData icon, String label, {IconData? actionIcon}) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final userId = authProvider.user!.id;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
@@ -208,11 +242,105 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
           ),
           Spacer(),
           if (actionIcon != null)
-            Icon(actionIcon, color: AppColors.fulvous, size: 24.0),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => GymPage(onGymChanged: _loadUserData,)), // GymPage — це ваша сторінка з інформацією про зал
+                    );
+                  },
+                  child: Icon(actionIcon, color: AppColors.fulvous, size: 24.0),
+
+                ),
+                SizedBox(width: 8,),
+                GestureDetector(
+                  onTap: () async {
+                    await _selectGym(userId);
+                  },
+                  child: Icon(CupertinoIcons.bin_xmark_fill, color: AppColors.fulvous, size: 24.0),
+
+                ),
+              ],
+            )
+
+
         ],
       ),
     );
   }
+
+  Future<void> _selectGym(userId) async {
+    // Показуємо діалогове вікно для підтвердження
+    bool? shouldCancel = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Відмінити підписку?'),
+          content: Text('Ви справді хочете відмінити свою підписку на зал?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Відміняємо дію
+              },
+              child: Text('Ні'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Підтверджуємо відміну
+              },
+              child: Text('Так'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldCancel != null && shouldCancel) {
+      Map<String, dynamic> additionalInfo = {
+        "operationType": 0,
+        "path": "/gymId",
+        "op": "replace",
+        "from": "",
+        "value": null,
+      };
+
+      bool isUpdated = await UserService.updateAdditionalInfo(userId, additionalInfo); // Викликаємо функцію для оновлення
+
+      if (isUpdated) {
+        // Якщо зал успішно змінено
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ви відмінили підписку на зал'),
+          ),
+        );
+        gym = null;
+        _loadUserData();
+      } else {
+        // Якщо сталася помилка
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Помилка при зміні залу!'),
+          ),
+        );
+      }
+    }
+  }
+
+  Map<String, dynamic>? membershipInfo;
+
+  Future<void> loadMembership() async {
+    try {
+      final membership = await UserService.getMembershipByUserId(user!.id);
+      setState(() {
+        membershipInfo = membership;
+      });
+    } catch (e) {
+      print('Failed to load membership: $e');
+    }
+  }
+
 
   Widget _buildMembershipInfo() {
     return Container(
@@ -230,20 +358,36 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user?.membership == null ? "Абонемент відсутній" : "Ваш абонемент: ${user?.membership?.id}",
+                  membershipInfo == null
+                      ? "Абонемент відсутній"
+                      : "${membershipInfo?['membershipName']}",
                   style: AppTextStyles.h3.copyWith(
                     color: Theme.of(context).brightness == Brightness.light
                         ? AppColors.jet
                         : AppColors.white,
                   ),
                 ),
-                SizedBox(height: 4),
-                if (user?.membership != null)
-                  Text("Активний до: ${user?.membership?.expirationDate}", style: AppTextStyles.h3.copyWith(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? AppColors.jet
-                        : AppColors.white,
-                  )),
+                const SizedBox(height: 4),
+                if (membershipInfo != null) ...[
+                  if (membershipInfo?['durationInMonths'] != null)
+                    Text(
+                      "Термін дії (місяців): ${membershipInfo?['durationInMonths']}",
+                      style: AppTextStyles.h3.copyWith(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? AppColors.jet
+                            : AppColors.white,
+                      ),
+                    )
+                  else
+                    Text(
+                      "Кількість сесій: ${membershipInfo?['sessions']}",
+                      style: AppTextStyles.h3.copyWith(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? AppColors.jet
+                            : AppColors.white,
+                      ),
+                    ),
+                ],
               ],
             ),
           ),
@@ -261,10 +405,19 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
       ),
       child: Row(
         children: [
-          Icon(CupertinoIcons.doc_plaintext, color: AppColors.fulvous, size: 24.0),
+          GestureDetector(
+            onTap: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TrainersPage(gymId: gym!.id)),
+              );
+            },
+            child: Icon(CupertinoIcons.pen, color: AppColors.fulvous, size: 24.0),
+
+          ),
           SizedBox(width: 8.0),
           Expanded(
-            child: Text("Ваш тренер: ${user?.trainer?.lastName ?? 'Тренер не закріплений'}", style: AppTextStyles.h3.copyWith(
+            child: Text("Ваш тренер: $TrainerInfo", style: AppTextStyles.h3.copyWith(
               color: Theme.of(context).brightness == Brightness.light
                 ? AppColors.jet
                 : AppColors.white,)),

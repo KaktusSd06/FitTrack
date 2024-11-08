@@ -9,7 +9,7 @@ import '../screens/Meals/kcal_page.dart';
 
 class KcalWidget extends StatelessWidget {
   final bool isClickable;
-  final int? calories; // Make it nullable to show 'Loading...' if null
+  final double? calories; // Make it nullable to show 'Loading...' if null
 
   KcalWidget({this.isClickable = true, this.calories});
 

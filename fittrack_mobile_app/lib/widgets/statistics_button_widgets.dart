@@ -1,15 +1,27 @@
+import 'package:fittrack_mobile_app/screens/meals/calorie_statistics_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fittrack_mobile_app/styles/colors.dart';
 import 'package:fittrack_mobile_app/styles/fonts.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/AuthProvider.dart';
 import '../screens/Meals/kcal_page.dart';
 
 class StatisticsButtonWidgets extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
+    final AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final String userId = authProvider.user!.id;
+
     return GestureDetector(
-      onTap: null,
+      onTap:(){ Navigator.push(
+        context,
+        MaterialPageRoute( builder: (context) => CalorieStatisticsScreen(userId: userId),
+        ),
+      );},
       child: Container(
         padding: const EdgeInsets.all(16),
         width: double.infinity,

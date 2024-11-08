@@ -142,13 +142,13 @@ class _SignupStepOneState extends State<SignupStepOne> {
                     //   ),
                     // ),
 
-                    _isLoadingGoogle
-                        ? const Center(child: CircularProgressIndicator())
-                        : ButtonWithTextIcon(
-                      text: "Продовжити з Google",
-                      iconPath: 'lib/assets/images/googleIcon.png',
-                      onPressed: _handleGoogleSignIn,
-                    ),
+                    // _isLoadingGoogle
+                    //     ? const Center(child: CircularProgressIndicator())
+                    //     : ButtonWithTextIcon(
+                    //   text: "Продовжити з Google",
+                    //   iconPath: 'lib/assets/images/googleIcon.png',
+                    //   onPressed: _handleGoogleSignIn,
+                    // ),
                   ],
                 ),
               ),

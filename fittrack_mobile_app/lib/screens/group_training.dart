@@ -1,19 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../models/group_training_UI.dart';
+import '../services/group_training_service.dart';
 import '../styles/colors.dart';
 import '../styles/fonts.dart';
 import '../widgets/group_training_widgets.dart';
 
 class GroupTraining extends StatefulWidget {
-  const GroupTraining({Key? key}) : super(key: key);
+  final int? gymId;
+
+  const GroupTraining({Key? key, this.gymId}) : super(key: key);
 
   @override
   _TrainingScreenState createState() => _TrainingScreenState();
 }
 
 class _TrainingScreenState extends State<GroupTraining> {
-  DateTime selectedDate = DateTime.now(); // Зберігає вибрану дату
-  DateTime startOfWeek = DateTime.now(); // Початок тижня
+  DateTime selectedDate = DateTime.now();
+  DateTime startOfWeek = DateTime.now();
+  late Future<List<GroupTrainingUI>> _trainingsFuture = Future.value([]);
+
+  @override
+  void initState() {
+    super.initState();
+    getStartOfWeek(selectedDate);
+    _fetchTrainingsForSelectedDate();
+  }
+
+  Future<void> _fetchTrainingsForSelectedDate() async {
+    setState(() {
+     _trainingsFuture = GroupTrainingService.getTrainingForDate(widget.gymId!, selectedDate);
+    });
+  }
+
 
   String getMonthName(int month) {
     switch (month) {
@@ -59,8 +78,8 @@ class _TrainingScreenState extends State<GroupTraining> {
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
-        selectedDate = picked; // Оновлюємо вибрану дату
-        getStartOfWeek(selectedDate); // Оновлюємо початок тижня
+        selectedDate = picked;
+        _fetchTrainingsForSelectedDate(); // Fetch trainings for the new date
       });
     }
   }
@@ -69,13 +88,8 @@ class _TrainingScreenState extends State<GroupTraining> {
     setState(() {
       selectedDate = date;
       getStartOfWeek(selectedDate); // Оновлюємо початок тижня при виборі дати
+      _fetchTrainingsForSelectedDate();
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getStartOfWeek(selectedDate); // Отримати початок тижня при ініціалізації
   }
 
   String getDayName(int weekday) {
@@ -297,33 +311,38 @@ class _TrainingScreenState extends State<GroupTraining> {
                 ),
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
-              Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        GroupTrainingWidgets(),
-                        SizedBox(height: 8),
-                        GroupTrainingWidgets(),
-                        SizedBox(height: 8),
-                        GroupTrainingWidgets(),
-                        SizedBox(height: 8),
-                        GroupTrainingWidgets(),
-                        SizedBox(height: 8),
-                        GroupTrainingWidgets(),
-                        SizedBox(height: 8),
-                        GroupTrainingWidgets(),
-                        SizedBox(height: 8),
-                        GroupTrainingWidgets(),
-                        SizedBox(height: 8),
-                        GroupTrainingWidgets(),
-                        SizedBox(height: 8),
-                      ],
-                    ),
-
-                  )
+              FutureBuilder<List<GroupTrainingUI>>(
+                future: _trainingsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Expanded(child: Center(
+                      child: CircularProgressIndicator(),
+                    ));
+                  } else if (snapshot.hasError) {
+                    return Expanded(child:  Center(child: Text('Здається сталась помилка')));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Expanded(child:  Center(child: Text('Немає тренувань на вибрану дату')));
+                  } else {
+                    return Expanded(  // Added to ensure proper layout
+                      child: ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final training = snapshot.data![index];
+                          return Column(
+                            children: [
+                              GroupTrainingWidgets(training: training),
+                              SizedBox(height: 8), // Adjust the height to set the spacing
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
               ),
+
             ],
           ),
         ),

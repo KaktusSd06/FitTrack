@@ -157,7 +157,7 @@ class UserService {
     };
 
     final response = await http.put(
-      Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-email/$id'),
+      Uri.parse('https://fittrackapidev.onrender.com/api/Account/update-email/$id'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -179,8 +179,8 @@ class UserService {
       phoneNumber,
     };
 
-    final response = await http.post(
-      Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-phone/$id'),
+    final response = await http.put(
+      Uri.parse('https://fittrackapidev.onrender.com/api/Account/update-phone/$id'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -222,7 +222,7 @@ class UserService {
     };
 
     final response = await http.put(
-      Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-password/$id'),
+      Uri.parse('https://fittrackapidev.onrender.com/api/Account/update-password/$id'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -271,7 +271,26 @@ class UserService {
     ).timeout(const Duration(seconds: 60));
 
     if (response.statusCode == 201) {
-      return 200;
+      final payload = {
+        'userEmail': email,
+        'role': "User",
+      };
+
+      final response = await http.post(
+        Uri.parse('https://fittrackapidev.onrender.com/api/Account/assign-role'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(payload),
+      ).timeout(const Duration(seconds: 60));
+
+      if (response.statusCode == 200) { return 200; }
+      else {
+        print('Failed to register user. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return response.statusCode; // Registration failed
+      }
+
     }
     else {
       print('Failed to register user. Status code: ${response.statusCode}');
@@ -315,4 +334,52 @@ class UserService {
 
     return user;
   }
+
+  static Future<Map<String, dynamic>> getMembershipByUserId(String userId) async {
+    final userResponse = await http.get(
+      Uri.parse(
+          'https://fittrackapidev.onrender.com/api/Memberships/get-membership-by-userId/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    ).timeout(const Duration(seconds: 60));
+
+    if (userResponse.statusCode == 200) {
+      final responseData = json.decode(userResponse.body);
+
+      final membershipInfo = {
+        'id': responseData['id'],
+        'membershipName': responseData['membershipName'],
+        'durationInMonths': responseData['durationInMonths'],
+        'sessions': responseData['sessions'],
+      };
+
+      return membershipInfo;
+    } else {
+      throw Exception('Failed to load trainer: ${userResponse.statusCode}');
+    }
+  }
+
+  static Future<bool> updateAdditionalInfo(String userId, Map<String, dynamic> additionalInfo) async {
+    final url = Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-additional-info/$userId');
+
+    final response = await http.patch(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode([additionalInfo]),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return true;
+    } else {
+      print('Failed to update info. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return false;
+    }
+  }
+
+
+
 }

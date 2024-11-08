@@ -5,7 +5,7 @@ import '../styles/colors.dart';
 
 class MealViewWidget extends StatelessWidget {
   final String foodName;
-  final int kcal;
+  final double kcal;
   final VoidCallback onDelete;
 
   const MealViewWidget({

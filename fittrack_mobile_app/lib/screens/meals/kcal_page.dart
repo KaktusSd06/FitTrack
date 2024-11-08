@@ -19,7 +19,7 @@ class KcalPage extends StatefulWidget {
 class _KcalPageState extends State<KcalPage> {
   late Future<List<Map<String, dynamic>>> _mealsFuture;
   late String userId;
-  int? totalCalories;
+  double? totalCalories;
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _KcalPageState extends State<KcalPage> {
 
   Future<void> _fetchCalories() async {
     try {
-      int calories = await MealsService.getCaloriesByUserIdForDate(userId);
+      double calories = await MealsService.getCaloriesByUserIdForDate(userId);
       setState(() {
         totalCalories = calories;
       });
@@ -94,7 +94,7 @@ class _KcalPageState extends State<KcalPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: FutureBuilder<int>(
+                    child: FutureBuilder<double>(
                       future: MealsService.getCaloriesByUserIdForDate(userId),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {

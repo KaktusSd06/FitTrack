@@ -108,7 +108,7 @@ class _AddMealPageState extends State<AddMealPage> {
                   setState(() => isLoading = true); // Встановлюємо стан завантаження
 
                   final name = _nameController.text;
-                  final calories = int.tryParse(_caloriesController.text) ?? 0;
+                  final calories = double.tryParse(_caloriesController.text) ?? 0;
 
                   if (name.isNotEmpty && calories > 0) {
                     final success = await _mealsService.addMeal(name, calories, authProvider.user!.id);

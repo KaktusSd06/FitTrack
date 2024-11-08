@@ -32,7 +32,6 @@ class  SetService{
 
   static Future<List<Map<String, dynamic>>> getSetByTraining(
       String userId, DateTime date) async {
-    // final formattedDate = DateFormat('yyyy-MM-dd').format(date.toUtc());
     final formattedDate = date.toUtc().toIso8601String();
 
 

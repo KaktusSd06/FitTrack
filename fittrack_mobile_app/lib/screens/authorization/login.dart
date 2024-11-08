@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 60),
                         _buildTextField(
                           controller: emailController,
-                          labelText: 'Номер телефону або E-mail',
+                          labelText: 'E-mail',
                           isPassword: false,
                           context: context,
                         ),
@@ -146,14 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                           text: "Увійти",
                           onPressed: () => handleLogin(context),
                         ),
-                        const SizedBox(height: 8),
-                        ButtonWithTextIcon(
-                          text: "Увійти з Google",
-                          iconPath: 'lib/assets/images/googleIcon.png',
-                          onPressed: () {
-                            print("Увійти через Google натиснуто");
-                          },
-                        ),
+
                         const SizedBox(height: 20),
                         TextButton(
                           onPressed: () {
