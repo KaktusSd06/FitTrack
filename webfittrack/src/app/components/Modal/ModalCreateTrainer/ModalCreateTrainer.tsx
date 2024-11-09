@@ -23,7 +23,7 @@ export default function App() {
 
     const registerUser = async (registrationData: Record<string, unknown>): Promise<boolean | undefined> => {
         try {
-            const response = await fetch(`/api/proxy/Users`, {
+            const response = await fetch(`/api/proxy/Trainers`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

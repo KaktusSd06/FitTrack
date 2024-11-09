@@ -34,7 +34,6 @@ export default function AdminDashboard() {
 
     return (
         <>
-
             <TableOwnerGyms columns={GymColumns} data={data}></TableOwnerGyms>
         </>
     );

@@ -2,25 +2,54 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { columns } from "@/app/Columns/user.json";
 import { Spinner, Tab, Tabs } from "@nextui-org/react";
-import { getUserByRole } from "@/app/Api/user/User";
 import { Trainer, User } from "@/app/Interfaces/Interfaces";
 import { TableAdminUsers } from "@/app/components/Table/TableAdminUsers";
 import { RoleProvider } from "@/app/Api/RoleProvider";
+import { getAdminById } from "@/app/Api/admin/Admin";
+import { fetchGymById } from "@/app/Api/gym/Gym";
 
 export default function AdminUsers() {
     const [data, setData] = useState<User[] | Trainer[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedRole, setSelectedRole] = React.useState("User");
+    // const [gym, setGym] = useState<Gym>();
+    const user = localStorage.getItem("currentUser");
 
+    let curruserid: string;
+    if (user) {
+        const parsedUser = JSON.parse(user);
+        if (parsedUser && parsedUser.userId && parsedUser.role === "Admin") {
+            curruserid = parsedUser.userId;
+        }
+        else {
+            window.history.back();
+        }
+    }
     // Define fetchData as a callback to fetch data based on selected role
     const fetchData = useCallback(async (role: string) => {
         setLoading(true);
         try {
-            const users = await getUserByRole(role); // Fetch data based on role
-            setData(users);
-            console.log("Fetched data for role:", role);
+            const fetchedUser = await getAdminById(curruserid);
+            // setCurrentUser(fetchedUser);
+
+            if (fetchedUser?.gymId !== undefined) {
+                const fetchedGym = await fetchGymById(fetchedUser.gymId);
+                // setGym(fetchedGym);
+
+                let users: React.SetStateAction<User[] | Trainer[]> = [];
+                if (role === "Trainer" && fetchedGym.trainers !== undefined) {
+                    users = fetchedGym.trainers;
+                } else if (role === "User" && fetchedGym.users !== undefined) {
+                    users = fetchedGym.users;
+                }
+
+                console.log(users);
+                setData(users);
+            } else {
+                console.error("User or gymId is undefined.");
+            }
         } catch (error) {
-            console.error("Error fetching users:", error);
+            console.error("Error fetching data:", error);
         } finally {
             setLoading(false);
         }
@@ -46,11 +75,6 @@ export default function AdminUsers() {
             onSelectionChange={(key) => setSelectedRole(key.toString())}        >
             <Tab key="User"
                 title="Користувачі"
-                onClick={() => {
-                    setSelectedRole("User"); // Update role
-                    fetchData("User");
-                    console.log("User");
-                }}
             >
                 <RoleProvider role="User">
                     <TableAdminUsers columns={columns} data={data} />
@@ -58,11 +82,6 @@ export default function AdminUsers() {
             </Tab>
             <Tab key="Trainer"
                 title="Тренери"
-                onClick={() => {
-                    setSelectedRole("Trainer"); // Update role
-                    fetchData("Trainer");
-                    console.log("Trainer");
-                }}
             >
                 <RoleProvider role="Trainer">
                     <TableAdminUsers columns={columns} data={data} />

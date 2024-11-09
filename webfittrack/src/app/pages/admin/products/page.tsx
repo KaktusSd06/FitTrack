@@ -17,7 +17,7 @@ export default function AdminProducts() {
                 aria-label="FilterTabs"
 
             >
-                <Tab title="Товари"> <div>                <CardProduct title="123" productImage="/rounded-rectangle.png" description="333" price={350} ></CardProduct>
+                <Tab title="Товари"> <div><CardProduct title="123" productImage="/rounded-rectangle.png" description="333" price={350} ></CardProduct>
                 </div></Tab>
                 <Tab title="Абонименти"><div>11212</div></Tab>
                 <Tab title="Послуги"><div>11212</div></Tab>
