@@ -1,5 +1,6 @@
 import 'package:fittrack_mobile_app/screens/profile/edit_profile.dart';
 import 'package:fittrack_mobile_app/screens/Authorization/login.dart';
+import 'package:fittrack_mobile_app/screens/profile/history.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -174,6 +175,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               text: "Редагувати профіль",
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
+              },
+            ),
+            const SizedBox(height: 8),
+            _buildActionBlock(
+              icon: CupertinoIcons.hourglass,
+              text: "Історія покупок",
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => History()));
               },
             ),
             const SizedBox(height: 8),
@@ -436,4 +445,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('Не вдалося запустити поштовий клієнт');
     }
   }
+
+  void _openHistoryPage() async {
+    final Uri url = Uri.parse('https://rt.pornhub.com/');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      print('Не вдалося відкрити веб-сторінку');
+    }
+  }
+
 }

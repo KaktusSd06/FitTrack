@@ -360,6 +360,75 @@ class UserService {
     }
   }
 
+  static Future<List<Map<String, dynamic>>> getServiceHistory(String userId) async {
+    final userResponse = await http.get(
+      Uri.parse(
+          'https://fittrackapidev.onrender.com/api/Purchases/get-purchases-by-userId/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    ).timeout(const Duration(seconds: 60));
+
+    if (userResponse.statusCode == 200) {
+      final List<dynamic> responseData = json.decode(userResponse.body);
+
+      // Filter out the purchases with services and map to the required structure
+      final List<Map<String, dynamic>> serviceHistory = responseData.where((purchase) {
+        // We only care about purchases related to services (not goods)
+        return purchase['service'] != null;
+      }).map((purchase) {
+        final service = purchase['service'];
+
+        return {
+          'id': purchase['id'],
+          'itemType': purchase['itemType'],
+          'date': purchase['date'],
+          'quantity': purchase['quantity'],
+          'userId': purchase['userId'],
+          'service': {
+            'name': service['name'],
+            'description': service['description'],
+            'cost': service['cost'],
+            'id': service['id'],
+          },
+        };
+      }).toList();
+
+      return serviceHistory;
+    } else {
+      throw Exception('Failed to load service history: ${userResponse.statusCode}');
+    }
+  }
+
+
+  static Future<List<Map<String, dynamic>>> getMembershipsByUserId(String userId) async {
+    final userResponse = await http.get(
+      Uri.parse(
+          'https://fittrackapidev.onrender.com/api/Memberships/get-memberships-by-userId/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    ).timeout(const Duration(seconds: 60));
+
+    if (userResponse.statusCode == 200) {
+      final List<dynamic> responseData = json.decode(userResponse.body);
+
+      final List<Map<String, dynamic>> memberships = responseData.map((membership) {
+        return {
+          'id': membership['id'],
+          'membershipName': membership['membershipName'],
+          'durationInMonths': membership['durationInMonths'],
+          'sessions': membership['sessions'],
+        };
+      }).toList();
+
+      return memberships;
+    } else {
+      throw Exception('Failed to load memberships: ${userResponse.statusCode}');
+    }
+  }
+
+
   static Future<bool> updateAdditionalInfo(String userId, Map<String, dynamic> additionalInfo) async {
     final url = Uri.parse('https://fittrackapidev.onrender.com/api/Users/update-additional-info/$userId');
 

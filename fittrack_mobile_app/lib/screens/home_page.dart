@@ -9,7 +9,7 @@ import '../theme/theme_provider.dart';
 import 'home_fragment.dart';
 import 'Authorization/login.dart';
 import 'training/training_fragment.dart';
-import 'shop_fragment.dart';
+import 'shop/shop_fragment.dart';
 import 'profile/profile_fragment.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,7 +28,7 @@ class _HomePage extends State<HomePage> {
   static List<Widget> _pages = <Widget>[
     HomeScreen(),
     const TrainingScreen(),
-    const ShopScreen(),
+    ShopPage(),
     const ProfileScreen(),
   ];
 
