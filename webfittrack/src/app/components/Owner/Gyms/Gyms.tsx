@@ -9,6 +9,7 @@ import ModalDeleteGym from "../../Modal/GymsModals/ModelDeleteGym/ModalDeleteGym
 import { TableOwnerGyms } from "../../Table/TableOwnerGyms";
 import { GymColumns } from "@/app/Api/gym/gym.json"
 import { Gym } from "@/app/Interfaces/Interfaces";
+import { fetchWithAuth } from "@/app/fetchWithAuth";
 
 const Gyms: React.FC = () => {
 
@@ -21,28 +22,45 @@ const Gyms: React.FC = () => {
     }, []);
 
     useEffect(() => {
-
+        getGyms();
     }, [idOwner]);
+
+    const getGyms = async () => {
+        try {
+            const response = await fetchWithAuth(`/api/proxy/Gyms/get-by-ownerId/${idOwner}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!response) {
+                console.error("No response received");
+                return false;
+            }
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+            if (response.status === 200) {
+                const data = await response.json();
+                setGyms(data);
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            return false;
+        }
+    }
 
     return (
         <div className={styles.Container}>
             <div className={styles.TopContainer}>
-                <div className={styles.Search}>
-                    <Input
-                        label="Пошук"
-                        // isClearable
-                        radius="md"
-                        endContent={
-                            <img src="/search.svg" className={`w-[24px] h-[24px]`} />
-                        }
-                    />
-                </div>
                 <ModalCreateGym ownerId={idOwner}></ModalCreateGym>
                 <ModalEditGym ownerId={idOwner} gymId={"3"}></ModalEditGym>
                 <ModalDeleteGym gymId={"3"}></ModalDeleteGym>
             </div>
             <div className={styles.GymsContainer}>
-                <TableOwnerGyms columns={GymColumns}> data={data}</TableOwnerGyms>
+                <TableOwnerGyms columns={GymColumns} data={data}></TableOwnerGyms>
             </div>
         </div>
     )

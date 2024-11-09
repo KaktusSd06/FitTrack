@@ -13,21 +13,16 @@ const Login: NextPage = () => {
     sessionStorage.removeItem("accessToken");
     sessionStorage.removeItem("refreshToken");
     localStorage.removeItem("currentUser");
-    // Отримання параметрів запиту з URL
     const params = new URLSearchParams(window.location.search);
     const emailParam = params.get("email");
     const passwordParam = params.get("password");
-
-    // Встановлення значень, якщо вони є
     if (emailParam) setEmail(emailParam);
     if (passwordParam) setPassword(passwordParam);
-
     if (emailParam || passwordParam) {
       router.replace("/pages/Login");
     }
 
   }, []);
-
 
   const router = useRouter();
   const [isVisible, setIsVisible] = React.useState(false);
@@ -40,6 +35,7 @@ const Login: NextPage = () => {
   const toggleVisibility = () => setIsVisible(!isVisible);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
+
   const checkReqiredFields = async () => {
     return (email && password);
   }
@@ -61,13 +57,6 @@ const Login: NextPage = () => {
 
     setRole(role);
     await getUser();
-    // const currentUser = {
-    //   userId, // тут вже буде правильний userId
-    //   email,
-    //   role,
-    // };
-
-    // localStorage.setItem("currentUser", JSON.stringify(currentUser));
     setLoading(true);
     router.push(`/pages/${role}`);
   }
@@ -124,7 +113,6 @@ const Login: NextPage = () => {
       const data = await response.json();
       const { accessToken, refreshToken } = data;
 
-      // Зберігаємо токени у sessionStorage
       if (accessToken && refreshToken) {
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("refreshToken", refreshToken);
@@ -142,13 +130,10 @@ const Login: NextPage = () => {
 
   return (
     <div className={styles.Container}>
-      {loading ? ( // Якщо loading true, показуємо CircularProgress
+      {loading ? (
         <div className={styles.LoadingContainer}>
           <CircularProgress classNames={{
-            // svg: "w-36 h-36 drop-shadow-md",
             indicator: "stroke-[--fulvous]",
-            // track: "bg-black",
-            // value: "text-3xl font-semibold text-white",
           }} />
         </div>
       ) : (
