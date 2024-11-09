@@ -49,7 +49,13 @@ export const TableAdminUsers = <T extends User | Trainer | Admin>({
   useEffect(() => {
     setDataJson(data); // Set the `data` prop to the state directly
   }, [data]);
+  const handleEdit = (curr: T) => {
+    console.log("Edit user:", curr); // Replace with actual edit logic
+  };
 
+  const handleDelete = (curr: T) => {
+    console.log("Delete user:", curr); // Replace with actual delete logic
+  };
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
     return columns.filter((column) =>
@@ -140,7 +146,7 @@ export const TableAdminUsers = <T extends User | Trainer | Admin>({
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell>
-                <UserTableCell user={item} columnKey={columnKey} />
+                <UserTableCell user={item} columnKey={columnKey} onEdit={handleEdit} onDelete={handleDelete} />
               </TableCell>
             )}
           </TableRow>
