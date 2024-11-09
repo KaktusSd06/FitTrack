@@ -14,8 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Sidebar buttonsData={AdminButtonData} />
       </div>
       <div className={styles.main}>
-
-        <Navbar imageSrc="/images/image-3.png" firstName="Adminqweqweqwew" lastName="Admin" />
+        <Navbar firstName="Admin" lastName="Admin" />
         {children}
       </div>
     </div>
