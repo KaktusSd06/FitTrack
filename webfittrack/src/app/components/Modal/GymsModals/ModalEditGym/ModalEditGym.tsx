@@ -1,33 +1,39 @@
-
-"use client";
-import { CircularProgress, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
-import styles from "./ModalEditGym.module.css"
+import { CircularProgress, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react";
+import styles from "./ModalEditGym.module.css";
 import React, { useEffect, useState } from "react";
 import { fetchWithAuth } from "@/app/fetchWithAuth";
 
 interface AppProps {
     gymId: string;
-    ownerId: string;  // Додаємо ownerId як пропс
+    ownerId: string;
+    isOpen: boolean;
+    onClose: () => void;
+    refreshTable: () => void;
 }
 
-export default function App({ gymId, ownerId }: AppProps) {
-    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+export default function ModalEditGym({ gymId, ownerId, isOpen, onClose, refreshTable }: AppProps) {
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
     const [requiredFieldsError, setRequiredFieldsError] = useState("");
 
+
     useEffect(() => {
-        startEdit();
-    }, []);
+        if (isOpen) {
+            startEdit();
+        }
+    }, [isOpen]);
 
     const startEdit = async () => {
-        const data = await getGym()
+        const data = await getGym();
+
         if (data) {
             setName(data.name);
             setAddress(data.address);
         }
-    }
+
+    };
+
 
     const getGym = async () => {
         try {
@@ -55,34 +61,33 @@ export default function App({ gymId, ownerId }: AppProps) {
             console.error('Error editing gym:', error);
             return false;
         }
-    }
-
+    };
 
     const editGymProcess = async () => {
         setRequiredFieldsError("");
         if (name && address) {
             setRequiredFieldsError("");
-        }
-        else {
+        } else {
             setRequiredFieldsError("Усі поля є обов'язковими");
             return false;
         }
         const gymData = {
-            ownerId,
+            id: gymId,
             address,
             name,
+            ownerId,
         };
-        console.log(gymData);
         setLoading(true);
         if (await editGym(gymData)) {
             onClose();
-        }
-        else {
+            refreshTable();
+        } else {
             setRequiredFieldsError("Сталась помилка при редагуванні. Спробуйте ще раз.");
+            setLoading(false);
             return false;
         }
-        setLoading(false);
-    }
+
+    };
 
     const editGym = async (gymData: Record<string, unknown>): Promise<boolean | undefined> => {
         try {
@@ -98,14 +103,10 @@ export default function App({ gymId, ownerId }: AppProps) {
                 console.error("No response received");
                 return false;
             }
-            console.log("response.status:", response.status);
-            if (response.status === 201) {
+            if (response.status === 201 || response.status === 204) {
                 return true;
-
             } else if (response.status === 500) {
                 return false;
-            } else {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
             }
 
         } catch (error) {
@@ -117,66 +118,53 @@ export default function App({ gymId, ownerId }: AppProps) {
         }
     };
 
-
     return (
         <>
-            {loading ? ( // Якщо loading true, показуємо CircularProgress
-                <div className={styles.LoadingContainer} >
-                    <CircularProgress classNames={{
-                        // svg: "w-36 h-36 drop-shadow-md",
-                        indicator: "stroke-[--fulvous]",
-                        // track: "bg-black",
-                        // value: "text-3xl font-semibold text-white",
-                    }} />
+            {loading ? (
+                <div className={styles.LoadingContainer}>
+                    <CircularProgress classNames={{ indicator: "stroke-[--fulvous]" }} />
                 </div>
             ) : (
-                <>
-                    <Button onPress={onOpen} className="bg-[#E48100] text-white">Редагувати</Button>
-                    <Modal
-                        isOpen={isOpen}
-                        onOpenChange={onOpenChange}
-                        placement="top-center"
-                    >
-                        <ModalContent>
-                            {(onClose) => (
-                                <>
-                                    <ModalHeader className="flex flex-col gap-1">Редагування спортивного центру</ModalHeader>
-                                    <ModalBody>
-                                        <div className={styles.FormElements}>
-                                            <div className={styles.FieldContainer}>
-                                                <Input
-                                                    type="text"
-                                                    variant="bordered"
-                                                    label="Назва"
-                                                    value={name}
-                                                    onChange={(e) => { setName(e.target.value); /*setRequiredFieldsError("");*/ }}
-                                                />
-                                                <Input
-                                                    type="text"
-                                                    variant="bordered"
-                                                    label="Адреса"
-                                                    value={address}
-                                                    onChange={(e) => { setAddress(e.target.value); /*setRequiredFieldsError("");*/ }}
-                                                />
-                                            </div>
+                <Modal isOpen={isOpen} onOpenChange={(open) => !open && onClose()} placement="top-center">
+                    <ModalContent>
+                        {(close) => (
+                            <>
+                                <ModalHeader className="flex flex-col gap-1">Редагування спортивного центру</ModalHeader>
+                                <ModalBody>
+                                    <div className={styles.FormElements}>
+                                        <div className={styles.FieldContainer}>
+                                            <Input
+                                                type="text"
+                                                variant="bordered"
+                                                label="Назва"
+                                                value={name}
+                                                onChange={(e) => { setName(e.target.value); }}
+                                            />
+                                            <Input
+                                                type="text"
+                                                variant="bordered"
+                                                label="Адреса"
+                                                value={address}
+                                                onChange={(e) => { setAddress(e.target.value); }}
+                                            />
                                         </div>
-                                        {requiredFieldsError && (
-                                            <p className="text-[14px] text-danger">{requiredFieldsError}</p>
-                                        )}
-                                    </ModalBody>
-                                    <ModalFooter>
-                                        <Button color="danger" variant="flat" onPress={onClose}>
-                                            Закрити
-                                        </Button>
-                                        <Button className="bg-[#E48100]" onClick={editGymProcess} onPress={onClose}>
-                                            Редагувати
-                                        </Button>
-                                    </ModalFooter>
-                                </>
-                            )}
-                        </ModalContent>
-                    </Modal>
-                </>
+                                    </div>
+                                    {requiredFieldsError && (
+                                        <p className="text-[14px] text-danger">{requiredFieldsError}</p>
+                                    )}
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="danger" variant="flat" onPress={onClose}>
+                                        Закрити
+                                    </Button>
+                                    <Button className="bg-[#E48100]" onClick={editGymProcess}>
+                                        Редагувати
+                                    </Button>
+                                </ModalFooter>
+                            </>
+                        )}
+                    </ModalContent>
+                </Modal>
             )}
         </>
     );

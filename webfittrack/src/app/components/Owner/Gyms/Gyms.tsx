@@ -1,32 +1,39 @@
 "use client";
 
 import styles from "./Gyms.module.css";
-import { Input, Button } from "@nextui-org/react"
 import { useEffect, useState } from "react";
-import ModalCreateGym from "../../Modal/GymsModals/ModalCreateGym/ModalCreateGym"
-import ModalEditGym from "../../Modal/GymsModals/ModalEditGym/ModalEditGym"
-import ModalDeleteGym from "../../Modal/GymsModals/ModelDeleteGym/ModalDeleteGym"
+import ModalCreateGym from "../../Modal/GymsModals/ModalCreateGym/ModalCreateGym";
 import { TableOwnerGyms } from "../../Table/TableOwnerGyms";
-import { GymColumns } from "@/app/Api/gym/gym.json"
+import { GymColumns } from "@/app/Api/gym/gym.json";
 import { Gym } from "@/app/Interfaces/Interfaces";
 import { fetchWithAuth } from "@/app/fetchWithAuth";
+import { CircularProgress } from "@nextui-org/react";
 
 const Gyms: React.FC = () => {
-
     const [idOwner, setIdOwner] = useState("");
     const [data, setGyms] = useState<Gym[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const id = JSON.parse(localStorage.getItem("currentUser") || "{}").userId;
-        setIdOwner(id);
+        const user = localStorage.getItem("currentUser");
+        if (user) {
+            const parsedUser = JSON.parse(user);
+            if (parsedUser && parsedUser.userId) {
+                setIdOwner(parsedUser.userId);
+            }
+        }
     }, []);
 
     useEffect(() => {
-        getGyms();
+        if (idOwner) {
+            getGyms();
+        }
     }, [idOwner]);
 
     const getGyms = async () => {
         try {
+            console.log(idOwner);
+            setIsLoading(true); // Починаємо завантаження
             const response = await fetchWithAuth(`/api/proxy/Gyms/get-by-ownerId/${idOwner}`, {
                 method: "GET",
                 headers: {
@@ -35,6 +42,7 @@ const Gyms: React.FC = () => {
             });
             if (!response) {
                 console.error("No response received");
+                setIsLoading(false); // Завершуємо завантаження при помилці
                 return false;
             }
 
@@ -48,22 +56,35 @@ const Gyms: React.FC = () => {
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
-            return false;
+        } finally {
+            setIsLoading(false); // Завершуємо завантаження
         }
-    }
+    };
+
+    const handleGymCreated = async () => {
+        setIsLoading(true); // Починаємо завантаження перед створенням
+        await getGyms(); // Оновлюємо список залів після створення
+        setIsLoading(false); // Завершуємо завантаження після завершення операції
+    };
 
     return (
         <div className={styles.Container}>
             <div className={styles.TopContainer}>
-                <ModalCreateGym ownerId={idOwner}></ModalCreateGym>
-                <ModalEditGym ownerId={idOwner} gymId={"3"}></ModalEditGym>
-                <ModalDeleteGym gymId={"3"}></ModalDeleteGym>
+                {/* Передаємо handleGymCreated замість getGyms, щоб активувати індикатор завантаження */}
+                <ModalCreateGym ownerId={idOwner} onGymCreated={handleGymCreated}></ModalCreateGym>
             </div>
             <div className={styles.GymsContainer}>
-                <TableOwnerGyms columns={GymColumns} data={data}></TableOwnerGyms>
+                {/* Показуємо індикатор завантаження, якщо isLoading == true */}
+                {isLoading ? (
+                    <div className={styles.LoadingContainer}>
+                        <CircularProgress size="lg" classNames={{ base: "w-full", indicator: "stroke-[--fulvous]" }} />
+                    </div>
+                ) : (
+                    <TableOwnerGyms refreshTable={getGyms} columns={GymColumns} data={data} />
+                )}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Gyms;

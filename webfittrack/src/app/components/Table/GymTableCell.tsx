@@ -1,61 +1,36 @@
 import React from "react";
 import { Tooltip, Avatar } from "@nextui-org/react";
-import { User } from "@/app/Interfaces/Interfaces";
+import { Gym } from "@/app/Interfaces/Interfaces";
 import { DeleteIcon } from "./DeleteIcon";
 import { EditIcon } from "./EditIcon";
 import CameraIcon from "./CameraIcon";
 
-interface UserTableCellProps {
-    user: User;
+
+interface GymTableCellProps {
+    gym: Gym;
+    onEdit?: (gym: Gym) => void;
+    onDelete?: (gym: Gym) => void;
     columnKey: React.Key;
 }
-const UserTableCell: React.FC<UserTableCellProps> = ({ user, columnKey }) => {
-    const cellValue = user[columnKey as keyof User];
+const GymTableCell = ({
+    gym,
+    columnKey,
+    onEdit,
+    onDelete,
+}: GymTableCellProps): JSX.Element => {
+    const cellValue = gym[columnKey as keyof Gym];
 
     switch (columnKey) {
-        case "trainer":
-            return (
-                <div className="flex items-center gap-2">
-                    {cellValue && typeof cellValue === "object" && "firstName" in cellValue
-                        ? cellValue.firstName
-                        : "N/A"}
-                </div>
-            );
-
-        case "profilePicture":
-            return (
-                <Avatar
-                    showFallback
-                    src="https://images.unsplash.com/broken"
-                    fallback={
-                        <CameraIcon
-                            className="animate-pulse w-6 h-6 text-default-500"
-                            fill="currentColor"
-                            size={20}
-                        />
-                    }
-                />
-            );
-
-        case "gym":
-            return (
-                <div className="flex items-center gap-2">
-                    {cellValue && typeof cellValue === "object" && "name" in cellValue
-                        ? cellValue.name
-                        : "N/A"}
-                </div>
-            );
-
         case "actions":
             return (
                 <div className="relative flex items-center gap-2">
-                    <Tooltip content="Edit user">
-                        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                    <Tooltip content="Edit" placement="left">
+                        <span onClick={() => onEdit?.(gym)} className="text-lg text-default-400 cursor-pointer active:opacity-50">
                             <EditIcon />
                         </span>
                     </Tooltip>
-                    <Tooltip color="danger" content="Delete user">
-                        <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                    <Tooltip color="danger" content="Delete" placement="right">
+                        <span onClick={() => onDelete?.(gym)} className="text-lg text-danger cursor-pointer active:opacity-50">
                             <DeleteIcon />
                         </span>
                     </Tooltip>
@@ -75,4 +50,4 @@ const UserTableCell: React.FC<UserTableCellProps> = ({ user, columnKey }) => {
     }
 };
 
-export default UserTableCell;
+export default GymTableCell;

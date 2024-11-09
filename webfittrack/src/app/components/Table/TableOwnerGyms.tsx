@@ -13,7 +13,11 @@ import {
 } from "@nextui-org/react";
 import { Gym } from "@/app/Interfaces/Interfaces";
 import TableTopContent from "./TableTopContent";
-import UserTableCell from "./UserTableCell ";
+import GymTableCell from "./GymTableCell";
+import ModalEditGym from "../Modal/GymsModals/ModalEditGym/ModalEditGym"
+import ModalDeleteGym from "../Modal/GymsModals/ModelDeleteGym/ModalDeleteGym"
+import { CircularProgress } from "@nextui-org/react";
+import styles from "./LoadingContainer.module.css";
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "location", "email", "actions"];
 
@@ -26,28 +30,64 @@ export interface Column {
 interface CustomTableProps {
   columns: Column[];
   data: Gym[];
+  refreshTable: () => void;
 }
 
 export const TableOwnerGyms = ({
   columns,
   data,
+  refreshTable,
 }: CustomTableProps): JSX.Element => {
   const [gyms, setGyms] = useState<Gym[]>([]);
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedGymId, setSelectedGymId] = useState<string | null>(null);
+  const [selectedOwnerId, setSelectedOwnerId] = useState<string | null>(null);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
     direction: "ascending",
   });
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false); // New loading state
 
   const hasSearchFilter = Boolean(filterValue);
+
+  const handleEdit = (gym: Gym) => {
+    console.log("Edit gym:", gym);
+    setSelectedGymId(gym.id.toString());
+    setSelectedOwnerId(gym.ownerId ? gym.ownerId.toString() : null);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = (gym: Gym) => {
+    console.log("Delete gym:", gym);
+    setSelectedGymId(gym.id.toString());
+    setSelectedOwnerId(gym.ownerId ? gym.ownerId.toString() : null);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   useEffect(() => {
     setGyms(data);
   }, [data]);
+
+
+  const handleRefreshTable = async () => {
+    setIsLoading(true);
+    await refreshTable();
+    setIsLoading(false);
+  };
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
@@ -110,40 +150,54 @@ export const TableOwnerGyms = ({
   );
 
   return (
-    <Table
-      aria-label="Example table with custom cells, pagination and sorting"
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={{
-        wrapper: "max-h-[382px]",
-        tr: "even:bg-[#f4f0e9] odd:bg-transparent",
-      }}
-      selectedKeys={selectedKeys}
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn key={column.uid} allowsSorting={column.sortable}>
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent="Не знайдено жодного запису" items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>
-                <UserTableCell user={item} columnKey={columnKey} />
-              </TableCell>
+    <>
+      {isLoading ? (
+        <div className={styles.LoadingContainer}>
+          <CircularProgress classNames={{ base: "w-full", indicator: "stroke-[--fulvous]" }} />
+        </div>
+      ) : (
+        <Table
+          aria-label="Example table with custom cells, pagination and sorting"
+          isHeaderSticky
+          bottomContent={bottomContent}
+          bottomContentPlacement="outside"
+          classNames={{
+            wrapper: "max-h-[382px]",
+            tr: "even:bg-[#f4f0e9] odd:bg-transparent",
+          }}
+          selectedKeys={selectedKeys}
+          sortDescriptor={sortDescriptor}
+          topContent={topContent}
+          topContentPlacement="outside"
+          onSelectionChange={setSelectedKeys}
+          onSortChange={setSortDescriptor}
+        >
+          <TableHeader columns={headerColumns}>
+            {(column) => (
+              <TableColumn key={column.uid} allowsSorting={column.sortable}>
+                {column.name}
+              </TableColumn>
             )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          </TableHeader>
+          <TableBody emptyContent="Не знайдено жодного запису" items={sortedItems}>
+            {(item) => (
+              <TableRow key={item.id}>
+                {(columnKey) => (
+                  <TableCell>
+                    <GymTableCell onEdit={handleEdit} onDelete={handleDelete} gym={item} columnKey={columnKey} />
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      )}
+      {selectedGymId && selectedOwnerId && (
+        <ModalEditGym gymId={selectedGymId} refreshTable={handleRefreshTable} ownerId={selectedOwnerId} isOpen={isEditModalOpen} onClose={handleCloseEditModal} />
+      )}
+      {selectedGymId && (
+        <ModalDeleteGym gymId={selectedGymId} refreshTable={handleRefreshTable} isOpen={isDeleteModalOpen} onClose={handleCloseDeleteModal} />
+      )}
+    </>
   );
 };

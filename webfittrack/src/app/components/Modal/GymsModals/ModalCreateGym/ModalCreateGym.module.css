@@ -10,3 +10,11 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.LoadingContainer {
+  flex-direction: row;
+  justify-items: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+}

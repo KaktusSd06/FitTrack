@@ -1,16 +1,17 @@
-
 "use client";
-import { CircularProgress, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
-import styles from "./ModalDeleteGym.module.css"
+import { CircularProgress, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react";
+import styles from "./ModalDeleteGym.module.css";
 import React, { useState } from "react";
 import { fetchWithAuth } from "@/app/fetchWithAuth";
 
 interface AppProps {
     gymId: string;
+    isOpen: boolean;
+    onClose: () => void;
+    refreshTable: () => void;
 }
 
-export default function App({ gymId }: AppProps) {
-    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+export default function App({ gymId, isOpen, onClose, refreshTable }: AppProps) {
     const [loading, setLoading] = useState(false);
     const [requiredFieldsError, setRequiredFieldsError] = useState("");
 
@@ -18,14 +19,15 @@ export default function App({ gymId }: AppProps) {
         setLoading(true);
         if (await deleteGym()) {
             onClose();
+            refreshTable();
             setLoading(false);
-        }
-        else {
+        } else {
             setRequiredFieldsError("Сталась помилка при видалені. Спробуйте ще раз.");
+
             setLoading(false);
             return false;
         }
-    }
+    };
 
     const deleteGym = async (): Promise<boolean | undefined> => {
         try {
@@ -40,10 +42,9 @@ export default function App({ gymId }: AppProps) {
                 console.error("No response received");
                 return false;
             }
-            console.log("response.status:", response.status);
+
             if (response.status === 204) {
                 return true;
-
             } else if (response.status === 500) {
                 return false;
             } else {
@@ -51,75 +52,39 @@ export default function App({ gymId }: AppProps) {
             }
 
         } catch (error) {
-            console.error('Error editing gym:', error);
-            if (!requiredFieldsError) {
-                setRequiredFieldsError('Сталась помилка при видалені. Спробуйте ще раз');
-            }
+            console.error('Error deleting gym:', error);
+            setRequiredFieldsError("Сталась помилка при видалені. Спробуйте ще раз.");
+
             return false;
         }
     };
 
-
     return (
         <>
-            {loading ? ( // Якщо loading true, показуємо CircularProgress
-                <div className={styles.LoadingContainer} >
-                    <CircularProgress classNames={{
-                        // svg: "w-36 h-36 drop-shadow-md",
-                        indicator: "stroke-[--fulvous]",
-                        // track: "bg-black",
-                        // value: "text-3xl font-semibold text-white",
-                    }} />
+            {loading ? (
+                <div className={styles.LoadingContainer}>
+                    <CircularProgress classNames={{ indicator: "stroke-[--fulvous]" }} />
                 </div>
             ) : (
-                <>
-                    <Button onPress={onOpen} className="bg-[#E48100] text-white">Видалити</Button>
-                    <Modal
-                        isOpen={isOpen}
-                        onOpenChange={onOpenChange}
-                        placement="top-center"
-                    >
-                        <ModalContent>
-                            {(onClose) => (
-                                <>
-                                    <ModalHeader className="flex flex-col gap-1">Підтвердження</ModalHeader>
-                                    <ModalBody>
-                                        {/* <div className={styles.FormElements}>
-                                            <div className={styles.FieldContainer}>
-                                                <Input
-                                                    type="text"
-                                                    variant="bordered"
-                                                    label="Назва"
-                                                    value={name}
-                                                    onChange={(e) => { setName(e.target.value); }}
-                                                />
-                                                <Input
-                                                    type="text"
-                                                    variant="bordered"
-                                                    label="Адреса"
-                                                    value={address}
-                                                    onChange={(e) => { setAddress(e.target.value); }}
-                                                />
-                                            </div>
-                                        </div>
-                                        {requiredFieldsError && (
-                                            <p className="text-[14px] text-danger">{requiredFieldsError}</p>
-                                        )} */}
-                                        <p>Ви впевнені що хочете видалити спортивний центр?</p>
-                                    </ModalBody>
-                                    <ModalFooter>
-                                        <Button color="danger" variant="flat" onPress={onClose}>
-                                            Закрити
-                                        </Button>
-                                        <Button className="bg-[#E48100]" onClick={deleteGymProcess} onPress={onClose}>
-                                            Видалити
-                                        </Button>
-                                    </ModalFooter>
-                                </>
+                <Modal isOpen={isOpen} onClose={onClose} placement="top-center">
+                    <ModalContent>
+                        <ModalHeader className="flex flex-col gap-1">Підтвердження</ModalHeader>
+                        <ModalBody>
+                            <p>Ви впевнені, що хочете видалити спортивний центр?</p>
+                            {requiredFieldsError && (
+                                <p className="text-[14px] text-danger">{requiredFieldsError}</p>
                             )}
-                        </ModalContent>
-                    </Modal>
-                </>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="danger" variant="flat" onPress={onClose}>
+                                Закрити
+                            </Button>
+                            <Button className="bg-[#E48100]" onClick={deleteGymProcess}>
+                                Видалити
+                            </Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
             )}
         </>
     );
