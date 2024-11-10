@@ -33,20 +33,9 @@ const GroupTrainingTopContent = ({
     const [startDate, setStartDate] = useState<DateValue | null>(null);
     const [endDate, setEndDate] = useState<DateValue | null>(null);
 
-    const formatDate = (date: DateValue | null): string => {
-        if (!date) return "";
-
-        const jsDate = date.toDate("UTC");
-        const day = String(jsDate.getDate()).padStart(2, "0");
-        const month = String(jsDate.getMonth() + 1).padStart(2, "0");
-        const year = jsDate.getFullYear();
-
-        return `${year}-${month}-${day}`;
-    };
-
     useEffect(() => {
         if (startDate && endDate) {
-            onDatePeriodChange(formatDate(startDate), formatDate(endDate));
+            onDatePeriodChange(startDate, endDate);
         }
     }, [startDate, endDate, onDatePeriodChange]);
 
