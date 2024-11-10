@@ -1,9 +1,8 @@
 import React from "react";
-import { Tooltip, Avatar } from "@nextui-org/react";
+import { Tooltip } from "@nextui-org/react";
 import { Gym } from "@/app/Interfaces/Interfaces";
 import { DeleteIcon } from "./DeleteIcon";
 import { EditIcon } from "./EditIcon";
-import CameraIcon from "./CameraIcon";
 
 
 interface GymTableCellProps {

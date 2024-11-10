@@ -19,7 +19,7 @@ const Login: NextPage = () => {
     if (emailParam) setEmail(emailParam);
     if (passwordParam) setPassword(passwordParam);
     if (emailParam || passwordParam) {
-      router.replace("/pages/Login");
+      router.replace("/pages/login");
     }
 
   }, []);
@@ -35,30 +35,68 @@ const Login: NextPage = () => {
   const toggleVisibility = () => setIsVisible(!isVisible);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
+  const [roles, setRoles] = useState<string[]>([]);
 
   const checkReqiredFields = async () => {
     return (email && password);
   }
 
-
   useEffect(() => {
     if (userId) {
-      const currentUser = {
-        userId,
-        email,
-        role,
-      };
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      console.log("Get user:", userId);
+      getUserRoles();
     }
+
   }, [userId]);
 
-  const loginAs = async (role: string) => {
-    onClose();
+  useEffect(() => {
+    console.log(roles);
+    if (roles.length != 0)
+      if (roles.length == 1) {
+        loginAs(roles[0]);
+      }
+      else
+        onOpen();
+  }, [roles]);
 
-    setRole(role);
-    await getUser();
+
+  const loginAs = async (role: string) => {
+    if (isOpen)
+      onClose();
+    // setRole(role);
+    const currentUser = {
+      userId,
+      email,
+      role,
+    };
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
     setLoading(true);
-    router.push(`/pages/${role}`);
+    router.push(`/pages/${role.toLowerCase()}`);
+  }
+
+
+  const getUserRoles = async (): Promise<boolean | undefined> => {
+    console.log("Get all roles", userId);
+    try {
+      const response = await fetch(`/api/proxy/Account/get-all-roles/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      if (response.status === 200) {
+        const data = await response.json();
+        setRoles(data);
+
+      }
+
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return false;
+    }
   }
 
   const getUser = async (): Promise<boolean | undefined> => {
@@ -74,7 +112,6 @@ const Login: NextPage = () => {
       }
       if (response.status === 200) {
         const data = await response.json();
-        console.log(data.id);
         setUserId(data.id);
       }
 
@@ -116,7 +153,8 @@ const Login: NextPage = () => {
       if (accessToken && refreshToken) {
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("refreshToken", refreshToken);
-        onOpen();
+        await getUser();
+
       } else {
         setUserExistsError("Не вдалося отримати токен.");
       }
@@ -177,13 +215,13 @@ const Login: NextPage = () => {
                           <img
                             src="/AuthPage/visibility_off.svg"
                             alt="Hide password"
-                            className="text-2xl text-default-400 pointer-events-none"
+                            className={`text-2xl text-default-400 pointer-events-none ${styles.eyeIcon}`}
                           />
                         ) : (
                           <img
                             src="/AuthPage/visibility.svg"
                             alt="Show password"
-                            className="text-2xl text-default-400 pointer-events-none"
+                            className={`text-2xl text-default-400 pointer-events-none ${styles.eyeIcon}`}
                           />
                         )}
                       </button>
@@ -210,12 +248,12 @@ const Login: NextPage = () => {
               </div>
               <div className={styles.LinkWrapper}>
                 <p className={styles.LinkText}>Забули пароль?</p>
-                <Link className={styles.Link} onClick={() => setLoading(true)} href="/pages/ResetPassword">Відновити</Link>
+                <Link className={styles.Link} onClick={() => setLoading(true)} href="/pages/resetPassword">Відновити</Link>
               </div>
             </div>
             <div className={styles.LinkWrapper}>
               <p className={styles.LinkText}>Не маєте аккаунту?</p>
-              <Link className={styles.Link} onClick={() => setLoading(true)} href="/pages/Register">Зареєструватись</Link>
+              <Link className={styles.Link} onClick={() => setLoading(true)} href="/pages/register">Зареєструватись</Link>
             </div>
           </div>
           <Modal hideCloseButton isDismissable={false} isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -226,22 +264,38 @@ const Login: NextPage = () => {
                   <p>Оберіть, як зайти:</p>
                 </ModalBody>
                 <ModalFooter className="justify-center">
-                  <Button
-                    id="User"
-                    className="bg-[--fulvous] text-white"
-                    variant="light"
-                    onPress={() => loginAs("User")}
-                  >
-                    Як користувач
-                  </Button>
-                  <Button
-                    id="Owner"
-                    className="bg-[--fulvous] text-white"
-                    variant="light"
-                    onPress={() => loginAs("Owner")}
-                  >
-                    Як власник
-                  </Button>
+                  {roles.map((role) => {
+                    // Визначення тексту кнопки на основі ролі
+                    let buttonText = '';
+                    switch (role) {
+                      case 'Owner':
+                        buttonText = 'Власник';
+                        break;
+                      case 'User':
+                        buttonText = 'Користувач';
+                        break;
+                      case 'Trainer':
+                        buttonText = 'Тренер';
+                        break;
+                      case 'Admin':
+                        buttonText = 'Адміністратор';
+                        break;
+                      default:
+                        return null; // Пропуск невідомих ролей
+                    }
+
+                    return (
+                      <Button
+                        key={role}
+                        id={role}
+                        className="bg-[--fulvous] text-white"
+                        variant="light"
+                        onPress={() => loginAs(role)}
+                      >
+                        Як {buttonText}
+                      </Button>
+                    );
+                  })}
                 </ModalFooter>
               </>
             </ModalContent>

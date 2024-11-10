@@ -29,12 +29,12 @@ const ResetPassword: NextPage = () => {
             email: email,
             password: password,
         });
-        window.location.href = `/pages/Login?${queryParams.toString()}`;
+        window.location.href = `/pages/login?${queryParams.toString()}`;
     };
 
     const handleNoLoginClick = () => {
         onClose();
-        router.push(`/pages/Login`);
+        router.push(`/pages/login`);
     }
 
     const checkExistUser = async (): Promise<boolean | undefined> => {

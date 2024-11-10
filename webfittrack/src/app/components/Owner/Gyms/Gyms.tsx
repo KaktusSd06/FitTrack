@@ -70,11 +70,11 @@ const Gyms: React.FC = () => {
     return (
         <div className={styles.Container}>
             <div className={styles.TopContainer}>
-                {/* Передаємо handleGymCreated замість getGyms, щоб активувати індикатор завантаження */}
-                <ModalCreateGym ownerId={idOwner} onGymCreated={handleGymCreated}></ModalCreateGym>
+                <div className={styles.TopContainer}>
+                    <ModalCreateGym ownerId={idOwner} onGymCreated={handleGymCreated}></ModalCreateGym>
+                </div>
             </div>
             <div className={styles.GymsContainer}>
-                {/* Показуємо індикатор завантаження, якщо isLoading == true */}
                 {isLoading ? (
                     <div className={styles.LoadingContainer}>
                         <CircularProgress size="lg" classNames={{ base: "w-full", indicator: "stroke-[--fulvous]" }} />

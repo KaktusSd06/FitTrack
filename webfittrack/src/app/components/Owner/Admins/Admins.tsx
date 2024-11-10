@@ -1,20 +1,20 @@
 "use client";
 
 import styles from "./Admins.module.css";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/react"
+import { Autocomplete, AutocompleteItem, CircularProgress } from "@nextui-org/react"
 import { useEffect, useState } from "react";
-import ModalCreateGym from "../../Modal/GymsModals/ModalCreateGym/ModalCreateGym"
-import ModalEditGym from "../../Modal/GymsModals/ModalEditGym/ModalEditGym"
-import ModalDeleteGym from "../../Modal/GymsModals/ModelDeleteGym/ModalDeleteGym"
+import ModalCreateAdmin from "../../Modal/AdminModals/ModalCreateAdmin/ModalCreateAdmin";
 import { Gym, Admin } from "@/app/Interfaces/Interfaces";
 import { fetchWithAuth } from "@/app/fetchWithAuth";
-
+import { TableOwnerAdmins } from "../../Table/TableOwnerAdmins";
+import { AdminColumns } from "@/app/Api/admin/admin.json";
 const Admins: React.FC = () => {
 
     const [idOwner, setIdOwner] = useState("");
     const [gyms, setGyms] = useState<Gym[]>([]);
     const [admins, setAdmins] = useState<Admin[]>([]);
-    const [currentGym, setCurrentGym] = useState<Gym>();
+    const [selectedGymId, setSelectedGymId] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
 
     useEffect(() => {
@@ -30,7 +30,7 @@ const Admins: React.FC = () => {
     useEffect(() => {
         if (gyms && idOwner)
             getAdmins();
-    }, [currentGym]);
+    }, [selectedGymId]);
 
     const getGyms = async (): Promise<boolean | undefined> => {
         try {
@@ -62,9 +62,23 @@ const Admins: React.FC = () => {
         }
     };
 
+    const handleAdminCreated = async () => {
+        setIsLoading(true);
+        await getAdmins();
+        setIsLoading(false);
+    };
+
+    const onSelectionChange = (id: string | number | null) => {
+        if (id) {
+            setSelectedGymId(id.toString());
+            console.log(selectedGymId);
+        }
+
+    };
+
     const getAdmins = async (): Promise<boolean | undefined> => {
         try {
-            const response = await fetchWithAuth(`/api/proxy/Gyms/get-by-ownerId/${idOwner}`, {
+            const response = await fetchWithAuth(`/api/proxy/Gyms/get-admins/${selectedGymId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -77,8 +91,8 @@ const Admins: React.FC = () => {
             }
             if (response.status === 200) {
                 const data = response.json();
-                setGyms(await data);
-                console.log(gyms[0]);
+                setAdmins(await data);
+                console.log(admins[0]);
             } else if (response.status === 500) {
 
                 return false;
@@ -87,7 +101,7 @@ const Admins: React.FC = () => {
             }
 
         } catch (error) {
-            console.error('Error getting gyms:', error);
+            console.error('Error getting admins:', error);
             return false;
         }
     };
@@ -97,6 +111,7 @@ const Admins: React.FC = () => {
             <div className={styles.TopContainer}>
                 <div className={styles.SelectContainer}>
                     <Autocomplete
+                        onSelectionChange={onSelectionChange}
                         label="Оберіть спортивний центр"
                         className="max-w-xs"
                     >
@@ -107,9 +122,15 @@ const Admins: React.FC = () => {
                         ))}
                     </Autocomplete>
                 </div>
+                <ModalCreateAdmin gymId={selectedGymId} onAdminCreated={handleAdminCreated}></ModalCreateAdmin>
             </div>
             <div className={styles.AdminsContainer}>
-
+                {isLoading ? (
+                    <div className={styles.LoadingContainer}>
+                        <CircularProgress size="lg" classNames={{ base: "w-full", indicator: "stroke-[--fulvous]" }} />
+                    </div>
+                ) : (
+                    <TableOwnerAdmins data={admins} refreshTable={getGyms} columns={AdminColumns}></TableOwnerAdmins>)}
             </div>
         </div>
     )

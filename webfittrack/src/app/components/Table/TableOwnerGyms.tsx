@@ -19,7 +19,7 @@ import ModalDeleteGym from "../Modal/GymsModals/ModelDeleteGym/ModalDeleteGym"
 import { CircularProgress } from "@nextui-org/react";
 import styles from "./LoadingContainer.module.css";
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "location", "email", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "address", "actions"];
 
 export interface Column {
   name: string;

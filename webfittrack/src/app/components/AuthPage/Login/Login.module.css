@@ -106,6 +106,10 @@
   font-size: 16px;
 }
 
+.eyeIcon {
+  filter: var(--icon-filter);
+}
+
 @media (max-width: 340px) {
   .LinkWrapper {
     flex-direction: column;

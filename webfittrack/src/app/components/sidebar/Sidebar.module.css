@@ -1,86 +1,82 @@
 /* Sidebar.module.css */
 
 .fittrack {
-    position: relative;
-    font-weight: 700;
-    font-size: 1.5rem; /* Relative font size for flexibility */
-    color: #333;
-    margin-left: 10px;
+  position: relative;
+  font-weight: 700;
+  font-size: 1.5rem; /* Relative font size for flexibility */
+  color: var(--color-text);
+  margin-left: 10px;
 }
 
 .frameParent {
-    width: 100%;
-    max-width: 350px;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    padding: 6vh 0 0;
-    font-family: 'Noto Sans', sans-serif;
+  width: 100%;
+  max-width: 350px;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 6vh 0 0;
+  font-family: "Noto Sans", sans-serif;
 }
 
 /* Flexbox for logo section */
 .frameGroup {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0 0 6vh;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 0 6vh;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .frameChild {
-    width: 40px;
-    height: 40px;
+  width: 40px;
+  height: 40px;
 }
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
-    .frameParent {
-        max-width: 90px;
-    }
+  .frameParent {
+    max-width: 90px;
+  }
 
-    .fittrack {
-        visibility: hidden;
-    }
-    .frameGroup{
-        padding: 0;
-        gap: 0px;
-        margin-bottom: 11px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .frameChild {
-        margin-left:30px;
-    }
-
+  .fittrack {
+    visibility: hidden;
+  }
+  .frameGroup {
+    padding: 0;
+    gap: 0px;
+    margin-bottom: 11px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .frameChild {
+    margin-left: 30px;
+  }
 }
-
 
 /* Smaller screens */
 @media (max-width: 480px) {
-    .frameParent {
-        max-width: 80px;
-    }
+  .frameParent {
+    max-width: 80px;
+  }
 
-    .fittrack {
-        display: none; /* Hide text logo on very small screens */
-    }
+  .fittrack {
+    display: none; /* Hide text logo on very small screens */
+  }
 
-    .frameChild {
-        width: 30px;
-        height: 30px;
-        margin-left: 0px;
-    }
-    .frameGroup{
-        margin-left: 0px;
-        
+  .frameChild {
+    width: 30px;
+    height: 30px;
+    margin-left: 0px;
+  }
+  .frameGroup {
+    margin-left: 0px;
+
     padding: 0 0 0vh;
-
-    }
-    /* Hide the sidebar completely if needed */
-    
+  }
+  /* Hide the sidebar completely if needed */
 }

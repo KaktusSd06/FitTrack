@@ -54,12 +54,12 @@ const Reg: NextPage = () => {
       email: email,
       password: password,
     });
-    window.location.href = `/pages/Login?${queryParams.toString()}`;
+    window.location.href = `/pages/login?${queryParams.toString()}`;
   };
 
   const handleNoLoginClick = () => {
     onClose();
-    router.push(`/pages/Login`);
+    router.push(`/pages/login`);
   }
 
   const formatDate = (date: DateValue | null): string => {
@@ -420,7 +420,7 @@ const Reg: NextPage = () => {
         {formStep !== 3 && (
           <div className={styles.LinkWrapper}>
             <p className={styles.LinkText}>Вже маєте аккаунт?</p>
-            <Link className={styles.Link} href="/pages/Login">Увійти</Link>
+            <Link className={styles.Link} href="/pages/login">Увійти</Link>
           </div>
         )}
       </div>

@@ -13,7 +13,7 @@
   min-height: 550px;
   display: flex;
   flex-direction: row;
-  box-shadow: 0px 1px 6px var(--text-color) inset, 4px 5px 6px var(--text-color);
+  box-shadow: 1px 2px 2px 2px var(--silver);
   border-radius: 20px;
   align-items: flex-start;
   justify-content: flex-start;
@@ -24,18 +24,16 @@
 .Slider {
   width: 65%;
   height: 100%;
-  min-width: 300px; /* Мінімальна ширина для слайдера */
+  min-width: 300px;
 }
 
 .UserContainer {
-  width: 35%; /* Фіксована ширина для UserContainer */
+  width: 35%;
   height: 100%;
   min-width: 400px;
 }
 
-/* Медіа-запит для адаптації */
 @media (max-width: 900px) {
-  /* Змінюйте 900px на необхідну ширину */
   .Slider {
     display: none; /* Ховаємо Slider, якщо ширина менша за 900px */
   }

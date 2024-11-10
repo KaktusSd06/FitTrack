@@ -25,7 +25,7 @@ const MenuButton: NextPage<MenuButtonProps> = ({ text, imageSrc, isActive, onTog
           <div className={styles.property1defaultChild} />
           <div className={styles.property1defaultInner}>
             <div className={styles.userParent}>
-              <Image className={styles.userIcon + " " + styles.blackSvg} alt="user icon" width={24} height={24} src={imageSrc} />
+              <Image className={styles.userIcon + " " + styles.Svg} alt="user icon" width={24} height={24} src={imageSrc} />
               <div className={styles.div}>{text}</div>
             </div>
           </div>
@@ -35,7 +35,7 @@ const MenuButton: NextPage<MenuButtonProps> = ({ text, imageSrc, isActive, onTog
           <div className={styles.property1variant2Child} />
           <div className={styles.property1variant2Inner}>
             <div className={styles.userParent}>
-              <Image className={styles.userIcon + " " + styles.whiteSvg} alt="user icon" width={24} height={24} src={imageSrc} />
+              <Image className={styles.userIcon + " " + styles.Svg} alt="user icon" width={24} height={24} src={imageSrc} />
               <div className={styles.div}>{text}</div>
             </div>
           </div>
