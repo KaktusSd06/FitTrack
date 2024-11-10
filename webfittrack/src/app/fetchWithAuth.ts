@@ -10,7 +10,7 @@ export const fetchWithAuth = async (
   }
 
   if (!token || token == "undefined" || token === null) {
-    window.location.href = "/pages/Login";
+    window.location.href = "/pages/login";
     return;
   }
 
@@ -28,7 +28,7 @@ export const fetchWithAuth = async (
       return fetch(url, { ...options, headers });
     } else {
       // Якщо refreshToken теж недійсний, редиректимо на сторінку логіну
-      window.location.href = "/pages/Login"; // Редирект на логін
+      window.location.href = "/pages/login"; // Редирект на логін
     }
   }
 
@@ -40,7 +40,7 @@ const refreshToken = async () => {
   const userId = JSON.parse(localStorage.getItem("currentUser") || "{}").userId;
 
   if (!refreshToken || refreshToken == "undefined" || !userId) {
-    window.location.href = "/pages/Login"; // Якщо немає refreshToken або userId, редиректимо на логін
+    window.location.href = "/pages/login"; // Якщо немає refreshToken або userId, редиректимо на логін
     return;
   }
 
@@ -64,7 +64,7 @@ const refreshToken = async () => {
   if (response.status === 401) {
     sessionStorage.clear();
     localStorage.removeItem("currentUser");
-    window.location.href = "/pages/Login"; // Редиректимо на сторінку логіну
+    window.location.href = "/pages/login"; // Редиректимо на сторінку логіну
     return;
   }
 
