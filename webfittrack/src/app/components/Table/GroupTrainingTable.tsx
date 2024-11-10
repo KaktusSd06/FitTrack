@@ -11,10 +11,11 @@ import {
     Selection,
     SortDescriptor,
 } from "@nextui-org/react";
-import { Admin, Gym, Trainer, User, Service, Membership, GroupTraining } from "@/app/Interfaces/Interfaces";
-import TableTopContent from "./TableTopContent";
+import { DateValue } from "@internationalized/date";
+import { GroupTraining } from "@/app/Interfaces/Interfaces";
 import CustomTableCell from "./CustomTableCell";
 import { useRole } from "@/app/Api/RoleProvider";
+import GroupTrainingTopContent from "./GroupTrainingTopContent";
 
 const INITIAL_VISIBLE_COLUMNS = ["firstName", "lastName", "name", "email", "actions"];
 
@@ -24,21 +25,22 @@ export interface Column {
     sortable?: boolean;
 }
 
-interface CustomTableProps<T> {
+interface GroupTrainingTableProps {
     columns: Column[];
-    data: T[];
-    onEdit?: (obj: T) => void;
-    onDelete?: (obj: T) => void;
+    data: GroupTraining[];
+    onEdit?: (obj: GroupTraining) => void;
+    onDelete?: (obj: GroupTraining) => void;
 }
 
-export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | Membership | GroupTraining>({
+export const GroupTrainingTable = ({
     columns,
     data,
     onEdit,
     onDelete,
-}: CustomTableProps<T>): JSX.Element => {
-    const [objects, setDataJson] = useState<T[]>([]);
-    const [filterValue, setFilterValue] = React.useState("");
+}: GroupTrainingTableProps): JSX.Element => {
+    const [objects, setDataJson] = useState<GroupTraining[]>([]);
+    const [startvalue, setStartValue] = useState<DateValue | null>(null);
+    const [finalvalue, setFinalValue] = useState<DateValue | null>(null);
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -48,7 +50,7 @@ export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | M
     });
     const [page, setPage] = React.useState(1);
     const role = useRole();
-    const hasSearchFilter = Boolean(filterValue);
+    const hasSearchFilter = Boolean(startvalue && finalvalue);
 
     useEffect(() => {
         setDataJson(data);
@@ -63,29 +65,31 @@ export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | M
 
     const filteredItems = React.useMemo(() => {
         let filteredUsers = [...objects];
-        if (hasSearchFilter) {
+
+        if (hasSearchFilter && startvalue && finalvalue) {
+            const formattedStart = formatDate(startvalue);
+            const formattedEnd = formatDate(finalvalue);
 
             filteredUsers = filteredUsers.filter((user) => {
-                if ('firstName' in user) {
-                    user.firstName?.toLowerCase().includes(filterValue.toLowerCase());
-                }
-                else if ('name' in user) {
-                    user.name?.toLowerCase().includes(filterValue.toLowerCase());
-                }
-                else if ('membershipName' in user) {
-                    user.membershipName?.toLowerCase().includes(filterValue.toLowerCase());
-                }
-                else if ('description' in user) {
-                    user.description?.toLowerCase().includes(filterValue.toLowerCase());
-                }
-            }
-            );
+                const userDate = user.date;
+                return userDate >= formattedStart && userDate <= formattedEnd;
+            });
         }
+
         return filteredUsers;
-    }, [objects, hasSearchFilter, filterValue]);
+    }, [objects, hasSearchFilter, startvalue, finalvalue]);
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
+    const formatDate = (date: DateValue | null): string => {
+        if (!date) return "";
 
+        const jsDate = date.toDate("UTC");
+        const day = String(jsDate.getDate()).padStart(2, "0");
+        const month = String(jsDate.getMonth() + 1).padStart(2, "0");
+        const year = jsDate.getFullYear();
+
+        return `${year}-${month}-${day}`;
+    };
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
@@ -94,18 +98,20 @@ export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | M
 
     const sortedItems = React.useMemo(() => {
         return [...items].sort((a, b) => {
-            const first = a[sortDescriptor.column as keyof T] as number;
-            const second = b[sortDescriptor.column as keyof T] as number;
+            const first = a[sortDescriptor.column as keyof GroupTraining] as number;
+            const second = b[sortDescriptor.column as keyof GroupTraining] as number;
             const cmp = first < second ? -1 : first > second ? 1 : 0;
             return sortDescriptor.direction === "descending" ? -cmp : cmp;
         });
     }, [sortDescriptor, items]);
-
+    const handleDatePeriodChange = (startDate: DateValue | null, endDate: DateValue | null) => {
+        setStartValue(startDate);
+        setFinalValue(endDate);
+        // Handle the date period data as needed
+    };
     const topContent = (
-        <TableTopContent
-            filterValue={filterValue}
-            onClear={() => setFilterValue("")}
-            onSearchChange={(value) => setFilterValue(value || "")}
+        <GroupTrainingTopContent
+            onDatePeriodChange={handleDatePeriodChange}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
             columns={columns}

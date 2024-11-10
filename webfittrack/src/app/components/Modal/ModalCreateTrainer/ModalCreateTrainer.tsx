@@ -1,10 +1,16 @@
 
 "use client";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react";
 import styles from "./ModalCreateTrainer.module.css"
 import React, { useState } from "react";
-export default function App() {
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+interface ModalProps {
+    gymId: number;
+    isopen: boolean;
+    onClose: () => void;
+}
+
+export const ModalCreateTrainer = ({ gymId, isopen, onClose }: ModalProps): JSX.Element => {
 
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
@@ -60,6 +66,7 @@ export default function App() {
             firstName,
             lastName,
             middleName,
+            gymId,
         };
         if (email && phone && password && confirmPassword) {
             setFirstReqiredFieldsError("");
@@ -87,7 +94,7 @@ export default function App() {
         if (isRegistered) {
             const assignRoleData = { userEmail: email, role: "Trainer" };
             await setRoleToUser(assignRoleData);
-            onOpen();
+
         }
         onclose
     };
@@ -144,10 +151,10 @@ export default function App() {
 
     return (
         <>
-            <Button onPress={onOpen} className="bg-[#E48100] text-white">Додати</Button>
+
             <Modal
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
+                isOpen={isopen}
+                onClose={onClose}
                 placement="top-center"
             >
                 <ModalContent>

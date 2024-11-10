@@ -20,6 +20,7 @@ export default function AdminUsers() {
         const parsedUser = JSON.parse(user);
         if (parsedUser && parsedUser.userId && parsedUser.role === "Admin") {
             curruserid = parsedUser.userId;
+
         }
         else {
             window.history.back();

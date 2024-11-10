@@ -115,6 +115,8 @@ export interface GroupTraining {
     description?: string; // nullable
     string: string; // could also use string type for better string handling
     gymId: number; // required
+    date: string;
+    durationInMinutes: number;
     trainerId?: string; // nullable
     users?: User[];
 }
