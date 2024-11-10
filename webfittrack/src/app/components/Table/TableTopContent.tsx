@@ -8,7 +8,6 @@ import {
     Selection
 } from "@nextui-org/react";
 import { Column } from "./TableAdminUsers";
-import ModalCreateTrainer from "../Modal/ModalCreateTrainer/ModalCreateTrainer";
 
 interface TableTopContentProps {
     filterValue: string;
@@ -20,6 +19,7 @@ interface TableTopContentProps {
     onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     usersCount: number;
     role: string
+    onCreate?: () => void;
 }
 
 const TableTopContent = ({
@@ -32,6 +32,7 @@ const TableTopContent = ({
     onRowsPerPageChange,
     usersCount,
     role,
+    onCreate,
 }: TableTopContentProps) => {
 
     return (
@@ -65,7 +66,7 @@ const TableTopContent = ({
                             ))}
                         </DropdownMenu>
                     </Dropdown>
-                    {(role === "Trainer" || role === "Admin") && <ModalCreateTrainer />}
+                    {(role === "Trainer" || role === "Admin") && <Button className="bg-[#e48100] text-white" onClick={() => onCreate?.()} >Додати </Button>}
 
 
 

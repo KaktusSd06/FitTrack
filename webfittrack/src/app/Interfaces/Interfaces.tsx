@@ -106,10 +106,10 @@ export interface Admin {
     gymId?: number;
 }
 export interface GroupTraining {
-    id: number; // required
-    description?: string; // nullable
-    string: string; // could also use string type for better string handling
-    gymId: number; // required
+    id: number;
+    description?: string;
+    contactPhone: string;
+    gymId: number;
     date: string;
     durationInMinutes: number;
     trainerId?: string; // nullable
@@ -178,7 +178,7 @@ export interface Service {
 }
 
 export interface Trainer {
-    id?: string;
+    id: string;
     userName?: string;
     normalizedUserName?: string;
     email?: string;
