@@ -29,6 +29,7 @@ interface CustomTableProps<T> {
     data: T[];
     onEdit?: (obj: T) => void;
     onDelete?: (obj: T) => void;
+    onCreate?: () => void;
 }
 
 export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | Membership | GroupTraining>({
@@ -36,6 +37,7 @@ export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | M
     data,
     onEdit,
     onDelete,
+    onCreate,
 }: CustomTableProps<T>): JSX.Element => {
     const [objects, setDataJson] = useState<T[]>([]);
     const [filterValue, setFilterValue] = React.useState("");
@@ -62,6 +64,7 @@ export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | M
     }, [columns, visibleColumns]);
 
     const filteredItems = React.useMemo(() => {
+        if (objects === null) return [];
         let filteredUsers = [...objects];
         if (hasSearchFilter) {
 
@@ -110,8 +113,9 @@ export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | M
             setVisibleColumns={setVisibleColumns}
             columns={columns}
             onRowsPerPageChange={(e) => setRowsPerPage(Number(e.target.value))}
-            usersCount={objects.length}
+            usersCount={objects?.length || 0}
             role={role}
+            onCreate={onCreate}
         />
     );
 
