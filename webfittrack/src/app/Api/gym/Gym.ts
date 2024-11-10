@@ -1,7 +1,7 @@
 // Gym.ts
 import { Gym } from "@/app/Interfaces/Interfaces";
 
-const BASE_URL = "/api/Gyms";
+const BASE_URL = "/api/proxy/Gyms";
 
 // Fetch all gyms
 export async function fetchGyms(): Promise<Gym[]> {
