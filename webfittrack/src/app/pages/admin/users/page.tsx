@@ -39,14 +39,14 @@ export default function AdminUsers() {
             });
             const fetchedUser = await response?.json();
             if (fetchedUser?.gymId !== undefined) {
-                setGymId(fetchedUser?.gymId);
-                const response = await fetch(`/api/proxy/Gyms/get-users/${fetchedUser?.gymId}`);
+                const response = await fetch(`/api/proxy/Gyms/${fetchedUser?.gymId}`);
                 const response1 = await fetch(`/api/proxy/Gyms/get-trainers/${fetchedUser?.gymId}`);
                 const trainers: Trainer[] = await response1.json();
-                const users: User[] = await response.json();
 
                 const fetchedGym: Gym = await response.json();
-
+                setGym(fetchedGym);
+                let users: React.SetStateAction<User[] | undefined> = [];
+                users = fetchedGym.users;
                 if (role === "User") {
                     console.log(users);
                     setData(users);
@@ -64,6 +64,7 @@ export default function AdminUsers() {
             setLoading(false);
         }
     }, []);
+
 
     // Fetch data for the initial role when the component mounts
     useEffect(() => {

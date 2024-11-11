@@ -74,6 +74,9 @@ const Login: NextPage = () => {
     if (role === "User") {
       router.push(`/pages/${role.toLowerCase()}/main`);
     }
+    else {
+      router.push(`/pages/${role.toLowerCase()}`);
+    }
   }
 
 

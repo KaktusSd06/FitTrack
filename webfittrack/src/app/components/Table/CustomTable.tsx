@@ -141,10 +141,10 @@ export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | M
             isHeaderSticky
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
-            classNames={{
-                wrapper: "max-h-[382px]",
-                tr: "even:bg-[#f4f0e9] odd:bg-transparent",
-            }}
+            // classNames={{
+            //     wrapper: "max-h-[382px]",
+            //     tr: "even:bg-[#f4f0e9] odd:bg-transparent",
+            // }}
             selectedKeys={selectedKeys}
             sortDescriptor={sortDescriptor}
             topContent={topContent}
