@@ -27,6 +27,18 @@ export const AdminButtonData = [
     },
 ];
 
+export const TrainerButtonData = [
+    {
+        text: "Тренування",
+        imageSrc: "/images/mdi-dumbbell.svg",
+        redirectPath: "/pages/trainer/trainings"
+    },
+    {
+        text: "Користувачі",
+        imageSrc: "/images/user.svg",
+        redirectPath: "/pages/trainer/users"
+    },
+];
 export const UserButtonData = [
     {
         text: "Головна",

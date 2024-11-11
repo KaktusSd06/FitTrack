@@ -1,22 +1,23 @@
 
 "use client";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
-import styles from "./ModlaCreateGroupTraininig.module.css"
+import styles from "./ModlaEditGroupTraininig.module.css"
 import React, { useState, useEffect } from "react";
-import { Trainer } from "@/app/Interfaces/Interfaces";
+import { GroupTraining, Trainer } from "@/app/Interfaces/Interfaces";
 import { I18nProvider } from "@react-aria/i18n";
 import { now } from "@internationalized/date";
 
 // Utility function to format date
 
 interface ModalProps {
+    id: number
     gymId: number;
     isopen: boolean;
     onClose: () => void;
 }
 
-export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps): JSX.Element => {
-
+export const ModlaEditGroupTraininig = ({ id, gymId, isopen, onClose }: ModalProps): JSX.Element => {
+    const [lasttraining, setlasttraining] = useState<GroupTraining>();
     const [contactPhone, setcontactPhone] = useState("");
     const [description, setdescription] = useState("");
     const [date, setdate] = useState<string>("");
@@ -34,11 +35,50 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
         const value = e.target.value;
         setdate(value);
     };
+    const startEdit = async () => {
+        const data = await getTraining();
+        if (data) {
+            setlasttraining(data);
+            setdescription(data.description);
+            setdurationInMinutes(data.password);
+            setcontactPhone(data.phoneNumber);
+            setTrainerId(data.birthDate);
+            console.log(data)
+        }
+    };
 
+    const getTraining = async () => {
+        try {
+            const response = await fetch(`/api/proxy/GroupTrainings/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response) {
+                console.error("No response received");
+                return false;
+            }
+
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 500) {
+                return false;
+            } else {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+        } catch (error) {
+            console.error('Error getting admin:', error);
+            return false;
+        }
+    };
     const CreateTraining = async (CreationData: Record<string, unknown>): Promise<boolean | undefined> => {
         try {
-            const response = await fetch(`/api/proxy/GroupTrainings`, {
-                method: 'POST',
+
+            const response = await fetch(`/api/proxy/GroupTrainings/${id}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -78,7 +118,8 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
             trainerId,
             gymId,
         };
-        console.log(CreationData);
+
+        console.log(JSON.stringify(CreationData));
         if (date && durationInMinutes && contactPhone) {
             setReqiredFieldsError("");
         }
@@ -112,13 +153,16 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
     };
     useEffect(() => {
         GetAllTrainers();
-    }, [gymId]);
+        if (isopen) {
+            startEdit();
+        }
+    }, [gymId, isopen]);
     return (
         <>
 
             <Modal
                 isOpen={isopen}
-                onClose={onClose}
+                onOpenChange={(open) => !open && onClose()}
                 placement="top-center"
             >
                 <ModalContent>
@@ -145,9 +189,10 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
                                         <I18nProvider locale="en-GB">
 
                                             <Input
-                                                label="Дата і час"
+
                                                 type="datetime-local" // Allows both date and time input
                                                 value={date}
+                                                placeholder="Дата і час"
                                                 onChange={handleDateTimeChange}
                                             />
                                         </I18nProvider>
@@ -155,7 +200,7 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
                                             type="number"
                                             variant="bordered"
                                             label="Час в хвилинах *"
-                                            value={durationInMinutes.toString()}
+                                            value={durationInMinutes}
                                             onChange={(e) => { setdurationInMinutes(parseInt(e.target.value, 10)); setCreationError(""); }}
                                         />
                                         <Dropdown>

@@ -1,3 +1,4 @@
+import { fetchWithAuth } from "@/app/fetchWithAuth";
 import { Admin } from "@/app/Interfaces/Interfaces";
 import axios from "axios";
 
@@ -5,7 +6,7 @@ const BASE_URL = "/api/proxy/Admins";
 
 export const getAdminByRole = async (personRole: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/${personRole}`);
+    const response = await fetchWithAuth(`${BASE_URL}/${personRole}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching admin by role:", error);
@@ -15,7 +16,7 @@ export const getAdminByRole = async (personRole: string) => {
 
 export const getAdminById = async (id: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/get-by-id/${id}`);
+    const response = await fetchWithAuth(`${BASE_URL}/get-by-id/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching admin by ID:", error);
@@ -25,7 +26,7 @@ export const getAdminById = async (id: string) => {
 
 export const getAdminByEmail = async (email: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/get-by-email/${email}`);
+    const response = await fetchWithAuth(`${BASE_URL}/get-by-email/${email}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching admin by email:", error);
@@ -35,7 +36,7 @@ export const getAdminByEmail = async (email: string) => {
 
 export const updateAdminBasicInfo = async (id: string, updateData: Admin) => {
   try {
-    const response = await axios.put(`${BASE_URL}/update-basic-info/${id}`, updateData);
+    const response = await fetchWithAuth(`${BASE_URL}/update-basic-info/${id}`, updateData);
     return response.data;
   } catch (error) {
     console.error("Error updating admin basic info:", error);

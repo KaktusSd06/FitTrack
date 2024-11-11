@@ -66,7 +66,7 @@ const TableTopContent = ({
                             ))}
                         </DropdownMenu>
                     </Dropdown>
-                    {(role === "Trainer" || role === "Admin") && <Button className="bg-[#e48100] text-white" onClick={() => onCreate?.()} >Додати </Button>}
+                    {(role === "Trainer" || role === "Admin" || role === "GroupTraining"|| role === "Service"|| role === "Membership") && <Button className="bg-[#e48100] text-white" onClick={() => onCreate?.()} >Додати </Button>}
 
 
 
