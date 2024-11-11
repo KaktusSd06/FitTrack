@@ -20,11 +20,6 @@ export const AdminButtonData = [
         imageSrc: "/images/mdi-dumbbell.svg",
         redirectPath: "/pages/admin/trainings"
     },
-    {
-        text: "Транзакції",
-        imageSrc: "/images/attach-money.svg",
-        redirectPath: "/pages/admin/transactions"
-    },
 ];
 
 export const TrainerButtonData = [
@@ -50,11 +45,6 @@ export const UserButtonData = [
         imageSrc: "/images/local-grocery-store.svg",
         redirectPath: "/pages/user/products"
     },
-    {
-        text: "Транзакції",
-        imageSrc: "/images/attach-money.svg",
-        redirectPath: "/pages/user/tansactions"
-    },
 ];
 
 export const OwnerButtonData = [
@@ -67,16 +57,6 @@ export const OwnerButtonData = [
         text: "Адміни",
         imageSrc: "/images/people.svg",
         redirectPath: "/pages/owner/admins"
-    },
-    {
-        text: "Статистика",
-        imageSrc: "/images/timeline.svg",
-        redirectPath: "/pages/owner/statistic"
-    },
-    {
-        text: "Транзакції",
-        imageSrc: "/images/attach-money.svg",
-        redirectPath: "/pages/owner/transactions"
     },
 ];
 

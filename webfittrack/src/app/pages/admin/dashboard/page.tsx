@@ -82,23 +82,6 @@ export default function AdminDashboard() {
                             iconSrc="/Stats/data_usage.svg"
                         />
                     </div>
-                    <div className={styles.BasicStats}>
-                        <StatsCard
-                            title="Kcal"
-                            value={600}
-                            iconColor="#E6AD00"
-                            iconSrc="/Stats/meat.svg"
-                        />
-                    </div>
-                    <div className={styles.BasicStats}>
-                        <StatsCard
-                            title="Час тренувань на цьому тижні"
-                            value={228}
-                            unit="хв"
-                            iconColor="#1CEC42"
-                            iconSrc="/Stats/access_time.svg"
-                        />
-                    </div>
                 </div>
             </div>
         </>

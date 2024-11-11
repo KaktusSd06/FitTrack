@@ -4,7 +4,7 @@ import ownerStyles from "./owner.module.css";
 import userStyles from "./user.module.css";
 import Link from 'next/link';
 
-const page = () => {
+const HomePage = () => {
 	return (
 		<div className={headerStyles.Parent}>
 			<div className={headerStyles.headerframe}>
@@ -27,7 +27,7 @@ const page = () => {
 						</div>
 						<div className={headerStyles.buttonsection}>
 							<div className={headerStyles.wrapper}>
-								<Link href="/pages/Register" passHref>
+								<Link href="/pages/register" passHref>
 									<button className={headerStyles.b}>Головна</button>
 								</Link>
 							</div>
@@ -212,4 +212,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default HomePage;
