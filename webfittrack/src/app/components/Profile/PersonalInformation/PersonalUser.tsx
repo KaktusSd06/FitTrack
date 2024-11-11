@@ -1,12 +1,16 @@
 "use client";
 
+import { User } from "@/app/Interfaces/Interfaces";
 import styles from "./Personal.module.css";
 import { Input } from "@nextui-org/input";
 import { Button, Tabs, Tab } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const PersonalUser: React.FC = () => {
   const [isReadOnly, setIsReadOnly] = useState(true);
+  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState<User>();
+
   const handleStartEdit = () => {
     setIsReadOnly(false);
   };
@@ -15,10 +19,42 @@ const PersonalUser: React.FC = () => {
     setIsReadOnly(true);
   };
 
+  useEffect(() => {
+    const id = JSON.parse(localStorage.getItem("currentUser") || "{}").userId;
+    setUserId(id);
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      getUser();
+    }
+  }, [userId]);
+
+  const getUser = async (): Promise<boolean | undefined> => {
+    try {
+      const response = await fetch(`/api/proxy/Users/get-by-id/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      if (response.status === 200) {
+        const data = await response.json();
+        setUser(data);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return false;
+    }
+  };
+
   return (
     <div className={styles.ProfileContainer}>
       <div className={styles.TitleContainer}>
-        <p className={styles.ProfileTitle}>Алфьоров Ростислав Віталійович</p>
+        <p className={styles.ProfileTitle}>{user?.firstName} {user?.middleName} {user?.lastName}</p>
       </div>
       <Tabs
         onSelectionChange={handleEndEdit}
@@ -38,8 +74,8 @@ const PersonalUser: React.FC = () => {
                 <label className={styles.label}>Прізвище:</label>
                 <Input
                   isReadOnly={isReadOnly}
+                  value={user?.lastName}
                   type="text"
-                  placeholder="Введіть ваше прізвище"
                   variant="bordered"
                   className={styles.input}
                 />
@@ -48,9 +84,9 @@ const PersonalUser: React.FC = () => {
                 <label className={styles.label}>Ім&apos;я:</label>
                 <Input
                   isReadOnly={isReadOnly}
+                  value={user?.firstName}
                   type="text"
                   variant="bordered"
-                  placeholder="Введіть ваше ім'я"
                   className={styles.input}
                 />
               </div>
@@ -58,9 +94,9 @@ const PersonalUser: React.FC = () => {
                 <label className={styles.label}>По батькові:</label>
                 <Input
                   isReadOnly={isReadOnly}
+                  value={user?.middleName}
                   type="text"
                   variant="bordered"
-                  placeholder="Введіть ваше по батькові"
                   className={styles.input}
                 />
               </div>
@@ -68,28 +104,13 @@ const PersonalUser: React.FC = () => {
                 <label className={styles.label}>Ріст:</label>
                 <Input
                   isReadOnly={isReadOnly}
+                  value={user?.height || ""}
                   type="Number"
                   variant="bordered"
-                  placeholder="00"
                   className={styles.input}
                   endContent={
                     <div className="pointer-events-none flex items-center">
                       <span className="text-default-400 text-small">см</span>
-                    </div>
-                  }
-                />
-              </div>
-              <div className={styles.inputContainer}>
-                <label className={styles.label}>Вага:</label>
-                <Input
-                  isReadOnly={isReadOnly}
-                  type="Number"
-                  placeholder="00"
-                  variant="bordered"
-                  className={styles.input}
-                  endContent={
-                    <div className="pointer-events-none flex items-center">
-                      <span className="text-default-400 text-small">кг</span>
                     </div>
                   }
                 />
@@ -132,8 +153,8 @@ const PersonalUser: React.FC = () => {
                 <label className={styles.label}>Телефон:</label>
                 <Input
                   isReadOnly={isReadOnly}
+                  value={user?.phoneNumber}
                   type="text"
-                  placeholder="#########"
                   variant="bordered"
                   className={styles.input}
                   startContent={
@@ -147,9 +168,9 @@ const PersonalUser: React.FC = () => {
                 <label className={styles.label}>Електронна адреса:</label>
                 <Input
                   isReadOnly={isReadOnly}
+                  value={user?.email}
                   type="email"
                   variant="bordered"
-                  placeholder="Введіть вашу електронну адресу"
                   className={styles.input}
                 />
               </div>

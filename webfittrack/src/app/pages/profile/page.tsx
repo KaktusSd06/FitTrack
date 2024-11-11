@@ -2,7 +2,7 @@ import PersonalUser from "@/app/components/Profile/PersonalInformation/PersonalU
 
 const Page = () => {
     return (
-        <h1>Власники</h1>
+        <PersonalUser></PersonalUser>
     );
 };
 

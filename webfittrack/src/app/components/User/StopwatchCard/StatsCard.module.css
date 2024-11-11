@@ -23,7 +23,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 8px;
 }
 
@@ -37,6 +36,7 @@
 
 .Title {
   font-weight: 400;
+  font-size: 12px;
 }
 
 .CurrentValue {

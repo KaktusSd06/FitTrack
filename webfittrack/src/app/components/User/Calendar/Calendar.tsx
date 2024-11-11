@@ -100,11 +100,10 @@ const Calendar: React.FC<CalendarProps> = ({
             <div
               key={index}
               onClick={() => handleDayClick(date)}
-              className={`${styles.dayCell} ${
-                date.isSame(selectedDate, "day")
+              className={`${styles.dayCell} ${date.isSame(selectedDate, "day")
                   ? styles.selectedDay
                   : styles.defaultDay
-              }`}
+                }`}
             >
               <div className={styles.dayLabel}>
                 {daysOfWeek[date.isoWeekday() - 1]}

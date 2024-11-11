@@ -71,7 +71,9 @@ const Login: NextPage = () => {
     };
     localStorage.setItem("currentUser", JSON.stringify(currentUser));
     setLoading(true);
-    router.push(`/pages/${role.toLowerCase()}`);
+    if (role === "User") {
+      router.push(`/pages/${role.toLowerCase()}/main`);
+    }
   }
 
 

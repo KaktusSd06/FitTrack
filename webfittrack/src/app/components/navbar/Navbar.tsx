@@ -4,6 +4,7 @@ import styles from './Navbar.module.css';
 import Toggle from '../themetoggle/themetoggle';
 import Image from 'next/image';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
 
 interface NavbarProps {
   lastName: string;
@@ -11,6 +12,15 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ lastName, firstName }) => {
+  const router = useRouter();
+  const handleClickQuit = () => {
+    router.push("/pages/login");
+  }
+
+  const handleOpenProfile = () => {
+    router.push("/pages/profile");
+  }
+
   return (
     <div className={styles.frameParent}>
       <Toggle />
@@ -33,12 +43,11 @@ const Navbar: React.FC<NavbarProps> = ({ lastName, firstName }) => {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="User actions"
-            onAction={(key) => alert(key)}
           >
-            <DropdownItem key="profile" className={styles.dropdownItem} >
+            <DropdownItem key="profile" onClick={handleOpenProfile} className={styles.dropdownItem} >
               Профіль
             </DropdownItem >
-            <DropdownItem key="logout" className={`${styles.dropdownItem} ${styles.customColor} ${styles.dropdownItem1}`} >
+            <DropdownItem key="logout" onClick={handleClickQuit} className={`${styles.dropdownItem} ${styles.customColor} ${styles.dropdownItem1}`} >
               Вийти
             </DropdownItem>
           </DropdownMenu>

@@ -23,7 +23,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 8px;
 }
 
@@ -37,6 +36,7 @@
 
 .Title {
   font-weight: 400;
+  font-size: 12px;
 }
 
 .CurrentValue {
@@ -59,6 +59,7 @@
   align-items: center;
   overflow: hidden;
   flex-shrink: 0; /* Запобігає виходу псевдоелемента за межі */
+  cursor: pointer;
 }
 
 .IconBefore {
@@ -76,15 +77,9 @@
 .Icon img {
   position: relative;
   width: 36px;
-  z-index: 2; /* Робить іконку видимою поверх псевдоелемента */
+  z-index: 2;
 }
 
 .Progress {
   width: 100%;
-}
-
-@container (max-width: 343px) {
-  .Icon {
-    display: none;
-  }
 }
