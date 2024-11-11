@@ -1,0 +1,29 @@
+.Button {
+    font-family: var(--font-noto-sans), sans-serif;
+    background-color: #e48100;
+    color: white;
+  }
+  
+  .Container {
+    width: 100%;
+    padding-top: 30px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .StatsContainer {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap; /* Дозволяє елементам переноситися на новий рядок */
+    gap: 25px;
+  }
+  
+  .StepsStats {
+    flex: 2;
+  }
+  
+  .BasicStats {
+    flex: 1;
+  }
+  

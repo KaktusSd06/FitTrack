@@ -13,9 +13,9 @@ export default function AdminUsers() {
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedRole, setSelectedRole] = React.useState("User");
     const [openModal, setopenModal] = useState<boolean>(false);
+    const [gymId, setGymId] = useState<number>(0);
 
     const user = localStorage.getItem("currentUser");
-    let gymId: string;
 
     let curruserid: string;
     if (user) {
@@ -39,14 +39,14 @@ export default function AdminUsers() {
             });
             const fetchedUser = await response?.json();
             if (fetchedUser?.gymId !== undefined) {
-                const response = await fetch(`/api/proxy/Gyms/${fetchedUser?.gymId}`);
+                setGymId(fetchedUser?.gymId);
+                const response = await fetch(`/api/proxy/Gyms/get-users/${fetchedUser?.gymId}`);
                 const response1 = await fetch(`/api/proxy/Gyms/get-trainers/${fetchedUser?.gymId}`);
                 const trainers: Trainer[] = await response1.json();
+                const users: User[] = await response.json();
 
                 const fetchedGym: Gym = await response.json();
-                setGym(fetchedGym);
-                let users: React.SetStateAction<User[] | undefined> = [];
-                users = fetchedGym.users;
+
                 if (role === "User") {
                     console.log(users);
                     setData(users);

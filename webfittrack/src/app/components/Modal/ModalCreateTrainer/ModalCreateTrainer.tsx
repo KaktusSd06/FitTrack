@@ -38,6 +38,7 @@ export const ModalCreateTrainer = ({ gymId, isopen, onClose }: ModalProps): JSX.
             });
 
             if (response.status === 201) {
+                console.log(response.status);
                 return true;
             } else if (response.status === 500) {
                 setRegistrationError('Користувач з таким номером телефону вже існує');

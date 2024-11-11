@@ -5,6 +5,7 @@ import { Spinner, Tab, Tabs } from "@nextui-org/react";
 import { Gym, Membership, Service } from "@/app/Interfaces/Interfaces";
 import { RoleProvider } from "@/app/Api/RoleProvider";
 import { ModalCreateService } from "@/app/components/Modal/ModalCreateService/ModalCreateService"
+import { ModalCreateMembership } from "@/app/components/Modal/ModalCreateMembership/ModalCreateMembership"
 import { CustomTable } from "@/app/components/Table/CustomTable";
 import { fetchWithAuth } from "@/app/fetchWithAuth";
 
@@ -72,7 +73,16 @@ export default function AdminUsers() {
             setLoading(false);
         }
     }, []);
-
+    const handleOnDeleteOpenService = async (service: Service) => {
+        await fetch(`/api/proxy/Services/${service.id}`, {
+            method: 'DELETE',
+        });
+    };
+    const handleOnDeleteOpenMembership = async (membership: Membership) => {
+        await fetch(`/api/proxy/Memberships/${membership.id}`, {
+            method: 'DELETE',
+        });
+    };
     useEffect(() => {
         fetchData(selectedRole);
     }, [selectedRole, fetchData]);
@@ -95,6 +105,8 @@ export default function AdminUsers() {
     return (
         <>
             <ModalCreateService isopen={openModalService} gymId={parseInt(gymId, 10)} onClose={handleOnCloseService} />
+            <ModalCreateMembership isopen={openModalMembership} gymId={parseInt(gymId, 10)} onClose={handleOnCloseMembership} />
+
             <Tabs
                 classNames={{
                     cursor: "w-full bg-[#e48100]",
@@ -109,14 +121,14 @@ export default function AdminUsers() {
                     title="Абонименти"
                 >
                     <RoleProvider role="Membership">
-                        <CustomTable columns={MembershipColumns} data={data} />
+                        <CustomTable columns={MembershipColumns} data={data} onCreate={handleOnOpenMembership} onDelete={handleOnDeleteOpenMembership} />
                     </RoleProvider>
                 </Tab>
                 <Tab key="Service"
                     title="Послуги"
                 >
                     <RoleProvider role="Service">
-                        <CustomTable columns={SerivceColumns} data={data} onCreate={handleOnOpenService} />
+                        <CustomTable columns={SerivceColumns} data={data} onCreate={handleOnOpenService} onDelete={handleOnDeleteOpenService} />
                     </RoleProvider>
                 </Tab>
             </Tabs>

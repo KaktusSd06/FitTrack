@@ -1,10 +1,9 @@
 'use client';
-import GymCard from "./components/Owner/GymCard/gymcard";
+import { } from "@/app/pages/Home/page"
 export default function Home() {
   return (
     <div>
-      <GymCard></GymCard>
-      <GymCard></GymCard> <GymCard></GymCard> <GymCard></GymCard>
+
     </div>
   );
 }

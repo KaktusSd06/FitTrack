@@ -1,148 +1,210 @@
-import React from 'react';
-import styles from './page.module.css';
-
+import Image from "next/image";
+import headerStyles from "./header.module.css";
+import ownerStyles from "./owner.module.css";
+import userStyles from "./user.module.css";
 
 const page = () => {
-  	return (
-    		<div className={styles.frameParent}>
-      			<div className={styles.frameWrapper}>
-        				<div className={styles.pexelsVictorfreitas9491311Parent}>
-          					<img className={styles.pexelsVictorfreitas9491311Icon} alt="" src="/landing/header.png" />
-          					<div className={styles.frameGroup}>
-            						<div className={styles.frameContainer}>
-              							<div className={styles.frameDiv}>
-                								<img className={styles.frameChild} alt="" src="/landing/logo.svg" />
-                								<div className={styles.fittrack}>FitTrack</div>
-              							</div>
-              							<div className={styles.frameParent1}>
-                								<div className={styles.wrapper}>
-													
-                  									<b className={styles.b}>Головна</b>
-                								</div>
-                								<div className={styles.div}>
-                  									<div className={styles.b}>Увійти</div>
-                								</div>
-              							</div>
-            						</div>
-            						<div className={styles.frameParent2}>
-              							<div className={styles.fittrackParent}>
-                								<b className={styles.fittrack1}>FitTrack</b>
-                								<div className={styles.div2}>Спорт - комфортно для всіх</div>
-              							</div>
-              							<div className={styles.parent}>
-                								<div className={styles.div3}>Тренування з комфортом для всіх. Власник - контроль та звітності. Корисутувач - мобільність та доступність</div>
-                								<div className={styles.group}>
-                  									<div className={styles.fittrack1}>
-                    										<ul className={styles.ul}>
-                      											<li>· Тренування</li>
-                    										</ul>
-                  									</div>
-                  									<div className={styles.fittrack1}>
-                    										<ul className={styles.ul}>
-                      											<li>· Магазин</li>
-                    										</ul>
-                  									</div>
-                  									<div className={styles.fittrack1}>
-                    										<ul className={styles.ul}>
-                      											<li>· Звітності</li>
-                    										</ul>
-                  									</div>
-                								</div>
-              							</div>
-            						</div>
-          					</div>
-        				</div>
-      			</div>
-      			<div className={styles.container}>
-        				<b className={styles.b1}>Для власників спортивних центрів</b>
-        				<img className={styles.frameItem} alt="" src="/landing/human.svg" />
-        				<div className={styles.flatColorIconsstatisticsParent}>
-          					<img className={styles.flatColorIconsstatistics} alt="" src="/landing/stats.svg" />
-          					<div className={styles.parent1}>
-            						<b className={styles.fittrack1}>Статистика</b>
-            						<div className={styles.div7}>Переглядайте статистику та показники ефективності, для комфортного керування спортивним центром</div>
-          					</div>
-        				</div>
-        				<div className={styles.frameParent3}>
-          					<img className={styles.frameIcon} alt="" src="/landing/man.svg" />
-          					<div className={styles.parent1}>
-            						<b className={styles.fittrack1}>Контроль</b>
-            						<div className={styles.div7}>Керуйте всіма аспектами власного бізнесу. Нехай адміністрування стане зручнішим</div>
-          					</div>
-        				</div>
-        				<div className={styles.frameParent4}>
-          					<img className={styles.frameIcon1} alt="" src="/landing/woman.svg" />
-          					<div className={styles.parent1}>
-            						<b className={styles.fittrack1}>Персонал</b>
-            						<div className={styles.div7}>Керуйте персоналом зручно. Редагуйте команду тренерів та адміністраторів сервісу</div>
-          					</div>
-        				</div>
-        				<img className={styles.frameIcon2} alt="" src="/landing/light.svg" />
-      			</div>
-      			<div className={styles.parent4}>
-        				<b className={styles.b5}>Переваги користувача</b>
-        				<div className={styles.flatColorIconsstatisticsParent}>
-          					<img className={styles.flatColorIconsstatistics} alt="" src="/landing/stats.svg" />
-          					<div className={styles.parent1}>
-            						<b className={styles.fittrack1}>Статистика</b>
-            						<div className={styles.div7}>Переглядайте статистику та показники ефективності, для покращення прогресу</div>
-          					</div>
-        				</div>
-        				<div className={styles.frameParent5}>
-          					<img className={styles.frameIcon3} alt="" src="/landing/dumbell.svg" />
-          					<div className={styles.parent1}>
-            						<b className={styles.fittrack1}>Тренування</b>
-            						<div className={styles.div7}>Створюйте зручний графік тренувань для себе, та відвідуйте групові тренування в вашому залі</div>
-          					</div>
-        				</div>
-        				<div className={styles.frameParent6}>
-          					<img className={styles.frameIcon4} alt="" src="/landing/bag.svg" />
-          					<div className={styles.parent1}>
-            						<b className={styles.fittrack1}>Зручний шопінг</b>
-            						<div className={styles.div7}>Купуйте потрібні товари, найвигідніші абонименти та додаткові послуги прямо у сервісі</div>
-          					</div>
-        				</div>
-        				<div className={styles.frameParent7}>
-          					<img className={styles.frameIcon5} alt="" src="/landing/telephone.svg" />
-          					<div className={styles.parent1}>
-            						<b className={styles.fittrack1}>Мобільність</b>
-            						<div className={styles.div7}>Керуйте власними тренуваннями, відслідковуйте показники прямо в застосунку</div>
-          					</div>
-        				</div>
-        				<img className={styles.frameInner} alt="" src="/landing/human1.svg" />
-      			</div>
-      			<div className={styles.formWrapperWrapper}>
-        				<div className={styles.formWrapper}>
-          					<div className={styles.group}>
-            						<div className={styles.div14}>Зв’яжіться з нами</div>
-            						<div className={styles.div15}>Відправте нам свої побажання, або враження від нас</div>
-          					</div>
-          					<div className={styles.form}>
-            						<div className={styles.names}>
-              							<div className={styles.fname}>
-                								<div className={styles.div16}>Прізвище</div>
-              							</div>
-              							<div className={styles.fname}>
-                								<div className={styles.div16}>Ім’я</div>
-              							</div>
-            						</div>
-            						<div className={styles.email}>
-              							<div className={styles.div16}>Email</div>
-            						</div>
-            						<div className={styles.phone}>
-              							<div className={styles.div16}>Номер телефону</div>
-            						</div>
-            						<div className={styles.message}>
-              							<div className={styles.div16}>Повідомлення</div>
-            						</div>
-            						<div className={styles.submit}>
-              							<div className={styles.div20}>Відправити</div>
-            						</div>
-          					</div>
-        				</div>
-      			</div>
-      			<img className={styles.pexelsVictorfreitas8411311Icon} alt="" src="/landing/footer.png" />
-    		</div>);
+	return (
+		<div className={headerStyles.Parent}>
+			<div className={headerStyles.headerframe}>
+				<img
+					className={headerStyles.headerimage}
+					alt=""
+					src="/landing/header.png"
+				/>
+				<div className={headerStyles.header}>
+					<div className={headerStyles.mainheader}>
+						<div className={headerStyles.logosection}>
+							<Image
+								className={headerStyles.logoframe}
+								width={37}
+								height={32}
+								alt=""
+								src="/landing/logo.svg"
+							/>
+							<div className={headerStyles.fittrack}>FitTrack</div>
+						</div>
+						<div className={headerStyles.buttonsection}>
+							<div className={headerStyles.wrapper}>
+								<button className={headerStyles.b}>Головна </button>
+							</div>
+							<div className={headerStyles.div}>
+								<button className={headerStyles.b}>Увійти</button>
+							</div>
+						</div>
+					</div>
+					<div className={headerStyles.maintextsection}>
+						<div className={headerStyles.bigtext}>
+							<b className={headerStyles.fittrack1}>FitTrack</b>
+							<div className={headerStyles.div2}>
+								Спорт - комфортно для всіх
+							</div>
+						</div>
+						<div className={headerStyles.smalltext}>
+							<div className={headerStyles.div3}>
+								Тренування з комфортом для всіх. Власник - контроль та
+								звітності. Корисутувач - мобільність та доступність
+							</div>
+							<div className={headerStyles.listsection}>
+								<div className={headerStyles.fittrack1}>
+									<ul className={headerStyles.ul}>
+										<li>· Тренування</li>
+									</ul>
+								</div>
+								<div className={headerStyles.fittrack1}>
+									<ul className={headerStyles.ul}>
+										<li>· Магазин</li>
+									</ul>
+								</div>
+								<div className={headerStyles.fittrack1}>
+									<ul className={headerStyles.ul}>
+										<li>· Звітності</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className={ownerStyles.ownerparentframe}>
+				<b className={ownerStyles.b}>Для власників спортивних центрів</b>
+
+				<img
+					className={ownerStyles.humanframe}
+					width={291}
+					height={542}
+					alt=""
+					src="/landing/human2.svg"
+				/>
+
+				<div className={ownerStyles.ownerstatsframe}>
+					<img
+						className={ownerStyles.flatColorIconsstatistics}
+						width={95}
+						height={95}
+						alt=""
+						src="/landing/stats.svg"
+					/>
+					<div className={ownerStyles.ownerstatstext}>
+						<b className={ownerStyles.b1}>Статистика</b>
+						<div className={ownerStyles.div}>
+							Переглядайте статистику та показники ефективності, для комфортного
+							керування спортивним центром
+						</div>
+					</div>
+				</div>
+				<div className={ownerStyles.ownercontrolframe}>
+					<img
+						className={ownerStyles.frame}
+						width={95}
+						height={83}
+						alt=""
+						src="/landing/man.svg"
+					/>
+					<div className={ownerStyles.ownerstatstext}>
+						<b className={ownerStyles.b1}>Контроль</b>
+						<div className={ownerStyles.div}>
+							Керуйте всіма аспектами власного бізнесу. Нехай адміністрування
+							стане зручнішим
+						</div>
+					</div>
+				</div>
+				<div className={ownerStyles.ownerpersonalframe}>
+					<img
+						className={ownerStyles.frame1}
+						width={95}
+						height={109}
+						alt=""
+						src="/landing/woman.svg"
+					/>
+					<div className={ownerStyles.ownerstatstext}>
+						<b className={ownerStyles.b1}>Персонал</b>
+						<div className={ownerStyles.div}>
+							Керуйте персоналом зручно. Редагуйте команду тренерів та
+							адміністраторів сервісу
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className={userStyles.userparentframe}>
+				<b className={userStyles.b}>Переваги користувача</b>
+				<img
+					className={userStyles.userhuman}
+					width={334}
+					height={522}
+					alt=""
+					src="/landing/human1.svg"
+				/>
+
+				<div className={userStyles.userstats}>
+					<img
+						className={userStyles.userstatsicon}
+						width={95}
+						height={95}
+						alt=""
+						src="/landing/stats.svg"
+					/>
+					<div className={userStyles.userstatstext}>
+						<b className={userStyles.b1}>Статистика</b>
+						<div className={userStyles.div}>
+							Переглядайте статистику та показники ефективності, для покращення
+							прогресу
+						</div>
+					</div>
+				</div>
+				<div className={userStyles.usertraining}>
+					<img
+						className={userStyles.usertrainingicon}
+						width={95}
+						height={77}
+						alt=""
+						src="/landing/dumbell.svg"
+					/>
+					<div className={userStyles.userstatstext}>
+						<b className={userStyles.b1}>Тренування</b>
+						<div className={userStyles.div}>
+							Створюйте зручний графік тренувань для себе, та відвідуйте групові
+							тренування в вашому залі
+						</div>
+					</div>
+				</div>
+				<div className={userStyles.usershopping}>
+					<img
+						className={userStyles.usershoppingicon}
+						width={95}
+						height={100}
+						alt=""
+						src="/landing/bag.svg"
+					/>
+					<div className={userStyles.userstatstext}>
+						<b className={userStyles.b1}>Зручний шопінг</b>
+						<div className={userStyles.div}>
+							Купуйте потрібні товари, найвигідніші абонименти та додаткові
+							послуги прямо у сервісі
+						</div>
+					</div>
+				</div>
+				<div className={userStyles.usermobility}>
+					<img
+						className={userStyles.usermobilityicon}
+						width={51}
+						height={95}
+						alt=""
+						src="/landing/telephone.svg"
+					/>
+					<div className={userStyles.userstatstext}>
+						<b className={userStyles.b1}>Мобільність</b>
+						<div className={userStyles.div}>
+							Керуйте власними тренуваннями, відслідковуйте показники прямо в
+							застосунку
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	);
 };
 
 export default page;
