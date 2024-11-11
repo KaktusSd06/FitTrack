@@ -4,22 +4,21 @@ import {
     DropdownTrigger,
     DropdownMenu,
     DropdownItem,
-    Selection
+    Selection,
+    Input
 } from "@nextui-org/react";
-import { DateInput } from "@nextui-org/react";
 import { I18nProvider } from "@react-aria/i18n";
-import { DateValue } from "@internationalized/date";
 import { useState, useEffect } from "react";
 import { Column } from "./TableAdminUsers";
 
 interface GroupTrainingTopContentProps {
-    onDatePeriodChange: (startDate: DateValue | null, endDate: DateValue | null) => void;
+    onDatePeriodChange: (startDate: string | null, endDate: string | null) => void;
     columns: Column[];
     visibleColumns: Selection;
     setVisibleColumns: React.Dispatch<React.SetStateAction<Selection>>;
     onRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     usersCount: number;
-    role: string;
+    onCreate?: () => void;
 }
 
 const GroupTrainingTopContent = ({
@@ -29,31 +28,41 @@ const GroupTrainingTopContent = ({
     setVisibleColumns,
     onRowsPerPageChange,
     usersCount,
+    onCreate,
 }: GroupTrainingTopContentProps) => {
-    const [startDate, setStartDate] = useState<DateValue | null>(null);
-    const [endDate, setEndDate] = useState<DateValue | null>(null);
+    const [startDate, setStartDate] = useState<string | null>(null);
+    const [endDate, setEndDate] = useState<string | null>(null);
 
     useEffect(() => {
         if (startDate && endDate) {
             onDatePeriodChange(startDate, endDate);
         }
     }, [startDate, endDate, onDatePeriodChange]);
-
+    const handleDateTimeChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setStartDate(value);
+    };
+    const handleDateTimeChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setEndDate(value);
+    };
     return (
         <div className="flex flex-col gap-4">
             <div className="flex justify-between gap-3 items-end">
                 <I18nProvider locale="en-GB">
-                    <DateInput
+                    <Input
                         label="Початок"
+                        type="datetime-local" // Allows both date and time input
                         value={startDate}
-                        onChange={setStartDate}
+                        onChange={handleDateTimeChange1}
                     />
                 </I18nProvider>
                 <I18nProvider locale="en-GB">
-                    <DateInput
+                    <Input
                         label="Кінець"
+                        type="datetime-local" // Allows both date and time input
                         value={endDate}
-                        onChange={setEndDate}
+                        onChange={handleDateTimeChange2}
                     />
                 </I18nProvider>
                 <div className="flex gap-3">
@@ -76,6 +85,8 @@ const GroupTrainingTopContent = ({
                             ))}
                         </DropdownMenu>
                     </Dropdown>
+                    <Button className="bg-[#e48100] text-white" onClick={() => onCreate?.()} >Додати </Button>
+
                 </div>
             </div>
             <div className="flex justify-between items-center">

@@ -1,0 +1,72 @@
+{
+    "MembershipColumns": [
+      {
+        "name": "ID",
+        "uid": "id",
+        "sortable": true
+      },
+      {
+        "name": "Назва",
+        "uid": "membershipName",
+        "sortable": true
+      },
+      {
+        "name": "Зал",
+        "uid": "gymId",
+        "sortable": true
+      },
+      {
+        "name": "Ціна",
+        "uid": "cost",
+        "sortable": true
+      },
+      {
+        "name": "Тривалість в місяцях",
+        "uid": "durationInMonths",
+        "sortable": true
+      },
+      {
+        "name": "Відвідування",
+        "uid": "sessions",
+        "sortable": true
+    },
+    {
+      "name": "Дії",
+      "uid": "actions",
+      "sortable": false
+    }
+    ],
+    "SerivceColumns": [
+      {
+        "name": "ID",
+        "uid": "id",
+        "sortable": true
+      },
+      {
+        "name": "Назва",
+        "uid": "name",
+        "sortable": true
+      },
+      {
+        "name": "Зал",
+        "uid": "gymId",
+        "sortable": true
+      },
+      {
+        "name": "Ціна",
+        "uid": "cost",
+        "sortable": true
+      },
+      {
+        "name": "Опис",
+        "uid": "description",
+        "sortable": true
+    },
+    {
+      "name": "Дії",
+      "uid": "actions",
+      "sortable": false
+    }
+    ]
+  }
+  

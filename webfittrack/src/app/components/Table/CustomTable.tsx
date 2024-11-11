@@ -16,7 +16,7 @@ import TableTopContent from "./TableTopContent";
 import CustomTableCell from "./CustomTableCell";
 import { useRole } from "@/app/Api/RoleProvider";
 
-const INITIAL_VISIBLE_COLUMNS = ["firstName", "lastName", "name", "email", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["firstName", "membershipName", "lastName", "name", "email", "actions"];
 
 export interface Column {
     name: string;
@@ -64,8 +64,11 @@ export const CustomTable = <T extends User | Trainer | Admin | Gym | Service | M
     }, [columns, visibleColumns]);
 
     const filteredItems = React.useMemo(() => {
-        if (objects === null) return [];
+        if (JSON.stringify(objects) === undefined || objects === null) return [];
         let filteredUsers = [...objects];
+
+        console.log(JSON.stringify(objects));
+        console.log(JSON.stringify([]));
         if (hasSearchFilter) {
 
             filteredUsers = filteredUsers.filter((user) => {

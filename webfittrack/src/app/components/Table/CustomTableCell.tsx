@@ -4,6 +4,7 @@ import { DeleteIcon } from "./DeleteIcon";
 import { EditIcon } from "./EditIcon";
 import CameraIcon from "./CameraIcon";
 import { Admin, GroupTraining, Gym, Membership, Service, Trainer, User } from "@/app/Interfaces/Interfaces";
+import { useEffect, useState } from "react";
 
 interface UserTableCellProps<T> {
     obj: T;
@@ -19,14 +20,25 @@ const CustomTableCell = <T extends User | Trainer | Admin | Gym | Service | Memb
     onDelete,
 }: UserTableCellProps<T>): JSX.Element => {
     const cellValue = obj[columnKey as keyof T];
+    const [trainerName, setTrainerName] = useState<string>("");
 
+    useEffect(() => {
+        if (columnKey === "trainerId" && cellValue) {
+            const fetchData = async (): Promise<void> => {
+                const response = await fetch(`/api/proxy/Trainers/get-by-id/${cellValue}`);
+                const trainer: Trainer = await response.json();
+                setTrainerName(trainer.lastName + ' ' + trainer.firstName); // Update state with the trainer's name
+            };
+
+            fetchData(); // Fetch data when columnKey is "trainerId"
+        }
+    }, [columnKey, cellValue]);
     switch (columnKey) {
-        case "trainer":
+        case "trainerId":
+
             return (
                 <div className="flex items-center gap-2">
-                    {cellValue && typeof cellValue === "object" && "firstName" in cellValue
-                        ? (cellValue as { firstName: string }).firstName
-                        : "N/A"}
+                    {trainerName}
                 </div>
             );
 
