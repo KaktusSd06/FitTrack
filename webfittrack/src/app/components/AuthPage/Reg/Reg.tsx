@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Checkbox, CheckboxGroup, DateInput, Link, Input, Button } from "@nextui-org/react";
 import { DateValue, getLocalTimeZone, today } from "@internationalized/date";
 import { I18nProvider } from "@react-aria/i18n";
+import validator from "validator";
 import styles from "../Login/Login.module.css";
 
 const Reg: NextPage = () => {
@@ -17,7 +18,7 @@ const Reg: NextPage = () => {
   const [isInvalid, setIsInvalid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-
+  const [plainPhoneNumber, setPlainPhoneNumber] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,12 +32,40 @@ const Reg: NextPage = () => {
   const [firstReqiredFieldsError, setFirstReqiredFieldsError] = useState('');
   const [secondReqiredFieldsError, setSecondReqiredFieldsError] = useState('');
   const [registrationError, setRegistrationError] = useState('');
+  const [validateEmailError, setValidateEmailError] = useState('');
+  const [validatePhoneError, setValidatePhoneError] = useState('');
+  const [validatePasswordError, setValidatePasswordError] = useState('');
+
 
   const toggleVisibilityPass = () => setIsPasswordVisible(!isPasswordVisible);
   const toggleVisibilityConfPass = () => setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
 
   const handleContinueClick = () => setFormStep(formStep + 1);
   const handleBackClick = () => setFormStep(formStep - 1);
+
+  const validateEmail = (email: string) => {
+
+    if (validator.isEmail(email)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+
+  function validatePassword(password: string): boolean {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return passwordRegex.test(password);
+  }
+
+
+  const validatePhoneNumber = () => {
+    if (validator.isMobilePhone(`${plainPhoneNumber}`, "uk-UA")) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   const handleEndRegistrationClick = () => {
     setIsSubmitted(true);
@@ -110,7 +139,7 @@ const Reg: NextPage = () => {
     setRegistrationError('');
     const registrationData = {
       email,
-      phoneNumber: phone,
+      phoneNumber: plainPhoneNumber,
       password,
       confirmedPassword: confirmPassword,
       firstName,
@@ -162,13 +191,18 @@ const Reg: NextPage = () => {
       });
       console.log(email);
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
+        console.log(`Error: ${response.status} ${response.statusText}`);
       }
-      return response.status === 200;
+      if (response.status === 200) {
+        return true;
+      }
+      if (response.status === 404) {
+        return false;
+      }
 
     } catch (error) {
       console.error('Error fetching user data:', error);
-      return false;
+      return;
     }
   };
 
@@ -177,12 +211,45 @@ const Reg: NextPage = () => {
   }
 
   const firstStepRegistration = async () => {
-
-    if (email && phone && password && confirmPassword) {
+    // const plainPhone = `+38${getPlainPhoneNumber(phone)}`;
+    // setPlainPhoneNumber(plainPhone);
+    setUserExistsError("");
+    if (email && plainPhoneNumber && password && confirmPassword) {
       setFirstReqiredFieldsError("");
     }
     else {
       setFirstReqiredFieldsError("Заповніть обов'язкові поля");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setValidateEmailError("Введіть коректну електронну адресу")
+      return;
+    }
+    else {
+      setValidateEmailError("")
+    }
+    console.log(plainPhoneNumber);
+    if (!validatePhoneNumber()) {
+      setValidatePhoneError("Введіть коректний номер телефону");
+      return;
+    }
+    else {
+      setValidatePhoneError("");
+    }
+
+    if (!validatePassword(password)) {
+      setValidatePasswordError("Недопустимий пароль. Пароль має мати великі та малі латинські літери, цифри, бути більше 8 і не мати спеціальних символів");
+      return;
+    }
+    else {
+      setValidatePasswordError("");
+    }
+    if (checkConfitmedPassword()) {
+      setConfirmedPasswordError("");
+    }
+    else {
+      setConfirmedPasswordError("Паролі не співпадають");
       return;
     }
     const userExists = await checkExistUser();
@@ -192,16 +259,36 @@ const Reg: NextPage = () => {
     } else {
       setUserExistsError("");
     }
-    if (checkConfitmedPassword()) {
-      setConfirmedPasswordError("");
-    }
-    else {
-      setConfirmedPasswordError("Паролі не співпадають");
-      return;
-    }
 
     handleContinueClick();
   };
+
+  const formatPhoneNumber = (value: string) => {
+    // Видаляємо всі символи, крім цифр
+    const cleaned = value.replace(/\D/g, '');
+
+    // Форматуємо за шаблоном "+38 (XXX) XXX-XX-XX"
+    const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
+
+    if (match) {
+      return `(${match[1]}${match[2] ? ') ' + match[2] : ''}${match[3] ? '-' + match[3] : ''}${match[4] ? '-' + match[4] : ''}`;
+    }
+    return value;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedPhone = formatPhoneNumber(e.target.value);
+    setPhone(formattedPhone);
+    setPlainPhoneNumber(`+38${getPlainPhoneNumber(formattedPhone)}`);
+    setFirstReqiredFieldsError("");
+    setRegistrationError("");
+    setValidatePhoneError("");
+  };
+
+  const getPlainPhoneNumber = (phone: string) => {
+    return phone.replace(/\D/g, ''); // Видаляє всі нечислові символи
+  };
+
 
   const secondStepRegistration = async () => {
     if (firstName && lastName && formatDate(birthDate)) {
@@ -228,23 +315,32 @@ const Reg: NextPage = () => {
                   <Input
                     type="text"
                     variant="bordered"
-                    label="Номер телефону *"
+                    label="Номер телефону"
                     value={phone}
-                    onChange={(e) => { setPhone(e.target.value); setFirstReqiredFieldsError(""); setRegistrationError("") }}
+                    isRequired
+                    startContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className=" text-small">+38</span>
+                      </div>
+                    }
+                    onChange={handlePhoneChange}
                   />
                   <Input
                     type="email"
                     variant="bordered"
-                    label="Електронна адреса *"
+                    label="Електронна адреса"
                     value={email}
+                    isRequired
                     onChange={(e) => {
                       setEmail(e.target.value);
                       setUserExistsError("");
                       setFirstReqiredFieldsError("");
+                      setValidateEmailError("");
                     }}
                   />
                   <Input
-                    label="Пароль *"
+                    label="Пароль"
+                    isRequired
                     variant="bordered"
                     endContent={
                       <button
@@ -271,10 +367,11 @@ const Reg: NextPage = () => {
                     type={isPasswordVisible ? "text" : "password"}
                     className="w-full"
                     value={password}
-                    onChange={(e) => { setPassword(e.target.value); setConfirmedPasswordError(""); setFirstReqiredFieldsError(""); }}
+                    onChange={(e) => { setPassword(e.target.value); setValidatePasswordError(""); setFirstReqiredFieldsError(""); }}
                   />
                   <Input
-                    label="Підтвердіть пароль *"
+                    label="Підтвердіть пароль"
+                    isRequired
                     variant="bordered"
                     endContent={
                       <button
@@ -304,8 +401,18 @@ const Reg: NextPage = () => {
                     onChange={(e) => { setConfirmPassword(e.target.value); setConfirmedPasswordError(""); setFirstReqiredFieldsError(""); }}
                   />
                 </div>
+
                 {registrationError && (
                   <p className="text-[14px] text-danger">{registrationError}</p>
+                )}
+                {validatePasswordError && (
+                  <p className="text-[14px] text-danger">{validatePasswordError}</p>
+                )}
+                {validatePhoneError && (
+                  <p className="text-[14px] text-danger">{validatePhoneError}</p>
+                )}
+                {validateEmailError && (
+                  <p className="text-[14px] text-danger">{validateEmailError}</p>
                 )}
                 {userExistsError && (
                   <p className="text-[14px] text-danger">{userExistsError}</p>

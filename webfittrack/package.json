@@ -22,7 +22,9 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.1",
+    "react-input-mask": "^2.0.4",
     "react-router-dom": "^6.28.0",
+    "validator": "^13.12.0",
     "webfittrack": "file:",
     "xlsx": "^0.18.5"
   },
@@ -30,6 +32,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/validator": "^13.12.2",
     "cypress": "^13.15.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.11",

@@ -3,6 +3,7 @@ import { CircularProgress, Modal, ModalContent, ModalHeader, ModalBody, ModalFoo
 import styles from "./ModalCreateAdmin.module.css"
 import React, { useEffect, useState } from "react";
 import { fetchWithAuth } from "@/app/fetchWithAuth";
+import validator from "validator";
 
 
 interface AppProps {
@@ -11,6 +12,8 @@ interface AppProps {
 }
 
 export default function App({ gymId, onAdminCreated }: AppProps) {
+
+    const [plainPhoneNumber, setPlainPhoneNumber] = useState("");
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
     const [loading, setLoading] = useState(false);
     const [phone, setPhone] = useState("");
@@ -24,6 +27,59 @@ export default function App({ gymId, onAdminCreated }: AppProps) {
     const [requiredFieldsError, setRequiredFieldsError] = useState("");
     const toggleVisibilityPass = () => setIsPasswordVisible(!isPasswordVisible);
     const [adminId, setAdminId] = useState("");
+    const [validateEmailError, setValidateEmailError] = useState('');
+    const [validatePhoneError, setValidatePhoneError] = useState('');
+    const [validatePasswordError, setValidatePasswordError] = useState('');
+
+
+    const validateEmail = (email: string) => {
+
+        if (validator.isEmail(email)) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+
+    function validatePassword(password: string): boolean {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(password);
+    }
+
+
+    const validatePhoneNumber = () => {
+        if (validator.isMobilePhone(`${plainPhoneNumber}`, "uk-UA")) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const formatPhoneNumber = (value: string) => {
+        // Видаляємо всі символи, крім цифр
+        const cleaned = value.replace(/\D/g, '');
+
+        // Форматуємо за шаблоном "+38 (XXX) XXX-XX-XX"
+        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
+
+        if (match) {
+            return `(${match[1]}${match[2] ? ') ' + match[2] : ''}${match[3] ? '-' + match[3] : ''}${match[4] ? '-' + match[4] : ''}`;
+        }
+        return value;
+    };
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const formattedPhone = formatPhoneNumber(e.target.value);
+        setPhone(formattedPhone);
+        setPlainPhoneNumber(`+38${getPlainPhoneNumber(formattedPhone)}`);
+        setRequiredFieldsError("");
+        setValidatePhoneError("");
+    };
+
+    const getPlainPhoneNumber = (phone: string) => {
+        return phone.replace(/\D/g, ''); // Видаляє всі нечислові символи
+    };
 
     const setEmptyFields = () => {
         setEmail("");
@@ -73,6 +129,29 @@ export default function App({ gymId, onAdminCreated }: AppProps) {
             setLoading(false);
             return;
         }
+        if (!validateEmail(email)) {
+            setValidateEmailError("Введіть коректну електронну адресу")
+            return;
+        }
+        else {
+            setValidateEmailError("")
+        }
+        console.log(plainPhoneNumber);
+        if (!validatePhoneNumber()) {
+            setValidatePhoneError("Введіть коректний номер телефону");
+            return;
+        }
+        else {
+            setValidatePhoneError("");
+        }
+
+        if (!validatePassword(password)) {
+            setValidatePasswordError("Недопустимий пароль. Пароль має мати великі та малі латинські літери, цифри, бути більше 8 і не мати спеціальних символів");
+            return;
+        }
+        else {
+            setValidatePasswordError("");
+        }
 
         const userExists = await checkExistUser();
         if (userExists) {
@@ -87,7 +166,7 @@ export default function App({ gymId, onAdminCreated }: AppProps) {
         const intGymId = parseInt(gymId);
         const adminData = {
             email: email,
-            phoneNumber: phone,
+            phoneNumber: plainPhoneNumber,
             password: password,
             confirmedPassword: password,
             firstName: firstName,
@@ -225,13 +304,17 @@ export default function App({ gymId, onAdminCreated }: AppProps) {
                                 <div className={styles.FormElements}>
                                     <div className={styles.FieldContainer}>
                                         <Input
-                                            isRequired
                                             type="text"
                                             variant="bordered"
                                             label="Номер телефону"
                                             value={phone}
-                                            onChange={(e) => { setPhone(e.target.value); setRequiredFieldsError("") }}
-                                            disabled={loading}
+                                            isRequired
+                                            startContent={
+                                                <div className="pointer-events-none flex items-center">
+                                                    <span className=" text-small">+38</span>
+                                                </div>
+                                            }
+                                            onChange={handlePhoneChange}
                                         />
                                         <Input
                                             isRequired
@@ -302,6 +385,15 @@ export default function App({ gymId, onAdminCreated }: AppProps) {
                                         />
                                     </div>
                                 </div>
+                                {validatePasswordError && (
+                                    <p className="text-[14px] text-danger">{validatePasswordError}</p>
+                                )}
+                                {validatePhoneError && (
+                                    <p className="text-[14px] text-danger">{validatePhoneError}</p>
+                                )}
+                                {validateEmailError && (
+                                    <p className="text-[14px] text-danger">{validateEmailError}</p>
+                                )}
                                 {requiredFieldsError && (
                                     <p className="text-[14px] text-danger">{requiredFieldsError}</p>
                                 )}

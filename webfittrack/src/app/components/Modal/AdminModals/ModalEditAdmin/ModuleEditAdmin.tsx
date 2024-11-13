@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { fetchWithAuth } from "@/app/fetchWithAuth";
 import { I18nProvider } from "@react-aria/i18n";
 import { DateValue, getLocalTimeZone, today } from "@internationalized/date";
-
+import validator from "validator";
 interface AppProps {
     adminId: string;
     isOpen: boolean;
@@ -26,7 +26,7 @@ export interface Admin {
 }
 export default function App({ adminId, isOpen, onClose, refreshTable }: AppProps) {
     const [lastAdmin, setLastAdmin] = useState<Admin>();
-
+    const [plainPhoneNumber, setPlainPhoneNumber] = useState("");
     const [loading, setLoading] = useState(false);
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
@@ -43,9 +43,12 @@ export default function App({ adminId, isOpen, onClose, refreshTable }: AppProps
     const [userExistsError, setUserExistsError] = useState('');
     const [requiredFieldsError, setRequiredFieldsError] = useState("");
     const toggleVisibilityPass = () => setIsPasswordVisible(!isPasswordVisible);
+    const [validateEmailError, setValidateEmailError] = useState('');
+    const [validatePhoneError, setValidatePhoneError] = useState('');
+    const [validatePasswordError, setValidatePasswordError] = useState('');
 
     const checkFields = () => {
-        return email && password && phone && firstName && lastName;
+        return email && password && plainPhoneNumber && firstName && lastName;
     }
 
     useEffect(() => {
@@ -68,6 +71,55 @@ export default function App({ adminId, isOpen, onClose, refreshTable }: AppProps
             setUserExistsError("");
             setRequiredFieldsError("");
         }
+    };
+
+    const validateEmail = (email: string) => {
+
+        if (validator.isEmail(email)) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+
+    function validatePassword(password: string): boolean {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(password);
+    }
+
+
+    const validatePhoneNumber = () => {
+        if (validator.isMobilePhone(`${plainPhoneNumber}`, "uk-UA")) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const formatPhoneNumber = (value: string) => {
+        // Видаляємо всі символи, крім цифр
+        const cleaned = value.replace(/\D/g, '');
+
+        // Форматуємо за шаблоном "+38 (XXX) XXX-XX-XX"
+        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
+
+        if (match) {
+            return `(${match[1]}${match[2] ? ') ' + match[2] : ''}${match[3] ? '-' + match[3] : ''}${match[4] ? '-' + match[4] : ''}`;
+        }
+        return value;
+    };
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const formattedPhone = formatPhoneNumber(e.target.value);
+        setPhone(formattedPhone);
+        setPlainPhoneNumber(`+38${getPlainPhoneNumber(formattedPhone)}`);
+        setRequiredFieldsError("");
+        setValidatePhoneError("");
+    };
+
+    const getPlainPhoneNumber = (phone: string) => {
+        return phone.replace(/\D/g, ''); // Видаляє всі нечислові символи
     };
 
     const getAdmin = async () => {
@@ -124,6 +176,30 @@ export default function App({ adminId, isOpen, onClose, refreshTable }: AppProps
             return;
         }
 
+        if (!validateEmail(email)) {
+            setValidateEmailError("Введіть коректну електронну адресу")
+            return;
+        }
+        else {
+            setValidateEmailError("")
+        }
+        console.log(plainPhoneNumber);
+        if (!validatePhoneNumber()) {
+            setValidatePhoneError("Введіть коректний номер телефону");
+            return;
+        }
+        else {
+            setValidatePhoneError("");
+        }
+
+        if (!validatePassword(password)) {
+            setValidatePasswordError("Недопустимий пароль. Пароль має мати великі та малі латинські літери, цифри, бути більше 8 і не мати спеціальних символів");
+            return;
+        }
+        else {
+            setValidatePasswordError("");
+        }
+
         const userExists = await checkExistUser();
         if (userExists) {
             setUserExistsError("Користувач з такою електронною адресою вже існує");
@@ -159,9 +235,9 @@ export default function App({ adminId, isOpen, onClose, refreshTable }: AppProps
                 return false;
             }
         }
-        if (lastAdmin && lastAdmin.phoneNumber != phone) {
+        if (lastAdmin && lastAdmin.phoneNumber != plainPhoneNumber) {
             const updatePhoneData = {
-                phone,
+                plainPhoneNumber,
             }
             if (await editAdminPhone(updatePhoneData)) {
                 setIsPhoneEdited(true);
@@ -374,13 +450,17 @@ export default function App({ adminId, isOpen, onClose, refreshTable }: AppProps
                                 <div className={styles.FormElements}>
                                     <div className={styles.FieldContainer}>
                                         <Input
-                                            isRequired
                                             type="text"
                                             variant="bordered"
                                             label="Номер телефону"
                                             value={phone}
-                                            onChange={(e) => { setPhone(e.target.value); setRequiredFieldsError("") }}
-                                            disabled={loading}
+                                            isRequired
+                                            startContent={
+                                                <div className="pointer-events-none flex items-center">
+                                                    <span className=" text-small">+38</span>
+                                                </div>
+                                            }
+                                            onChange={handlePhoneChange}
                                         />
                                         <Input
                                             isRequired
@@ -461,6 +541,15 @@ export default function App({ adminId, isOpen, onClose, refreshTable }: AppProps
                                         </I18nProvider>
                                     </div>
                                 </div>
+                                {validatePasswordError && (
+                                    <p className="text-[14px] text-danger">{validatePasswordError}</p>
+                                )}
+                                {validatePhoneError && (
+                                    <p className="text-[14px] text-danger">{validatePhoneError}</p>
+                                )}
+                                {validateEmailError && (
+                                    <p className="text-[14px] text-danger">{validateEmailError}</p>
+                                )}
                                 {requiredFieldsError && (
                                     <p className="text-[14px] text-danger">{requiredFieldsError}</p>
                                 )}
