@@ -1,0 +1,120 @@
+.Container {
+  height: 100%;
+  width: 100%;
+  max-width: 1000px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-noto-sans);
+  flex-shrink: 0;
+}
+
+.ContainerWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 60px;
+  flex-shrink: 0;
+}
+
+.MainContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding-top: 50px;
+}
+
+.LogoContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.LogoText {
+  font-weight: 600;
+  font-size: 48px;
+  color: var(--text-color);
+}
+
+.FormElements {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.FieldContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ButtonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 400px) {
+  .LogoText {
+    font-size: 36px;
+  }
+  .Logo {
+    width: 40px;
+  }
+
+  .LogoContainer {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 500px) {
+  .ContainerWrapper {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 425px) {
+  .ContainerWrapper {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 300px) {
+  .GoogleLogo {
+    display: none;
+  }
+}
+
+.Link {
+  color: #e48100;
+}
+
+.LinkWrapper {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.eyeIcon {
+  filter: var(--icon-filter);
+}
+
+@media (max-width: 340px) {
+  .LinkWrapper {
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+    justify-content: center;
+  }
+}

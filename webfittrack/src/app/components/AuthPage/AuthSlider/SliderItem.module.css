@@ -1,0 +1,23 @@
+.slideritem {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end; /* Вирівнюємо текст вниз */
+  padding: 0 0 30px; /* Внутрішні відступи */
+  background-size: cover; /* Підгонка фону */
+  background-repeat: no-repeat; /* Без повторення */
+  background-position: center; /* Центруємо фон */
+}
+
+.slidertext {
+  width: 370px; /* Ширина тексту */
+  font-weight: 600; /* Жирність тексту */
+  color: white; /* Колір тексту */
+  text-align: center; /* Центруємо текст */
+  position: absolute; /* Встановлюємо абсолютне позиціонування */
+  bottom: 100px; /* Відстань від нижнього краю слайду до тексту */
+  left: 50%; /* Центруємо текст */
+  transform: translateX(-50%); /* Центруємо текст по горизонталі */
+}
