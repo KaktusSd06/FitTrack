@@ -265,10 +265,7 @@ const Reg: NextPage = () => {
   };
 
   const formatPhoneNumber = (value: string) => {
-    // Видаляємо всі символи, крім цифр
     const cleaned = value.replace(/\D/g, '');
-
-    // Форматуємо за шаблоном "+38 (XXX) XXX-XX-XX"
     const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
 
     if (match) {
@@ -287,7 +284,7 @@ const Reg: NextPage = () => {
   };
 
   const getPlainPhoneNumber = (phone: string) => {
-    return phone.replace(/\D/g, ''); // Видаляє всі нечислові символи
+    return phone.replace(/\D/g, '');
   };
 
 
