@@ -72,70 +72,6 @@ public class BasePersonController<TPerson> : ControllerBase where TPerson : Pers
         
         return NoContent();
     }
-
-    [HttpPut("update-email/{id}")]
-    public async Task<IActionResult> UpdateEmail(string id, [FromBody] string newEmail)
-    {
-        var person = await _userManager.FindByIdAsync(id);
-        if (person == null)
-        {
-            return NotFound();
-        }
-        
-        var token = await _userManager.GenerateChangeEmailTokenAsync(person, newEmail);
-        var result = await _userManager.ChangeEmailAsync(person, newEmail, token);
-        if (!result.Succeeded)
-        {
-            return BadRequest(result.Errors);
-        }
-        
-        await _userManager.SetUserNameAsync(person, newEmail);
-        
-        return NoContent();
-    }
-
-    [HttpPut("update-phone/{id}")]
-    public async Task<IActionResult> UpdatePhone(string id, [FromBody] string newPhone)
-    {
-        var person = await _userManager.FindByIdAsync(id);
-        if (person == null)
-        {
-            return NotFound();
-        }
-        
-        var token = await _userManager.GenerateChangePhoneNumberTokenAsync(person, newPhone);
-        var result = await _userManager.ChangePhoneNumberAsync(person, newPhone, token);
-        if (!result.Succeeded)
-        {
-            return BadRequest(result.Errors);
-        }
-        
-        return NoContent();
-    }
-
-    [HttpPut("update-password/{id}")]
-    public async Task<IActionResult> UpdatePassword(string id, [FromBody] string newPassword)
-    {
-        var person = await _userManager.FindByIdAsync(id);
-        if (person == null)
-        {
-            return NotFound();
-        }
-        
-        var removePasswordResult = await _userManager.RemovePasswordAsync(person);
-        if (!removePasswordResult.Succeeded)
-        {
-            return BadRequest(removePasswordResult.Errors);
-        }
-        
-        var setPasswordResult = await _userManager.AddPasswordAsync(person, newPassword);
-        if (!setPasswordResult.Succeeded)
-        {
-            return BadRequest(setPasswordResult.Errors);
-        }
-        
-        return NoContent();
-    }
     
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] Register model)
@@ -153,7 +89,15 @@ public class BasePersonController<TPerson> : ControllerBase where TPerson : Pers
 
         if (person is User user)
         {
-            user.DateOfBirth = DateTime.SpecifyKind(model.BirthDate.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            user.DateOfBirth = DateTime.SpecifyKind((DateTime)model.BirthDate?.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+        }
+        if (person is Trainer trainer)
+        {
+            trainer.GymId = model.GymId;
+        }
+        if (person is Admin admin)
+        {
+            admin.GymId = (int)model.GymId;
         }
         
         var result = await _userManager.CreateAsync(person, model.Password);
