@@ -269,7 +269,6 @@ public class AccountController : Controller
     public async Task<IActionResult> GetAllRoles(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-
         if (user == null)
         {
             return NotFound();
