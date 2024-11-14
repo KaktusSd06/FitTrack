@@ -13,9 +13,9 @@ export default function AdminUsers() {
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedRole, setSelectedRole] = React.useState("User");
     const [openModal, setopenModal] = useState<boolean>(false);
-    const [gymId, setGymId] = useState<number>(0);
-
+    const [gym, setGym] = useState<Gym>();
     const user = localStorage.getItem("currentUser");
+    let gymId: string;
 
     let curruserid: string;
     if (user) {
@@ -64,7 +64,6 @@ export default function AdminUsers() {
             setLoading(false);
         }
     }, []);
-
 
     // Fetch data for the initial role when the component mounts
     useEffect(() => {

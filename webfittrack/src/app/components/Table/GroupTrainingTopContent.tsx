@@ -51,7 +51,7 @@ const GroupTrainingTopContent = ({
             <div className="flex justify-between gap-3 items-end">
                 <I18nProvider locale="en-GB">
                     <Input
-                        label="Початок"
+                        label=""
                         type="datetime-local" // Allows both date and time input
                         value={startDate}
                         onChange={handleDateTimeChange1}
@@ -59,7 +59,7 @@ const GroupTrainingTopContent = ({
                 </I18nProvider>
                 <I18nProvider locale="en-GB">
                     <Input
-                        label="Кінець"
+                        label=""
                         type="datetime-local" // Allows both date and time input
                         value={endDate}
                         onChange={handleDateTimeChange2}
