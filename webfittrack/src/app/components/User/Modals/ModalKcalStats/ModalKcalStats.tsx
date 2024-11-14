@@ -83,10 +83,12 @@ const AppModal: React.FC<AppModalProps> = ({ isOpen, onClose }) => {
 
     const showStats = () => {
         setSelectedContent("stats");
+
     }
 
     const showMeals = () => {
         setSelectedContent("meals");
+
     }
 
     const getTodayMeals = async (today: string): Promise<boolean | undefined> => {
