@@ -256,7 +256,6 @@ public class AccountController : Controller
         }
         
         var result = await _userManager.RemoveFromRoleAsync(user, role.Role);
-
         if (!result.Succeeded)
         {
             return BadRequest(result.Errors);
