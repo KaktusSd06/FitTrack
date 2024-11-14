@@ -7,6 +7,8 @@ public class IndividualTraining:Training
     
     public string? TrainerId { get; set; }    
     public Trainer? Trainer { get; set; }
+    
+    public ICollection<Set>? Sets { get; set; }
 
-    public ICollection<Exercise>? Exercises { get; set; }
+    //public ICollection<Exercise>? Exercises { get; set; }
 }

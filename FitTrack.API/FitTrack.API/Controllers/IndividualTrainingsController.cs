@@ -35,6 +35,25 @@ namespace FitTrack.API.Controllers
 
             return individualTraining;
         }
+        
+        [HttpGet("get-by-userId-and-period/{userId}/{fromDate}/{toDate}")]
+        public async Task<IActionResult> GetIndividualTrainingsInfoByUserIdByPeriod(string userId, DateTime fromDate, DateTime toDate)
+        {
+            fromDate = DateTime.SpecifyKind(fromDate, DateTimeKind.Utc);
+            toDate = DateTime.SpecifyKind(toDate, DateTimeKind.Utc);
+        
+            var individualTrainings = await _context.IndividualTrainings
+                .Where(m => m.UserId == userId
+                            && m.Date.Date >= fromDate.Date
+                            && m.Date.Date <= toDate.Date)
+                .ToListAsync();
+            if (individualTrainings == null || individualTrainings.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(individualTrainings);
+        }
 
         // PUT: api/IndividualTrainings/5
         [HttpPut("{id}")]

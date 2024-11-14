@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FitTrack.API.Models;
+using EntityState = Microsoft.EntityFrameworkCore.EntityState;
 
 namespace FitTrack.API.Controllers
 {
@@ -19,7 +20,7 @@ namespace FitTrack.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Gym>>> GetGyms()
         {
-            return await _context.Gyms.ToListAsync();
+            return await EntityFrameworkQueryableExtensions.ToListAsync(_context.Gyms);
         }
 
         // GET: api/Gyms/5
@@ -27,13 +28,188 @@ namespace FitTrack.API.Controllers
         public async Task<ActionResult<Gym>> GetGym(int id)
         {
             var gym = await _context.Gyms.FindAsync(id);
-
             if (gym == null)
             {
                 return NotFound();
             }
 
             return gym;
+        }
+        
+        [HttpGet("get-by-ownerId/{ownerId}")]
+        public async Task<IActionResult> GetGymByOwnerId(string ownerId)
+        {
+            var gyms = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Gyms.Where(g => g.OwnerId == ownerId));
+            if (gyms == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(gyms);
+        }
+        
+        [HttpGet("get-by-userId/{userId}")]
+        public async Task<IActionResult> GetGymByUserId(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            
+            var gym = await _context.Gyms.FindAsync(user.GymId);
+            if (gym == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(gym);
+        }
+        
+        [HttpGet("get-gyms-by-ownerId/{ownerId}")]
+        public async Task<ActionResult<Owner>> GetGymsByOwnerId(string ownerId)
+        {
+            var owner = await _context.Owners.Include(o => o.Gyms).Where(o => o.Id == ownerId).FirstAsync();
+            if (owner == null)
+            {
+                return NotFound();
+            }
+        
+            var gyms = owner.Gyms;
+            if(gyms == null || gyms.Count == 0)
+            {
+                return NotFound();
+            }
+        
+            return Ok(gyms);
+        }
+        
+        [HttpGet("get-trainers/{gymId}")]
+        public async Task<IActionResult> GetTrainers(int gymId)
+        {
+            var gym = await _context.Gyms.Include(g=> g.Trainers).Where(g => g.Id == gymId).FirstAsync();
+            if (gym == null)
+            {
+                return NotFound();
+            }
+            
+            var trainers = gym.Trainers;
+            if (trainers == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(trainers);
+        }
+
+        [HttpGet("get-memberships/{gymId}")]
+        public async Task<IActionResult> GetMemberships(int gymId)
+        {
+            var gym = await _context.Gyms
+                .Include(g => g.Memberships)
+                .Where(g => g.Id == gymId)
+                .FirstAsync();
+
+            if (gym == null)
+            {
+                return NotFound();
+            }
+            
+            var memberships = gym.Memberships;
+            if (memberships == null || memberships.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(memberships);
+        }
+        
+        [HttpGet("get-goods/{gymId}")]
+        public async Task<IActionResult> GetGoods(int gymId)
+        {
+            var gym = await _context.Gyms
+                .Include(g => g.Goods)
+                .Where(g => g.Id == gymId)
+                .FirstAsync();
+
+            if (gym == null)
+            {
+                return NotFound();
+            }
+            
+            var goods = gym.Goods;
+            if (goods == null || goods.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(goods);
+        }
+        
+        [HttpGet("get-services/{gymId}")]
+        public async Task<IActionResult> GetServices(int gymId)
+        {
+            var gym = await _context.Gyms
+                .Include(g => g.Services)
+                .Where(g => g.Id == gymId)
+                .FirstAsync();
+
+            if (gym == null)
+            {
+                return NotFound();
+            }
+            
+            var services = gym.Services;
+            if (services == null || services.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(services);
+        }
+        
+        [HttpGet("get-admins/{gymId}")]
+        public async Task<IActionResult> GetAdmins(int gymId)
+        {
+            var gym = await _context.Gyms
+                .Include(g => g.Admins)
+                .Where(g => g.Id == gymId)
+                .FirstAsync();
+
+            if (gym == null)
+            {
+                return NotFound();
+            }
+            
+            var admins = gym.Admins;
+            if (admins == null || admins.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(admins);
+        }
+        
+        [HttpGet("get-users/{gymId}")]
+        public async Task<IActionResult> GetUsers(int gymId)
+        {
+            var gym = await _context.Gyms
+                .Include(g => g.Users)
+                .Where(g => g.Id == gymId)
+                .FirstAsync();
+
+            if (gym == null)
+            {
+                return NotFound();
+            }
+            
+            var users = gym.Users;
+            if (users == null || users.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(users);
         }
 
         // PUT: api/Gyms/5

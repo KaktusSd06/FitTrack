@@ -36,29 +36,29 @@ public class StepsInfoController : ControllerBase
         return stepsInfo;
     }
     
-    [HttpGet("get-steps-by-userId-by-period/{userId}/{fromDate}/{toDate}")]
+    [HttpGet("get-by-userId-and-period/{userId}/{fromDate}/{toDate}")]
     public async Task<IActionResult> GetStepsInfoByUserIdByPeriod(string userId, DateTime fromDate, DateTime toDate)
     {
         fromDate = DateTime.SpecifyKind(fromDate, DateTimeKind.Utc);
         toDate = DateTime.SpecifyKind(toDate, DateTimeKind.Utc);
         
-        var meals = await _context.Steps
-            .Where(m => m.UserId == userId
-                        && m.Date.Date >= fromDate.Date
-                        && m.Date.Date <= toDate.Date)
-            .GroupBy(m => m.Date.Date)
+        var steps = await _context.Steps
+            .Where(s => s.UserId == userId
+                        && s.Date.Date >= fromDate.Date
+                        && s.Date.Date <= toDate.Date)
+            .GroupBy(s => s.Date.Date)
             .Select(g => new
             {
                 Date = g.Key.ToString("dd/MM/yyyy"),
-                TotalSteps = g.Sum(m => m.Steps)
+                TotalSteps = g.Sum(s => s.Steps)
             })
             .ToListAsync();
-        if (meals == null || meals.Count == 0)
+        if (steps == null || steps.Count == 0)
         {
             return NotFound();
         }
             
-        var result = meals.Select(m => $"{m.Date}: {m.TotalSteps}");
+        var result = steps.Select(m => new { date = m.Date, calories = m.TotalSteps });
             
         return Ok(result);
     }

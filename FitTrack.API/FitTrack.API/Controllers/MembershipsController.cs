@@ -35,6 +35,53 @@ namespace FitTrack.API.Controllers
 
             return membership;
         }
+        
+        [HttpGet("get-membership-by-userId/{userId}")]
+        public async Task<IActionResult> GetMembership(string userId)
+        {
+            var userMemberships = await _context.UserMemberships.Where(uM => uM.UserId == userId).ToListAsync();
+            var userMembership = userMemberships.Last();
+            if (userMembership == null)
+            {
+                return NotFound();
+            }
+            
+            var membership = await _context.Memberships.FindAsync(userMembership.MembershipId);
+            if (membership == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(membership);
+        }
+        
+        [HttpGet("get-memberships-by-userId/{userId}")]
+        public async Task<IActionResult> GetMembershipsBuUserId(string userId)
+        {
+            var userMemberships = await _context.UserMemberships.Where(uM => uM.UserId == userId).ToListAsync();
+            if (userMemberships == null || userMemberships.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            var memberships = new List<Membership>();
+
+            foreach (var userMembership in userMemberships)
+            {
+                var membership = await _context.Memberships.FindAsync(userMembership.MembershipId);
+                if (membership != null)
+                {
+                   memberships.Add(membership);
+                }
+            }
+            
+            if (memberships == null || memberships.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(memberships);
+        }
 
         // PUT: api/Memberships/5
         [HttpPut("{id}")]

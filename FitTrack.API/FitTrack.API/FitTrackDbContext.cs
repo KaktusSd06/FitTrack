@@ -72,14 +72,14 @@ namespace FitTrack.API
             modelBuilder.Entity<Purchase>()
                 .HasOne(p => p.Good)
                 .WithMany(g => g.Purchases)
-                .HasForeignKey(p => p.ItemId)
+                .HasForeignKey(p => p.GoodId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired(false);
 
             modelBuilder.Entity<Purchase>()
                 .HasOne(p => p.Service)
                 .WithMany(s => s.Purchases)
-                .HasForeignKey(p => p.ItemId)
+                .HasForeignKey(p => p.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired(false);
             //modelBuilder.Entity<User>()

@@ -3,6 +3,7 @@ using System;
 using FitTrack.API;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FitTrack.API.Migrations
 {
     [DbContext(typeof(FitTrackDbContext))]
-    partial class FitTrackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241105090934_Exercise_Training_Set_Relations_Changes")]
+    partial class Exercise_Training_Set_Relations_Changes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,9 +62,6 @@ namespace FitTrack.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("GymId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Image")
                         .HasColumnType("text");
 
@@ -71,8 +71,6 @@ namespace FitTrack.API.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GymId");
 
                     b.ToTable("Goods");
                 });
@@ -85,19 +83,12 @@ namespace FitTrack.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ContactPhone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("DurationInMinutes")
-                        .HasColumnType("integer");
 
                     b.Property<int>("GymId")
                         .HasColumnType("integer");
@@ -340,7 +331,7 @@ namespace FitTrack.API.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("GoodId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ItemType")
@@ -349,18 +340,13 @@ namespace FitTrack.API.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ServiceId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GoodId");
-
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("ItemId");
 
                     b.HasIndex("UserId");
 
@@ -382,17 +368,12 @@ namespace FitTrack.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("GymId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GymId");
 
                     b.ToTable("Services");
                 });
@@ -462,8 +443,8 @@ namespace FitTrack.API.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int>("DurationInSeconds")
-                        .HasColumnType("integer");
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("interval");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -771,17 +752,6 @@ namespace FitTrack.API.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("FitTrack.API.Models.Good", b =>
-                {
-                    b.HasOne("FitTrack.API.Models.Gym", "Gym")
-                        .WithMany("Goods")
-                        .HasForeignKey("GymId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Gym");
-                });
-
             modelBuilder.Entity("FitTrack.API.Models.GroupTraining", b =>
                 {
                     b.HasOne("FitTrack.API.Models.Gym", "Gym")
@@ -855,12 +825,12 @@ namespace FitTrack.API.Migrations
                 {
                     b.HasOne("FitTrack.API.Models.Good", "Good")
                         .WithMany("Purchases")
-                        .HasForeignKey("GoodId")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("FitTrack.API.Models.Service", "Service")
                         .WithMany("Purchases")
-                        .HasForeignKey("ServiceId")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("User", "User")
@@ -874,17 +844,6 @@ namespace FitTrack.API.Migrations
                     b.Navigation("Service");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FitTrack.API.Models.Service", b =>
-                {
-                    b.HasOne("FitTrack.API.Models.Gym", "Gym")
-                        .WithMany("Services")
-                        .HasForeignKey("GymId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Gym");
                 });
 
             modelBuilder.Entity("FitTrack.API.Models.Set", b =>
@@ -1073,13 +1032,9 @@ namespace FitTrack.API.Migrations
                 {
                     b.Navigation("Admins");
 
-                    b.Navigation("Goods");
-
                     b.Navigation("GroupTrainings");
 
                     b.Navigation("Memberships");
-
-                    b.Navigation("Services");
 
                     b.Navigation("Trainers");
 

@@ -35,7 +35,7 @@ namespace FitTrack.API.Controllers
             return meal;
         }
 
-        [HttpGet("get-meals-by-userId-by-day/{userId}/{date}")]
+        [HttpGet("get-by-userId-and-day/{userId}/{date}")]
         public async Task<IActionResult> GetMealsByUserIdByDay(string userId, DateTime date)
         {
             date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
@@ -53,7 +53,7 @@ namespace FitTrack.API.Controllers
             return Ok(meals);
         }
         
-        [HttpGet("get-calories-by-userId-by-period/{userId}/{fromDate}/{toDate}")]
+        [HttpGet("get-calories-by-userId-and-period/{userId}/{fromDate}/{toDate}")]
         public async Task<IActionResult> GetMealsByUserIdByPeriod(string userId, DateTime fromDate, DateTime toDate)
         {
             fromDate = DateTime.SpecifyKind(fromDate, DateTimeKind.Utc);

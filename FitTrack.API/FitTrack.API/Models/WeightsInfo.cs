@@ -3,7 +3,7 @@
 public class WeightsInfo
 {
     public int Id { get; set; }
-    public decimal Weight { get; set; }
+    public double Weight { get; set; }
     public DateTime Date { get; set; }
 
     public string UserId { get; set; }

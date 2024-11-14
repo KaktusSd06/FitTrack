@@ -35,6 +35,25 @@ namespace FitTrack.API.Controllers
 
             return groupTraining;
         }
+        
+        [HttpGet("get-by-gymId-and-period/{gymId}/{fromDate}/{toDate}")]
+        public async Task<IActionResult> GetGroupTrainingsInfoByUserIdByPeriod(int gymId, DateTime fromDate, DateTime toDate)
+        {
+            fromDate = DateTime.SpecifyKind(fromDate, DateTimeKind.Utc);
+            toDate = DateTime.SpecifyKind(toDate, DateTimeKind.Utc);
+        
+            var groupsTrainigs = await _context.GroupTrainings
+                .Where(m => m.GymId == gymId
+                            && m.Date.Date >= fromDate.Date
+                            && m.Date.Date <= toDate.Date)
+                .ToListAsync();
+            if (groupsTrainigs == null || groupsTrainigs.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(groupsTrainigs);
+        }
 
         // PUT: api/GroupTrainings/5
         [HttpPut("{id}")]
@@ -70,6 +89,8 @@ namespace FitTrack.API.Controllers
         [HttpPost]
         public async Task<ActionResult<GroupTraining>> PostGroupTraining(GroupTraining groupTraining)
         {
+            groupTraining.Date = DateTime.SpecifyKind(groupTraining.Date, DateTimeKind.Utc);
+            
             await _context.GroupTrainings.AddAsync(groupTraining);
             await _context.SaveChangesAsync();
 

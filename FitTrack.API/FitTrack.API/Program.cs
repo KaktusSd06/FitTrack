@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,12 +29,20 @@ builder.WebHost.ConfigureKestrel(options =>
         });
     }
 });
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "redis://red-csl8csbqf0us73c4668g:6379";
+});
+
 // Add services to the container.
 builder.Services.AddScoped(typeof(RoleManager<IdentityRole>));
 builder.Services.AddScoped(typeof(UserManager<Person>));
 builder.Services.AddScoped(typeof(SignInManager<Person>));
+builder.Services.AddScoped(typeof(TokenService));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

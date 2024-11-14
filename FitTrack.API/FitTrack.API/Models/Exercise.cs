@@ -10,6 +10,6 @@ public class Exercise
 	//public required string Image { get; set; }
 	public required string Description { get; set; }
 	
-	public ICollection<IndividualTraining>? IndividualTrainings { get; set; }
+	//public ICollection<IndividualTraining>? IndividualTrainings { get; set; }
 	public ICollection<Set>? Sets { get; set; }
 }

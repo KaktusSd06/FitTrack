@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FitTrack.API.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
 public class UserMembershipsController : Controller
 {
     private readonly FitTrackDbContext _context;
@@ -36,6 +38,12 @@ public class UserMembershipsController : Controller
     [HttpPost]
     public async Task<IActionResult> Post(UserMembership userMembership)
     {
+        var membership = await _context.Memberships.FindAsync(userMembership.MembershipId);
+        if (membership == null)
+        {
+            return NotFound();
+        }
+        userMembership.InitializeMembershipData(membership);
         await _context.UserMemberships.AddAsync(userMembership);
         await _context.SaveChangesAsync();
         return CreatedAtAction(nameof(GetById), new { id = userMembership.Id }, userMembership);

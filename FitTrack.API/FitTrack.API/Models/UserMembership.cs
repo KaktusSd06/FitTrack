@@ -12,9 +12,12 @@ public class UserMembership
     public int MembershipId { get; set; }
     public Membership? Membership { get; set; }
 
-    public UserMembership()
+    public void InitializeMembershipData(Membership membership)
     {
-        SessionsReminded = Membership.Sessions;
-        ExpirationDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(Membership.DurationInMonths));
+        if (membership != null)
+        {
+            SessionsReminded = membership.Sessions;
+            ExpirationDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(membership.DurationInMonths));
+        }
     }
 }

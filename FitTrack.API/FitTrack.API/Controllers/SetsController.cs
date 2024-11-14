@@ -35,6 +35,20 @@ namespace FitTrack.API.Controllers
 
             return set;
         }
+        
+        [HttpGet("get-by-individual-training-Id/{individualTrainingId}")]
+        public async Task<IActionResult> GetSetsInfoByIndividualTrainingId(int individualTrainingId)
+        {
+            var sets = await _context.Sets
+                .Where(s => s.IndividualTrainingId == individualTrainingId)
+                .ToListAsync();
+            if (sets == null || sets.Count == 0)
+            {
+                return NotFound();
+            }
+            
+            return Ok(sets);
+        }
 
         // PUT: api/Sets/5
         [HttpPut("{id}")]

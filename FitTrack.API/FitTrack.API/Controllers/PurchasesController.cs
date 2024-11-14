@@ -36,6 +36,22 @@ namespace FitTrack.API.Controllers
             return purchase;
         }
 
+        [HttpGet("get-purchases-by-userId/{userId}")]
+        public async Task<IActionResult> GetPurchasesByUserId(string userId)
+        {
+            var purchases = await _context.Purchases
+                .Include(p => p.Service)
+                .Include(p => p.Good)
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+            if (purchases == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(purchases);
+        }
+
         // PUT: api/Purchases/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPurchase(int id, Purchase purchase)

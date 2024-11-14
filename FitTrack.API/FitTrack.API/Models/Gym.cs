@@ -20,4 +20,6 @@ public class Gym
     public ICollection<User>? Users { get; set; }
     public ICollection<Membership>? Memberships { get; set; }
     public ICollection<GroupTraining>? GroupTrainings { get; set; }
+    public ICollection<Service>? Services { get; set; }
+    public ICollection<Good>? Goods { get; set; }
 }

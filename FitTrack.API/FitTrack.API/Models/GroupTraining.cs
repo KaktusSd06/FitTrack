@@ -2,11 +2,14 @@ namespace FitTrack.API.Models;
 
 public class GroupTraining : Training
 {
-	public required int GymId { get; set; }
-	public required Gym? Gym { get; set; }
+	public int DurationInMinutes { get; set; }
+	public string ContactPhone { get; set; }
 	
-	public required string TrainerId { get; set; }
-	public required Trainer? Trainer { get; set; }
+	public int GymId { get; set; }
+	public Gym? Gym { get; set; }
+	
+	public string TrainerId { get; set; }
+	public Trainer? Trainer { get; set; }
 
 	public ICollection<User>? Users { get; set; }
 }

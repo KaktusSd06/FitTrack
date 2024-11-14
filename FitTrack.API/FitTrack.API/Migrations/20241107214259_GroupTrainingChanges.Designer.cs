@@ -3,6 +3,7 @@ using System;
 using FitTrack.API;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FitTrack.API.Migrations
 {
     [DbContext(typeof(FitTrackDbContext))]
-    partial class FitTrackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241107214259_GroupTrainingChanges")]
+    partial class GroupTrainingChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,7 +343,7 @@ namespace FitTrack.API.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("GoodId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ItemType")
@@ -349,18 +352,13 @@ namespace FitTrack.API.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ServiceId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GoodId");
-
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("ItemId");
 
                     b.HasIndex("UserId");
 
@@ -855,12 +853,12 @@ namespace FitTrack.API.Migrations
                 {
                     b.HasOne("FitTrack.API.Models.Good", "Good")
                         .WithMany("Purchases")
-                        .HasForeignKey("GoodId")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("FitTrack.API.Models.Service", "Service")
                         .WithMany("Purchases")
-                        .HasForeignKey("ServiceId")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("User", "User")
