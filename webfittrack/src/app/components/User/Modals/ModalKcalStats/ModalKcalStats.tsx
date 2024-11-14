@@ -83,10 +83,12 @@ const AppModal: React.FC<AppModalProps> = ({ isOpen, onClose }) => {
 
     const showStats = () => {
         setSelectedContent("stats");
+
     }
 
     const showMeals = () => {
         setSelectedContent("meals");
+
     }
 
     const getTodayMeals = async (today: string): Promise<boolean | undefined> => {
@@ -165,6 +167,9 @@ const AppModal: React.FC<AppModalProps> = ({ isOpen, onClose }) => {
         const year = date.getFullYear();
         return `${year}-${month}-${day}`;
     };
+
+
+
 
     return (
         <Modal
