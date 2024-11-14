@@ -248,6 +248,7 @@ const Reg: NextPage = () => {
     if (checkConfitmedPassword()) {
       setConfirmedPasswordError("");
     }
+
     else {
       setConfirmedPasswordError("Паролі не співпадають");
       return;

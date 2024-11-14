@@ -122,6 +122,7 @@ export default function App({ gymId, onAdminCreated }: AppProps) {
         }
     };
 
+
     const creationProcess = async () => {
         setLoading(true);
         if (!checkFields()) {

@@ -544,6 +544,7 @@ export default function App({ adminId, isOpen, onClose, refreshTable }: AppProps
                                 {validatePasswordError && (
                                     <p className="text-[14px] text-danger">{validatePasswordError}</p>
                                 )}
+
                                 {validatePhoneError && (
                                     <p className="text-[14px] text-danger">{validatePhoneError}</p>
                                 )}
