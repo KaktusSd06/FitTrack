@@ -1,0 +1,46 @@
+name: dockercompose11357261670365412918
+services:
+  fittrack.api:
+    build:
+      context: D:\4 course\CourseWork\FitTrack\FitTrack.API
+      dockerfile: FitTrack.API/Dockerfile
+    container_name: fittrack.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+    image: fittrack.api
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8080"
+        protocol: tcp
+      - mode: ingress
+        target: 8081
+        published: "8081"
+        protocol: tcp
+  fittrack.db:
+    container_name: fittrack.db
+    environment:
+      POSTGRES_DB: ""
+      POSTGRES_PASSWORD: ""
+      POSTGRES_USER: ""
+    image: postgres:16
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: D:\4 course\CourseWork\FitTrack\FitTrack.API\.containers\product-db
+        target: /var/lib/postgesql/data
+        bind:
+          create_host_path: true
+networks:
+  default:
+    name: dockercompose11357261670365412918_default
