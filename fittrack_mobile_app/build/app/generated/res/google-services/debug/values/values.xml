@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">517167028721-rgno0020gj0cf32r7gub6nd3sglt1u2v.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">517167028721</string>
+    <string name="google_api_key" translatable="false">AIzaSyCDTF0tuHI-W7ZINk4VT9eWFLPq-rSPRwQ</string>
+    <string name="google_app_id" translatable="false">1:517167028721:android:f638fdf36d72ce1a35cc50</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCDTF0tuHI-W7ZINk4VT9eWFLPq-rSPRwQ</string>
+    <string name="google_storage_bucket" translatable="false">fittrack-a4174.firebasestorage.app</string>
+    <string name="project_id" translatable="false">fittrack-a4174</string>
+</resources>

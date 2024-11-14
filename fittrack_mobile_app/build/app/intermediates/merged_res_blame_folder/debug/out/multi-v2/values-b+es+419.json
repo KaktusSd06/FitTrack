@@ -1,0 +1,26 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.fittrack_mobile_app-mergeDebugResources-32:/values-b+es+419/values-b+es+419.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\stepa\\.gradle\\caches\\transforms-3\\24fa451cd5716964f0c937712bfd9f34\\transformed\\jetified-play-services-wallet-19.2.1\\res\\values-b+es+419\\values.xml",
+                    "from": {
+                        "startLines": "4,5",
+                        "startColumns": "0,0",
+                        "startOffsets": "208,265",
+                        "endColumns": "56,73",
+                        "endOffsets": "264,338"
+                    },
+                    "to": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,116",
+                        "endColumns": "60,77",
+                        "endOffsets": "111,189"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,1 @@
+ C:\\Users\\stepa\\OneDrive\\Documents\\FitTrack\\fittrack_mobile_app\\.dart_tool\\flutter_build\\210ee1ce8d1dffcc92e0333f0d5d47e4\\native_assets.yaml: 
