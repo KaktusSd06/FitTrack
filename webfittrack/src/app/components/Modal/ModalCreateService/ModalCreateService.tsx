@@ -83,7 +83,7 @@ export const ModalCreateService = ({ gymId, isopen, onClose }: ModalProps): JSX.
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Створення тренера</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">Створення послуги</ModalHeader>
                             <ModalBody>
                                 <div className={styles.FormElements}>
                                     <div className={styles.FieldContainer}>

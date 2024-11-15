@@ -3,6 +3,7 @@
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react";
 import styles from "./ModlaCreateService.module.css"
 import React, { useState, useEffect } from "react";
+import validator from "validator";
 
 // Utility function to format date
 
@@ -85,7 +86,7 @@ export const ModalCreateMembership = ({ gymId, isopen, onClose }: ModalProps): J
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Створення тренера</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">Створення абонименту</ModalHeader>
                             <ModalBody>
                                 <div className={styles.FormElements}>
                                     <div className={styles.FieldContainer}>

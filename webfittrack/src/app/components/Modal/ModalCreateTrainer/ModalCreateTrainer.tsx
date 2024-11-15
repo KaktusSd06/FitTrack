@@ -3,6 +3,7 @@
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react";
 import styles from "./ModalCreateTrainer.module.css"
 import React, { useState } from "react";
+import validator from "validator";
 
 interface ModalProps {
     gymId: number;
@@ -24,6 +25,11 @@ export const ModalCreateTrainer = ({ gymId, isopen, onClose }: ModalProps): JSX.
     const [firstReqiredFieldsError, setFirstReqiredFieldsError] = useState('');
     const [secondReqiredFieldsError, setSecondReqiredFieldsError] = useState('');
     const [registrationError, setRegistrationError] = useState('');
+    const [plainPhoneNumber, setPlainPhoneNumber] = useState("");
+    const [validateEmailError, setValidateEmailError] = useState('');
+    const [validatePhoneError, setValidatePhoneError] = useState('');
+    const [validatePasswordError, setValidatePasswordError] = useState('');
+
 
 
 
@@ -38,7 +44,7 @@ export const ModalCreateTrainer = ({ gymId, isopen, onClose }: ModalProps): JSX.
             });
 
             if (response.status === 201) {
-                console.log(response.status);
+                console.log(response.status + "123");
                 return true;
             } else if (response.status === 500) {
                 setRegistrationError('Користувач з таким номером телефону вже існує');
@@ -67,21 +73,46 @@ export const ModalCreateTrainer = ({ gymId, isopen, onClose }: ModalProps): JSX.
             firstName,
             lastName,
             middleName,
-            gymId,
+            gymId: 27,
         };
+        console.log(registrationData);
         if (email && phone && password && confirmPassword) {
             setFirstReqiredFieldsError("");
         }
         else {
             setFirstReqiredFieldsError("Заповніть обов'язкові поля");
+        }
+
+        console.log(plainPhoneNumber);
+        if (checkConfitmedPassword()) {
+            setConfirmedPasswordError("");
+        }
+        else {
+            setConfirmedPasswordError("Паролі не співпадають");
+            return;
+        } if (!validateEmail(email)) {
+            setValidateEmailError("Введіть коректну електронну адресу");
+        }
+        else {
+            setValidateEmailError("")
+        }
+        console.log(plainPhoneNumber);
+        console.log(plainPhoneNumber);
+        console.log(plainPhoneNumber);
+        if (!validatePhoneNumber()) {
+            setValidatePhoneError("Введіть коректний номер телефону");
             return;
         }
-        const userExists = await checkExistUser();
-        if (userExists) {
-            setUserExistsError("Користувач з такою електронною адресою вже існує");
+        else {
+            setValidatePhoneError("");
+        }
+
+        if (!validatePassword(password)) {
+            setValidatePasswordError("Недопустимий пароль. Пароль має мати великі та малі латинські літери, цифри, бути більше 8 і не мати спеціальних символів");
             return;
-        } else {
-            setUserExistsError("");
+        }
+        else {
+            setValidatePasswordError("");
         }
         if (checkConfitmedPassword()) {
             setConfirmedPasswordError("");
@@ -90,14 +121,39 @@ export const ModalCreateTrainer = ({ gymId, isopen, onClose }: ModalProps): JSX.
             setConfirmedPasswordError("Паролі не співпадають");
             return;
         }
+
         const isRegistered = await registerUser(registrationData);
 
         if (isRegistered) {
             const assignRoleData = { userEmail: email, role: "Trainer" };
+            console.log("Trainer");
             await setRoleToUser(assignRoleData);
 
         }
         onclose
+    };
+    const validateEmail = (email: string) => {
+
+        if (validator.isEmail(email)) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+
+    function validatePassword(password: string): boolean {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(password);
+    }
+
+
+    const validatePhoneNumber = () => {
+        if (validator.isMobilePhone(`${plainPhoneNumber}`, "uk-UA")) {
+            return true;
+        } else {
+            return false;
+        }
     };
     const setRoleToUser = async (assignRoleData: Record<string, unknown>): Promise<boolean | undefined> => {
         try {
@@ -141,14 +197,32 @@ export const ModalCreateTrainer = ({ gymId, isopen, onClose }: ModalProps): JSX.
             return false;
         }
     };
+    const formatPhoneNumber = (value: string) => {
+        // Видаляємо всі символи, крім цифр
+        const cleaned = value.replace(/\D/g, '');
 
+        // Форматуємо за шаблоном "+38 (XXX) XXX-XX-XX"
+        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
+
+        if (match) {
+            return `(${match[1]}${match[2] ? ') ' + match[2] : ''}${match[3] ? '-' + match[3] : ''}${match[4] ? '-' + match[4] : ''}`;
+        }
+        return value;
+    };
+    const getPlainPhoneNumber = (phone: string) => {
+        return phone.replace(/\D/g, ''); // Видаляє всі нечислові символи
+    };
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const formattedPhone = formatPhoneNumber(e.target.value);
+        setPhone(formattedPhone);
+        setPlainPhoneNumber(`+38${getPlainPhoneNumber(formattedPhone)}`);
+        setFirstReqiredFieldsError("");
+        setRegistrationError("");
+        setValidatePhoneError("");
+    };
     const checkConfitmedPassword = () => {
         return password === confirmPassword;
     }
-
-
-
-
 
     return (
         <>
@@ -192,23 +266,32 @@ export const ModalCreateTrainer = ({ gymId, isopen, onClose }: ModalProps): JSX.
                                             variant="bordered"
                                             label="Номер телефону *"
                                             value={phone}
-                                            onChange={(e) => { setPhone(e.target.value); setFirstReqiredFieldsError(""); setRegistrationError("") }}
+                                            isRequired
+                                            startContent={
+                                                <div className="pointer-events-none flex items-center">
+                                                    <span className=" text-small">+38</span>
+                                                </div>
+                                            }
+                                            onChange={handlePhoneChange}
                                         />
                                         <Input
                                             type="email"
                                             variant="bordered"
                                             label="Електронна адреса *"
                                             value={email}
+                                            isRequired
                                             onChange={(e) => {
                                                 setEmail(e.target.value);
                                                 setUserExistsError("");
                                                 setFirstReqiredFieldsError("");
+                                                setValidateEmailError("");
                                             }}
                                         />
                                         <Input
                                             label="Пароль *"
                                             variant="bordered"
                                             className="w-full"
+                                            isRequired
                                             value={password}
                                             onChange={(e) => { setPassword(e.target.value); setConfirmedPasswordError(""); setFirstReqiredFieldsError(""); }}
                                         />
@@ -236,12 +319,18 @@ export const ModalCreateTrainer = ({ gymId, isopen, onClose }: ModalProps): JSX.
                                 {secondReqiredFieldsError && (
                                     <p className="text-[14px] text-danger">{secondReqiredFieldsError}</p>
                                 )}
+                                {validatePasswordError && (
+                                    <p className="text-[14px] text-danger">{validatePasswordError}</p>
+                                )}
+                                {validatePhoneError && (
+                                    <p className="text-[14px] text-danger">{validatePhoneError}</p>
+                                )}
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="flat" onPress={onClose}>
                                     Закрити
                                 </Button>
-                                <Button className="bg-[#E48100]" onClick={registration} onPress={onClose}>
+                                <Button className="bg-[#E48100]" onClick={registration} >
                                     Створити
                                 </Button>
                             </ModalFooter>

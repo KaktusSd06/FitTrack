@@ -44,6 +44,8 @@ export default function AdminTrainings() {
                 },
             });
             const fetchedUser = await response?.json();
+            console.log(fetchedUser?.gymId);
+
             setGymId(fetchedUser?.gymId);
             if (fetchedUser?.gymId !== undefined) {
                 const response1 = await fetch(`/api/proxy/GroupTrainings/get-by-gymId-and-period/${fetchedUser?.gymId}/${oneWeekAgo}/${oneWeekAhead}`, {

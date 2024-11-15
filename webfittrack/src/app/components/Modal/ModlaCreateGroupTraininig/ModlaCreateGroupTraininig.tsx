@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import { Trainer } from "@/app/Interfaces/Interfaces";
 import { I18nProvider } from "@react-aria/i18n";
 import { now } from "@internationalized/date";
+import validator from "validator";
 
 // Utility function to format date
 
@@ -16,8 +17,9 @@ interface ModalProps {
 }
 
 export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps): JSX.Element => {
+    const [plainPhoneNumber, setPlainPhoneNumber] = useState("");
+    const [phone, setPhone] = useState("");
 
-    const [contactPhone, setcontactPhone] = useState("");
     const [description, setdescription] = useState("");
     const [date, setdate] = useState<string>("");
     const [durationInMinutes, setdurationInMinutes] = useState(1);
@@ -25,6 +27,7 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
     const [trainerId, setTrainerId] = useState('');
     const [ReqiredFieldsError, setReqiredFieldsError] = useState('');
     const [CreationError, setCreationError] = useState('');
+    const [validatePhoneError, setValidatePhoneError] = useState('');
 
     const formatDateToISO = (dateString: string): string => {
         const jsDate = new Date(dateString);
@@ -34,7 +37,36 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
         const value = e.target.value;
         setdate(value);
     };
+    const validatePhoneNumber = () => {
+        if (validator.isMobilePhone(`${plainPhoneNumber}`, "uk-UA")) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    const formatPhoneNumber = (value: string) => {
+        // Видаляємо всі символи, крім цифр
+        const cleaned = value.replace(/\D/g, '');
 
+        // Форматуємо за шаблоном "+38 (XXX) XXX-XX-XX"
+        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
+
+        if (match) {
+            return `(${match[1]}${match[2] ? ') ' + match[2] : ''}${match[3] ? '-' + match[3] : ''}${match[4] ? '-' + match[4] : ''}`;
+        }
+        return value;
+    };
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const formattedPhone = formatPhoneNumber(e.target.value);
+        setPhone(formattedPhone);
+        setPlainPhoneNumber(`+38${getPlainPhoneNumber(formattedPhone)}`);
+        setReqiredFieldsError("");
+        setValidatePhoneError("");
+    };
+    const getPlainPhoneNumber = (phone: string) => {
+        return phone.replace(/\D/g, ''); // Видаляє всі нечислові символи
+    };
     const CreateTraining = async (CreationData: Record<string, unknown>): Promise<boolean | undefined> => {
         try {
             const response = await fetch(`/api/proxy/GroupTrainings`, {
@@ -45,6 +77,8 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
                 body: JSON.stringify(CreationData),
             });
             if (response.status === 201) {
+                console.log(CreationData);
+                console.log(201);
                 return true;
             } else if (response.status === 500) {
                 setCreationError('помилка на сервері');
@@ -72,18 +106,23 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
             formatteddate = now("UTC").toString();
         const CreationData = {
             description,
-            contactPhone,
+            contactPhone: plainPhoneNumber,
             date: formatteddate,
             durationInMinutes,
             trainerId,
-            gymId,
+            gymId: gymId,
         };
         console.log(CreationData);
-        if (date && durationInMinutes && contactPhone) {
+        if (date && durationInMinutes && phone) {
             setReqiredFieldsError("");
         }
         else {
             setReqiredFieldsError("Заповніть обов'язкові поля");
+            return;
+        }
+        console.log(plainPhoneNumber);
+        if (!validatePhoneNumber()) {
+            setValidatePhoneError("Введіть коректний номер телефону");
             return;
         }
         await CreateTraining(CreationData);
@@ -124,7 +163,7 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Створення тренера</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">Створення групвих треувань</ModalHeader>
                             <ModalBody>
                                 <div className={styles.FormElements}>
                                     <div className={styles.FieldContainer}>
@@ -139,8 +178,13 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
                                             type="text"
                                             variant="bordered"
                                             label="Контактний телефон"
-                                            value={contactPhone}
-                                            onChange={(e) => { setcontactPhone(e.target.value); setCreationError("") }}
+                                            isRequired
+                                            startContent={
+                                                <div className="pointer-events-none flex items-center">
+                                                    <span className=" text-small">+38</span>
+                                                </div>
+                                            }
+                                            onChange={handlePhoneChange}
                                         />
                                         <I18nProvider locale="en-GB">
 
@@ -192,6 +236,8 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
                                 )}
                                 {ReqiredFieldsError && (
                                     <p className="text-[14px] text-danger">{ReqiredFieldsError}</p>
+                                )}{validatePhoneError && (
+                                    <p className="text-[14px] text-danger">{validatePhoneError}</p>
                                 )}
 
                             </ModalBody>
@@ -199,7 +245,7 @@ export const ModlaCreateGroupTraininig = ({ gymId, isopen, onClose }: ModalProps
                                 <Button color="danger" variant="flat" onPress={onClose}>
                                     Закрити
                                 </Button>
-                                <Button className="bg-[#E48100]" onClick={registration} onPress={onClose}>
+                                <Button className="bg-[#E48100]" onClick={registration} >
                                     Створити
                                 </Button>
                             </ModalFooter>
