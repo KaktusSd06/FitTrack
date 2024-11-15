@@ -50,7 +50,6 @@ export default function AdminTrainings() {
             console.log(fetchedUser?.gymId);
 
             setGymId(fetchedUser?.gymId);
-            setGymId(fetchedUser?.gymId);
             if (fetchedUser?.gymId !== undefined) {
                 const response1 = await fetch(`/api/proxy/GroupTrainings/get-by-gymId-and-period/${fetchedUser?.gymId}/${oneWeekAgo}/${oneWeekAhead}`, {
                     method: 'GET',
